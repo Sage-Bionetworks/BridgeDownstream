@@ -20,7 +20,7 @@ def read_args():
 
 def download_from_synapse(syn, source_table, limit=None):
     q_string = (
-            f"SELECT recordId, healthCode, rawData FROM {source_table} "
+            f"SELECT recordId, healthCode, createdOn, rawData FROM {source_table} "
             f"WHERE rawData IS NOT NULL AND \"taskData.testVersion\" = '1.0.0' "
             f"ORDER BY createdOn DESC ")
     if limit is None:
@@ -40,7 +40,8 @@ def copy_to_s3(df, session, bucket, basekey):
         key = f"{basekey}/{os.path.basename(record['path'])}"
         metadata_dic = {
                 "recordId": record["recordId"],
-                "healthCode": record["healthCode"]}
+                "healthCode": record["healthCode"],
+                "createdOn": str(int(record["createdOn"]))}
         with open(record["path"], "rb") as f:
             obj = s3.Object(
                     bucket_name = bucket,
