@@ -4,6 +4,7 @@ import sys
 import json
 import zipfile
 import boto3
+from datetime import datetime
 from urllib.parse import urlparse
 from awsglue.utils import getResolvedOptions
 
@@ -25,20 +26,40 @@ s3_obj = client.get_object(
         Bucket = s3_url_components["bucket"],
         Key = s3_url_components["key"])
 s3_obj_metadata = s3_obj["Metadata"]
+created_on = datetime.fromtimestamp(
+        int(s3_obj_metadata["createdon"]) / 1000)
 with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
     contents = z.namelist()
     for json_path in z.namelist():
         dataset_name = os.path.splitext(json_path)[0]
         with z.open(json_path, "r") as p:
             j = json.load(p)
+            # We inject all S3 metadata into the metadata file
             if dataset_name == "metadata":
+                j["year"] = created_on.year
+                j["month"] = created_on.month
+                j["day"] = created_on.day
                 for key in s3_obj_metadata:
-                    j[key] = s3_obj_metadata[key]
-            else:
+                    # We revert partition fields back to camelCase
+                    if key == "taskidentifier":
+                        j["taskIdentifier"] = s3_obj_metadata[key]
+                    if key == "recordid":
+                        j["recordId"] = s3_obj_metadata[key]
+                    else:
+                        j[key] = s3_obj_metadata[key]
+            else: # but only the partition fields into other files
                 if type(j) == list:
                     for item in j:
-                        item["recordid"] = s3_obj_metadata["recordid"]
+                        item["taskIdentifier"] = s3_obj_metadata["taskidentifier"]
+                        item["year"] = created_on.year
+                        item["month"] = created_on.month
+                        item["day"] = created_on.day
+                        item["recordId"] = s3_obj_metadata["recordid"]
                 else:
+                    j["taskIdentifier"] = s3_obj_metadata["taskidentifier"]
+                    j["year"] = created_on.year
+                    j["month"] = created_on.month
+                    j["day"] = created_on.day
                     j["recordid"] = s3_obj_metadata["recordid"]
             output_fname = s3_obj_metadata["recordid"] + ".ndjson"
             output_path = os.path.join(dataset_name, output_fname)
