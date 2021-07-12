@@ -61,7 +61,7 @@ for s3_obj in s3_objects["Contents"]:
                         j["year"] = created_on.year
                         j["month"] = created_on.month
                         j["day"] = created_on.day
-                        j["recordid"] = s3_obj_metadata["recordid"]
+                        j["recordId"] = s3_obj_metadata["recordid"]
                 output_fname = s3_obj_metadata["recordid"] + ".ndjson"
                 output_path = os.path.join(dataset_name, output_fname)
                 os.makedirs(dataset_name, exist_ok=True)
