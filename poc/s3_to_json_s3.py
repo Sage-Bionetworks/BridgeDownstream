@@ -44,7 +44,7 @@ for s3_obj in s3_objects["Contents"]:
                         # We revert partition fields back to camelCase
                         if key == "taskidentifier":
                             j["taskIdentifier"] = s3_obj_metadata[key]
-                        if key == "recordid":
+                        elif key == "recordid":
                             j["recordId"] = s3_obj_metadata[key]
                         else:
                             j[key] = s3_obj_metadata[key]
