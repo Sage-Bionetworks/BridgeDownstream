@@ -1,7 +1,7 @@
 # This script runs as a Glue job and converts a collection of JSON files
 # (whose common schema is defined by a Glue table, created and maintained
 # by a Glue crawler), to a parquet dataset partitioned by
-# measure (task identifier) / year / month / day / recordid
+# measure (taskIdentifier) / year / month / day / recordId
 # Additionally, if the table has nested data, it will be separated out
 # into its own dataset with a predictable name.
 #
@@ -9,14 +9,15 @@
 # "files" which is an array of objects. We will write out two parquet datasets
 # in this case, an `info` dataset and an `info_files` dataset.
 #
-# Before writing our tables to parquet datasets, we will add the recordid
-# measure (task identifier), and year, month, day to each record in each table.
+# Before writing our tables to parquet datasets, we will add the recordId
+# measure (taskIdentifier), and year, month, day to each record in each table.
 
 import sys
 import os
 from pyspark import SparkContext
-from awsglue.context import GlueContext
 from awsglue import DynamicFrame
+from awsglue.context import GlueContext
+from awsglue.utils import getResolvedOptions
 
 args = getResolvedOptions(
         sys.argv,
@@ -44,12 +45,11 @@ def write_to_partitioned_dataset(table, table_name, s3_bucket, s3_prefix):
                     "taskIdentifier", "year", "month", "day", "recordid"]},
             format = "parquet")
 
-
 if has_nested_fields(table.schema()):
     tables_with_index = {}
     table_relationalized = table.relationalize(
         root_table_name = args["table_name"],
-        staging_path = f"s3://{args['bucket']}/tmp/")
+        staging_path = f"s3://{args['s3_bucket_output']}/tmp/")
     # Inject partition fields into child tables
     for k in sorted(table_relationalized.keys()):
         this_table = table_relationalized[k].toDF()
