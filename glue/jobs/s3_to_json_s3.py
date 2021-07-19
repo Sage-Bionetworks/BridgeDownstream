@@ -16,17 +16,19 @@ from awsglue.utils import getResolvedOptions
 args = getResolvedOptions(
         sys.argv,
         ["input-bucket",
-         "input-prefix",
+         "input-prefix", # for batch = true
+         "input-key",
          "output-bucket",
          "output-prefix", # e.g. app/study/ndjson/
+         "batch", # "true" if using diff functionality
          "glue-diff-database", # do not process the records here
          "glue-diff-table", # because we have already processed them!
          "glue-diff-interval"]) # num past days to check for processed record
 
 s3_client = boto3.client("s3")
-athena_client = boto3.client("athena")
 
 def get_already_processed_records(glue_database, glue_table, day_interval):
+    athena_client = boto3.client("athena")
     output_bucket = args["output_bucket"]
     output_prefix = "tmp/"
     query_str = (
@@ -37,8 +39,7 @@ def get_already_processed_records(glue_database, glue_table, day_interval):
     query = athena_client.start_query_execution(
             QueryString = f"select distinct recordId from {glue_table}",
             QueryExecutionContext={
-                "Database": glue_database,
-                "Catalog": "AwsDataCatalog"},
+                "Database": glue_database},
             ResultConfiguration={
                 "OutputLocation": f"s3://f{output_bucket}/f{output_prefix}"})
     for i in range(10):
@@ -56,7 +57,7 @@ def get_already_processed_records(glue_database, glue_table, day_interval):
     try:
         s3_client.download_file(
                 Bucket = output_bucket,
-                Key = os.path.join(output_prefix, fpath)
+                Key = os.path.join(output_prefix, fpath),
                 Filename = fpath)
     except s3_client.exceptions.ClientError:
         return(set())
@@ -67,20 +68,7 @@ def get_already_processed_records(glue_database, glue_table, day_interval):
             already_processed_records.add(row["recordId"])
     return(already_processed_records)
 
-s3_objects = s3_client.list_objects_v2(
-        Bucket = args["input_bucket"],
-        Prefix = args["input_prefix"])
-already_processed_records = get_already_processed_records(
-        glue_database = args["glue_diff_database"]
-        glue_table = args["glue_diff_table"],
-        day_interval = args["glue_diff_interval"])
-for s3_obj in s3_objects["Contents"]:
-    s3_obj = s3_client.get_object(
-            Bucket = args["input_bucket"],
-            Key = s3_obj["Key"])
-    s3_obj_metadata = s3_obj["Metadata"]
-    if s3_obj_metadata["recordid"] in already_processed_records:
-        continue
+def process_record(s3_obj, s3_obj_metadata):
     created_on = datetime.fromtimestamp(
             int(s3_obj_metadata["createdon"]) / 1000)
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
@@ -131,8 +119,35 @@ for s3_obj in s3_objects["Contents"]:
                 with open(output_path, "rb") as f_in:
                     response = s3_client.put_object(
                             Body = f_in,
-                            Bucket = args["output_bucket"]
+                            Bucket = args["output_bucket"],
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
+
+if args["batch"] == "true":
+    s3_objects = s3_client.list_objects_v2(
+            Bucket = args["input_bucket"],
+            Prefix = args["input_prefix"])
+    already_processed_records = get_already_processed_records(
+            glue_database = args["glue_diff_database"],
+            glue_table = args["glue_diff_table"],
+            day_interval = args["glue_diff_interval"])
+    for s3_obj in s3_objects["Contents"]:
+        s3_obj = s3_client.get_object(
+                Bucket = args["input_bucket"],
+                Key = s3_obj["Key"])
+        s3_obj_metadata = s3_obj["Metadata"]
+        if s3_obj_metadata["recordid"] in already_processed_records:
+            continue
+        else:
+            process_record(
+                    s3_obj=s3_obj,
+                    s3_obj_metadata=s3_obj_metadata)
+else:
+    s3_obj = s3_client.get_object(
+            Bucket = args["input_bucket"],
+            Key = args["input_key"])
+    process_record(
+            s3_obj = s3_obj,
+            s3_obj_metadata=s3_obj["Metadata"])
 
 
