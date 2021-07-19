@@ -21,7 +21,7 @@ from awsglue.utils import getResolvedOptions
 
 args = getResolvedOptions(
         sys.argv,
-        ["database", "table-name", "s3-bucket-output", "s3-prefix-output"])
+        ["database", "table-name", "output-bucket", "output-prefix"])
 glueContext = GlueContext(SparkContext.getOrCreate())
 table = glueContext.create_dynamic_frame.from_catalog(
              database=args["database"],
@@ -49,7 +49,7 @@ if has_nested_fields(table.schema()):
     tables_with_index = {}
     table_relationalized = table.relationalize(
         root_table_name = args["table_name"],
-        staging_path = f"s3://{args['s3_bucket_output']}/tmp/")
+        staging_path = f"s3://{args['output_bucket']}/tmp/")
     # Inject partition fields into child tables
     for k in sorted(table_relationalized.keys()):
         this_table = table_relationalized[k].toDF()
@@ -106,11 +106,11 @@ if has_nested_fields(table.schema()):
         write_to_partitioned_dataset(
                 table = dynamic_frame_with_index,
                 table_name = clean_name,
-                s3_bucket = args["s3_bucket_output"],
-                s3_prefix = args["s3_prefix_output"])
+                s3_bucket = args["output_bucket"],
+                s3_prefix = args["output_prefix"])
 else:
     write_to_partitioned_dataset(
             table = table,
             table_name = args["table_name"],
-            s3_bucket = args["s3_bucket_output"],
-            s3_prefix = args["s3_prefix_output"])
+            s3_bucket = args["output_bucket"],
+            s3_prefix = args["output_prefix"])
