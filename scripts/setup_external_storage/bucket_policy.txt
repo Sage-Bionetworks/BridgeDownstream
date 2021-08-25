@@ -1,0 +1,16 @@
+{
+    "Statement": [
+        {
+            "Action": [ "s3:ListBucket*", "s3:GetBucketLocation" ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::thisisthenameofmybucket",
+            "Principal": { "AWS": "325565585839" }
+        },
+        {
+            "Action": [ "s3:*Object*", "s3:*MultipartUpload*" ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::thisisthenameofmybucket/*",
+            "Principal": { "AWS": "325565585839" }
+        }
+    ]
+}

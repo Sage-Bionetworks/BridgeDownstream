@@ -1,0 +1,16 @@
+{
+    "CORSRules": [
+        {
+            "AllowedOrigins": [
+                "*"
+            ],
+            "AllowedMethods": [
+                "GET", "POST", "PUT", "HEAD"
+            ],
+            "MaxAgeSeconds": 3000,
+            "AllowedHeaders": [
+                "*"
+            ]
+        }
+    ]
+}
