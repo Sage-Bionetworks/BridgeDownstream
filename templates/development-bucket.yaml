@@ -9,6 +9,7 @@ Parameters:
   BucketName:
     Type: String
     Description: Name of the bucket.
+    Default: ''
 
   ReadWriteAccessArns:
     Type: List<String>
@@ -29,6 +30,7 @@ Conditions:
     !Not [!Equals [!Join [",", !Ref ReadWriteAccessArns], ""]]
   HasReadOnlyAccessArns:
     !Not [!Equals [!Join [",", !Ref ReadOnlyAccessArns], ""]]
+  HasBucketName: !Not [!Equals [!Ref BucketName, ""]]
 
 Resources:
 
@@ -36,7 +38,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
-      BucketName: !Ref BucketName
+      BucketName: !If [HasBucketName, !Ref BucketName, !Ref 'AWS::NoValue']
       AccessControl: Private
       OwnershipControls:
         Rules:
