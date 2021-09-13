@@ -20,8 +20,10 @@ jobs:
       matrix:
         job-environment:
           - develop
+          - prod
         include:
           - sceptre-environment: develop
+          - sceptre-environment: prod
     environment: ${{ matrix.job-environment }}
     steps:
 
@@ -63,4 +65,4 @@ jobs:
           role-duration-seconds: 1200
 
       - name: Deploy sceptre stacks
-        run: pipenv run sceptre launch ${{ matrix.job-environment }} --yes
+        run: pipenv run sceptre launch ${{ matrix.sceptre-environment }} --yes
