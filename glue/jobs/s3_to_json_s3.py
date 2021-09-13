@@ -149,5 +149,3 @@ else:
     process_record(
             s3_obj = s3_obj,
             s3_obj_metadata=s3_obj["Metadata"])
-
-
