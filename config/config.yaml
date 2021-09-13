@@ -1,0 +1,6 @@
+project_code: bridge_downstream
+region: us-east-1
+default_stack_tags:
+  Department: IBC
+  Project: mobile-toolbox
+  OwnerEmail: aws-mobilehealth-dataengineering-dev@sagebase.org
