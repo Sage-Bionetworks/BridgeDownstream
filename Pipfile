@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.9"
+
+[dev-packages]
+pre-commit = "==2.*"
+sceptre = "==2.*"
+
+[packages]
+boto3 = "==1.*"
+pyspark = "==3.*"
+synapseclient = "==2.*"
