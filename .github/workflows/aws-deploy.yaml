@@ -22,8 +22,10 @@ jobs:
           - develop
           - prod
         include:
-          - sceptre-environment: develop
-          - sceptre-environment: prod
+          - job-environment: develop
+            sceptre-environment: develop
+          - job-environment: prod
+            sceptre-environment: prod
     environment: ${{ matrix.job-environment }}
     steps:
 
