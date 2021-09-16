@@ -111,7 +111,6 @@ if has_nested_fields(table_schema) and table.count() > 0:
                 tables_with_index[t],
                 glue_ctx = glueContext,
                 name = clean_name)
-        small_dynamic_frame_with_index = dynamic_frame_with_index.coalesce(10)
         s3_write_path = os.path.join(
                 "s3://",
                 workflow_run_properties["parquet_bucket"],
@@ -119,7 +118,7 @@ if has_nested_fields(table_schema) and table.count() > 0:
                 clean_name)
         #logger.info(f"Writing {table} to {s3_write_path}")
         glueContext.write_dynamic_frame.from_options(
-                frame = small_dynamic_frame_with_index,
+                frame = dynamic_frame_with_index,
                 connection_type = "s3",
                 connection_options = {
                     "path": s3_write_path,
