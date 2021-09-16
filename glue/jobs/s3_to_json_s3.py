@@ -4,69 +4,22 @@
 import io
 import os
 import sys
-import csv
-import time
 import json
 import zipfile
 import boto3
 from datetime import datetime
-from urllib.parse import urlparse
 from awsglue.utils import getResolvedOptions
+
+glue_client = boto3.client("glue")
+s3_client = boto3.client("s3")
 
 args = getResolvedOptions(
         sys.argv,
-        ["input-bucket",
-         "input-prefix", # for batch = true
-         "input-key",
-         "output-bucket",
-         "output-prefix", # e.g. app/study/ndjson/
-         "batch", # "true" if using diff functionality
-         "glue-diff-database", # do not process the records here
-         "glue-diff-table", # because we have already processed them!
-         "glue-diff-interval"]) # num past days to check for processed record
-
-s3_client = boto3.client("s3")
-
-def get_already_processed_records(glue_database, glue_table, day_interval):
-    athena_client = boto3.client("athena")
-    output_bucket = args["output_bucket"]
-    output_prefix = "tmp/"
-    query_str = (
-            f"select distinct recordId from {glue_table}"
-            f"where cast(createdOn as double) > "
-            f"to_unixtime("
-            f"current_timestamp - INTERVAL '{day_interval}' DAY)*1000")
-    query = athena_client.start_query_execution(
-            QueryString = f"select distinct recordId from {glue_table}",
-            QueryExecutionContext={
-                "Database": glue_database},
-            ResultConfiguration={
-                "OutputLocation": f"s3://f{output_bucket}/f{output_prefix}"})
-    for i in range(10):
-        query_execution = athena_client.get_query_execution(
-                QueryExecutionId = query["QueryExecutionId"])
-        query_state = query_execution["QueryExecution"]["Status"]["State"]
-        if query_state == "SUCEEDED":
-            break
-        elif query_state == "QUEUED":
-            time.sleep(1)
-            continue
-        else: # either "FAILED", "CANCELLED", or something we didn't expect
-            return set()
-    fpath = f"{query['QueryExecutionId']}.csv"
-    try:
-        s3_client.download_file(
-                Bucket = output_bucket,
-                Key = os.path.join(output_prefix, fpath),
-                Filename = fpath)
-    except s3_client.exceptions.ClientError:
-        return(set())
-    already_processed_records = set()
-    with open(fpath, "r") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            already_processed_records.add(row["recordId"])
-    return(already_processed_records)
+        ["WORKFLOW_NAME",
+         "WORKFLOW_RUN_ID"])
+workflow_run_properties = glue_client.get_workflow_run_properties(
+        Name=args["WORKFLOW_NAME"],
+        RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 
 def process_record(s3_obj, s3_obj_metadata):
     created_on = datetime.fromtimestamp(
@@ -110,44 +63,24 @@ def process_record(s3_obj, s3_obj_metadata):
                 with open(output_path, "w") as f_out:
                     json.dump(j, f_out, indent=None)
                 s3_output_key = os.path.join(
-                        args["output_prefix"],
-                        dataset_name,
-                        str(created_on.year),
-                        str(created_on.month),
-                        str(created_on.day),
+                        workflow_run_properties["json_prefix"],
+                        f"dataset={dataset_name}",
+                        f"taskIdentifier={s3_obj_metadata['taskidentifier']}",
+                        f"year={str(created_on.year)}",
+                        f"month={str(created_on.month)}",
+                        f"day={str(created_on.day)}",
+                        f"recordId={s3_obj_metadata['recordid']}",
                         output_fname)
                 with open(output_path, "rb") as f_in:
                     response = s3_client.put_object(
                             Body = f_in,
-                            Bucket = args["output_bucket"],
+                            Bucket = workflow_run_properties["json_bucket"],
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
-if args["batch"] == "true":
-    s3_objects = s3_client.list_objects_v2(
-            Bucket = args["input_bucket"],
-            Prefix = args["input_prefix"])
-    already_processed_records = get_already_processed_records(
-            glue_database = args["glue_diff_database"],
-            glue_table = args["glue_diff_table"],
-            day_interval = args["glue_diff_interval"])
-    for s3_obj in s3_objects["Contents"]:
-        s3_obj = s3_client.get_object(
-                Bucket = args["input_bucket"],
-                Key = s3_obj["Key"])
-        s3_obj_metadata = s3_obj["Metadata"]
-        if s3_obj_metadata["recordid"] in already_processed_records:
-            continue
-        else:
-            process_record(
-                    s3_obj=s3_obj,
-                    s3_obj_metadata=s3_obj_metadata)
-else:
-    s3_obj = s3_client.get_object(
-            Bucket = args["input_bucket"],
-            Key = args["input_key"])
-    process_record(
-            s3_obj = s3_obj,
-            s3_obj_metadata=s3_obj["Metadata"])
-
-
+s3_obj = s3_client.get_object(
+        Bucket = workflow_run_properties["source_bucket"],
+        Key = workflow_run_properties["source_key"])
+process_record(
+        s3_obj = s3_obj,
+        s3_obj_metadata=s3_obj["Metadata"])
