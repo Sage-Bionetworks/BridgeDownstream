@@ -30,4 +30,3 @@ def get_s3_loc(synapse_id, auth_token):
     key = f["_file_handle"]["key"]
     s3_loc = {"bucket": bucket, "key": key}
     return s3_loc
-

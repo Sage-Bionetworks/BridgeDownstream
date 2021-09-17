@@ -1,0 +1,5 @@
+# this stack exists only to test cicd, and will be removed in a future PR
+template_path: development-bucket.yaml
+stack_name: bridge-downstream-temp-bucket
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}

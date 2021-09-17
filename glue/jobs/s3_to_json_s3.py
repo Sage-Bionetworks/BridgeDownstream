@@ -78,6 +78,7 @@ def process_record(s3_obj, s3_obj_metadata):
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
+
 s3_obj = s3_client.get_object(
         Bucket = workflow_run_properties["source_bucket"],
         Key = workflow_run_properties["source_key"])
