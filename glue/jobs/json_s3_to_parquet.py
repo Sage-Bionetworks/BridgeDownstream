@@ -14,18 +14,33 @@
 
 import sys
 import os
+import boto3
 from pyspark import SparkContext
 from awsglue import DynamicFrame
 from awsglue.context import GlueContext
 from awsglue.utils import getResolvedOptions
+from awsglue.job import Job
 
+glue_client = boto3.client("glue")
 args = getResolvedOptions(
-        sys.argv,
-        ["database", "table-name", "output-bucket", "output-prefix"])
+         sys.argv,
+         ["WORKFLOW_NAME",
+          "WORKFLOW_RUN_ID",
+          "JOB_NAME",
+          "table"])
+workflow_run_properties = glue_client.get_workflow_run_properties(
+        Name=args["WORKFLOW_NAME"],
+        RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 glueContext = GlueContext(SparkContext.getOrCreate())
+#logger = glueContext.get_logger()
+job = Job(glueContext)
+job.init(args["JOB_NAME"], args)
 table = glueContext.create_dynamic_frame.from_catalog(
-             database=args["database"],
-             table_name=args["table_name"])
+             database=workflow_run_properties["database"],
+             table_name=args["table"],
+             additional_options={"groupFiles": "inPartition"},
+             transformation_ctx="create_dynamic_frame")
+table_schema = table.schema()
 
 def has_nested_fields(schema):
     for col in schema:
@@ -35,25 +50,18 @@ def has_nested_fields(schema):
             return True
     return False
 
-def write_to_partitioned_dataset(table, table_name, s3_bucket, s3_prefix):
-    s3_write_path = os.path.join("s3://", s3_bucket, s3_prefix, table_name)
-    table.write(
-            connection_type = "s3",
-            connection_options = {
-                "path": s3_write_path,
-                "partitionKeys": [
-                    "taskIdentifier", "year", "month", "day", "recordid"]},
-            format = "parquet")
-
-if has_nested_fields(table.schema()):
+if has_nested_fields(table_schema) and table.count() > 0:
     tables_with_index = {}
     table_relationalized = table.relationalize(
-        root_table_name = args["table_name"],
-        staging_path = f"s3://{args['output_bucket']}/tmp/")
+        root_table_name = args["table"],
+        staging_path = f"s3://{workflow_run_properties['parquet_bucket']}/tmp/",
+        transformation_ctx="relationalize")
     # Inject partition fields into child tables
     for k in sorted(table_relationalized.keys()):
+        #logger.info(f"Injecting partition fields into relationalized "
+        #            f"table {k} of {table}")
         this_table = table_relationalized[k].toDF()
-        if k == args['table_name']: # top-level fields
+        if k == args['table']: # top-level fields
             for c in list(this_table.columns):
                 if "." in c: # a flattened struct field
                     this_table = this_table.withColumnRenamed(
@@ -66,8 +74,8 @@ if has_nested_fields(table.schema()):
                 original_field_name = hierarchy[-1]
                 parent_table = tables_with_index[parent_key]
             else: # k is the value of a top-level field
-                parent_key = args['table_name']
-                original_field_name = k.replace(f"{args['table_name']}_", "")
+                parent_key = args['table']
+                original_field_name = k.replace(f"{args['table']}_", "")
                 parent_table = table_relationalized[parent_key].toDF()
             parent_index = (parent_table
                     .select(
@@ -80,7 +88,7 @@ if has_nested_fields(table.schema()):
                     on = "id",
                     how = "inner")
             # remove prefix from field names
-            field_prefix = k.replace(f"{args['table_name']}_", "") + ".val."
+            field_prefix = k.replace(f"{args['table']}_", "") + ".val."
             columns = list(df_with_index.columns)
             for c in columns:
                 # do nothing if c is id, index, or partition field
@@ -103,14 +111,36 @@ if has_nested_fields(table.schema()):
                 tables_with_index[t],
                 glue_ctx = glueContext,
                 name = clean_name)
-        write_to_partitioned_dataset(
-                table = dynamic_frame_with_index,
-                table_name = clean_name,
-                s3_bucket = args["output_bucket"],
-                s3_prefix = args["output_prefix"])
-else:
-    write_to_partitioned_dataset(
-            table = table,
-            table_name = args["table_name"],
-            s3_bucket = args["output_bucket"],
-            s3_prefix = args["output_prefix"])
+        s3_write_path = os.path.join(
+                "s3://",
+                workflow_run_properties["parquet_bucket"],
+                workflow_run_properties["parquet_prefix"],
+                clean_name)
+        #logger.info(f"Writing {table} to {s3_write_path}")
+        glueContext.write_dynamic_frame.from_options(
+                frame = dynamic_frame_with_index,
+                connection_type = "s3",
+                connection_options = {
+                    "path": s3_write_path,
+                    "partitionKeys": [
+                        "taskIdentifier", "year", "month", "day", "recordId"]},
+                format = "parquet",
+                transformation_ctx="write_dynamic_frame")
+elif table.count() > 0:
+    s3_write_path = os.path.join(
+            "s3://",
+            workflow_run_properties["parquet_bucket"],
+            workflow_run_properties["parquet_prefix"],
+            args["table"])
+    #logger.info(f"Writing {table} to {s3_write_path}")
+    glueContext.write_dynamic_frame.from_options(
+            frame = table,
+            connection_type = "s3",
+            connection_options = {
+                "path": s3_write_path,
+                "partitionKeys": [
+                    "taskIdentifier", "year", "month", "day", "recordId"]},
+            format = "parquet",
+            transformation_ctx="write_dynamic_frame")
+
+job.commit()
