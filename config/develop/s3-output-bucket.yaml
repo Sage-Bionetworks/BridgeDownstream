@@ -1,0 +1,8 @@
+template_path: s3-bucket.yaml
+stack_name: bridge-downstream-dev-output-bucket
+parameters:
+  BucketName: bridge-downstream-dev-output
+  ReadWriteAccessArns:
+    - !stack_output_external glue-job-role::RoleArn
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}

@@ -1,6 +1,0 @@
-template_path: development-bucket.yaml
-stack_name: bridge-downstream-dev-bucket
-parameters:
-  BucketName: bridge-downstream-dev
-stack_tags:
-  {{ stack_group_config.default_stack_tags }}
