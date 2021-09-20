@@ -67,4 +67,4 @@ jobs:
           role-duration-seconds: 1200
 
       - name: Deploy sceptre stacks
-        run: pipenv run sceptre launch ${{ matrix.sceptre-environment }} --yes
+        run: pipenv run sceptre --debug launch ${{ matrix.sceptre-environment }} --yes
