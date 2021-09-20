@@ -32,10 +32,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up python 3.9
+      - name: Set up python 3.8
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.8
 
       - name: Install pipenv
         run: python -m pip install pipenv
@@ -67,4 +67,4 @@ jobs:
           role-duration-seconds: 1200
 
       - name: Deploy sceptre stacks
-        run: pipenv run sceptre --debug launch ${{ matrix.sceptre-environment }} --yes
+        run: pipenv run sceptre launch ${{ matrix.sceptre-environment }} --yes
