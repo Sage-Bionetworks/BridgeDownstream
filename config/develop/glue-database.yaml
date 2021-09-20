@@ -1,0 +1,4 @@
+template_path: glue-database.yaml
+stack_name: glue-database
+parameters:
+  DatabaseName: bridge-downstream-etl
