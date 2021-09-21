@@ -1,0 +1,4 @@
+template_path: ecr-repository.yaml
+stack_name: ecr-repository
+parameters:
+  RepositoryName: sns_to_glue
