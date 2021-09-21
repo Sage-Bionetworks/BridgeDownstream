@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: An IAM Role to run Glue Jobs
+
+Resources:
+
+  JobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - glue.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole'
+
+Outputs:
+
+  RoleName:
+    Value: !Ref JobRole
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-RoleName'
+
+  RoleArn:
+    Value: !GetAtt JobRole.Arn
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-RoleArn'

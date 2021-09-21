@@ -76,7 +76,7 @@ Resources:
             - Sid: ReadAccess
               Effect: Allow
               Principal:
-                AWS: !Ref ReadWriteAccessArns
+                AWS: !Ref ReadOnlyAccessArns
               Action:
                 - 's3:GetObject*'
                 - 's3:DeleteObject*'

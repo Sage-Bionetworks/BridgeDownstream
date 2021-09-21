@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A Glue Classifier that checks JSON content for a crawler
+
+Parameters:
+
+  ClassifierName:
+    Description: Name of the classifier
+    Type: String
+
+Resources:
+
+  Classifier:
+    Type: AWS::Glue::Classifier
+    Properties:
+      JsonClassifier:
+        Name: !Ref ClassifierName
+        JsonPath: $[*]
