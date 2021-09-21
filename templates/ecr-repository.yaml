@@ -1,0 +1,8 @@
+Type: AWS::ECR::Repository
+Properties:
+  EncryptionConfiguration:
+    EncryptionType: AES256
+  ImageScanningConfiguration:
+     ScanOnPush: true
+  ImageTagMutability: MUTABLE
+  RepositoryName: sns_to_glue

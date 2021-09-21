@@ -1,8 +1,10 @@
-import synapseclient as sc
+import os
 import boto3
+import synapseclient
 
-SSM_PARAMETER_NAME = "/phil/sns_to_glue"
-GLUE_WORKFLOW_NAME = "s3_to_json_workflow"
+SSM_PARAMETER_NAME = os.getenv("SSM_PARAMETER_NAME")
+GLUE_WORKFLOW_NAME = os.getenv("GLUE_WORKFLOW_NAME")
+synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
 
 def handler(sns_event, context):
     message = sns_event['Records'][0]['Sns']['Message']
@@ -23,7 +25,7 @@ def handler(sns_event, context):
                 "input_key": s3_loc["key"]})
 
 def get_s3_loc(synapse_id, auth_token):
-    syn = sc.Synapse()
+    syn = synapseclient.Synapse()
     syn.login(authToken=auth_token)
     f = syn.get(synapse_id, downloadFile=False)
     bucket = f["_file_handle"]["bucketName"]
