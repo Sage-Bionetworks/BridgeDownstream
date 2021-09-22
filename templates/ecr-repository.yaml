@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create an ECR repository for use with a lambda function
+
+Parameters:
+  RepositoryName:
+    Type: String
+
+Resources:
+
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      EncryptionConfiguration:
+        EncryptionType: AES256
+      ImageScanningConfiguration:
+         ScanOnPush: true
+      ImageTagMutability: MUTABLE
+      RepositoryName: !Ref RepositoryName
