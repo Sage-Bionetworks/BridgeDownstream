@@ -12,14 +12,15 @@
 # Before writing our tables to parquet datasets, we will add the recordId
 # measure (taskIdentifier), and year, month, day to each record in each table.
 
-import sys
-import os
 import boto3
-from pyspark import SparkContext
+import os
+import sys
+
 from awsglue import DynamicFrame
 from awsglue.context import GlueContext
-from awsglue.utils import getResolvedOptions
 from awsglue.job import Job
+from awsglue.utils import getResolvedOptions
+from pyspark import SparkContext
 
 glue_client = boto3.client("glue")
 args = getResolvedOptions(
