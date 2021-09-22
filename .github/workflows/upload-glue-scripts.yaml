@@ -3,7 +3,7 @@ name: upload-python
 on:
   push:
     paths:
-      - '**.py'
+      - 'src/glue/jobs/*.py'
 
 jobs:
 
