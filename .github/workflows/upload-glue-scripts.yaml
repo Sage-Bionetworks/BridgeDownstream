@@ -30,26 +30,28 @@ jobs:
           role-to-assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
           role-duration-seconds: 1200
 
-      - name: Set Ref
+      - name: Set bucket directory path
         shell: python
         run: |
           import os
           import sys
 
           ref = os.environ['GITHUB_REF']
+          print(f'GITHUB_REF: {ref}')
           branch_prefix = 'refs/heads/'
           tag_prefix = 'refs/tags/'
           if(ref.startswith(branch_prefix)):
-            dir_path = ref[len(branch_prefix)] + '/'
+            dir_path = ref[len(branch_prefix):] + '/'
           elif(ref.startswith(tag_prefix)):
-            dir_path = ref[len(tag_prefix)] + '/'
+            dir_path = ref[len(tag_prefix):] + '/'
           else:
             sys.exit(1)
 
-          os.environ['BUCKET_DIR_PATH'] = dir_path
+          with open(os.environ['GITHUB_ENV'], 'w') as env_file:
+            env_file.write(f'BUCKET_DIR_PATH={dir_path}')
 
       - name: Copy python scripts to S3 bucket
         env:
           S3_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
         run: |
-          aws s3 sync src/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH
+          aws s3 sync src/glue/jobs/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH
