@@ -1,16 +1,16 @@
-name: upload-python
+name: upload-files
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - '*'
+    # branches:
+    #   - main
+    # tags:
+    #   - '*'
 
 jobs:
 
   upload:
-    name: Upload python scripts to bucket
+    name: Upload python scripts and CFN templates to bucket
     runs-on: ubuntu-latest
     environment: develop
     steps:
@@ -56,9 +56,12 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'w') as env_file:
             env_file.write(f'BUCKET_DIR_PATH={dir_path}')
 
-      - name: Copy python scripts to S3 bucket
+      - name: Copy files to S3 bucket
         env:
           S3_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
         run: |
-          GLUE_JOB_PATH=glue/jobs/
-          aws s3 sync src/$GLUE_JOB_PATH s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH/$GLUE_JOB_PATH
+          # copy glue python scripts to bucket
+          aws s3 sync src/glue/jobs/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH/glue/jobs/
+
+          # copy CFN templates to bucket
+          aws s3 sync templates/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH/templates/
