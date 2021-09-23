@@ -2,8 +2,10 @@ name: upload-python
 
 on:
   push:
-    paths:
-      - 'src/glue/jobs/*.py'
+    branches:
+      - main
+    tags:
+      - '*'
 
 jobs:
 
@@ -40,13 +42,14 @@ jobs:
           import sys
 
           ref = os.environ['GITHUB_REF']
+
           print(f'GITHUB_REF: {ref}')
           branch_prefix = 'refs/heads/'
           tag_prefix = 'refs/tags/'
           if(ref.startswith(branch_prefix)):
-            dir_path = ref[len(branch_prefix):] + '/'
+            dir_path = ref[len(branch_prefix):]
           elif(ref.startswith(tag_prefix)):
-            dir_path = ref[len(tag_prefix):] + '/'
+            dir_path = ref[len(tag_prefix):]
           else:
             sys.exit(1)
 
@@ -57,4 +60,5 @@ jobs:
         env:
           S3_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
         run: |
-          aws s3 sync src/glue/jobs/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH
+          GLUE_JOB_PATH=glue/jobs/
+          aws s3 sync src/$GLUE_JOB_PATH s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH/$GLUE_JOB_PATH
