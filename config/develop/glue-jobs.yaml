@@ -2,7 +2,6 @@ template_path: glue-jobs.yaml
 stack_name: glue-jobs
 parameters:
   SourceBucketName: {{ stack_group_config.artifact_bucket_name }}
-  BranchOrTagName: ETL-66/glue-jobs
   GlueDatabaseName: !stack_output_external glue-database::DatabaseName
   JobRole: !stack_output_external glue-job-role::RoleArn
   S3OutputBucketName: !stack_output_external bridge-downstream-dev-output-bucket::BucketName
