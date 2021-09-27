@@ -47,7 +47,7 @@ Parameters:
     Description: >-
       The number of workers of a defined workerType that are allocated
       when a job runs (integer).
-    Default: 2
+    Default: 1
 
   MaxConcurrentRuns:
     Type: Number
