@@ -38,10 +38,8 @@ Resources:
         GlueTableName: taskresult
         JobName: TaskResultParquet
         JobRole: !Ref JobRole
-        NumberOfWorkers: 10
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
-        TimeoutInMinutes: 2880
 
   TaskDataParquetJob:
     Type: AWS::CloudFormation::Stack
