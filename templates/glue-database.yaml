@@ -13,3 +13,10 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseInput:
         Name: !Ref DatabaseName
+
+Outputs:
+
+  DatabaseName:
+    Value: !Ref GlueDatabase
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-DatabaseName'
