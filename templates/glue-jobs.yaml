@@ -18,10 +18,6 @@ Parameters:
     Type: String
     Description: The name or ARN of the IAM role that will run this job.
 
-  GlueDatabaseName:
-    Type: String
-    Description: Name of the Glue database
-
   S3OutputBucketName:
     Type: String
     Description: The S3 output bucket where temporary files will be written.
@@ -34,7 +30,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export taskresult data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: taskresult
         JobName: TaskResultParquet
         JobRole: !Ref JobRole
@@ -47,7 +42,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export taskdata data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: taskdata
         JobName: TaskDataParquet
         JobRole: !Ref JobRole
@@ -60,7 +54,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export answers data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: answers
         JobName: AnswersParquet
         JobRole: !Ref JobRole
@@ -73,7 +66,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export info data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: info
         JobName: InfoParquet
         JobRole: !Ref JobRole
@@ -86,7 +78,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export metadata data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: metadata
         JobName: MetadataParquet
         JobRole: !Ref JobRole
@@ -99,7 +90,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export microphone levels data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: microphone_levels
         JobName: MicrophoneLevelsParquet
         JobRole: !Ref JobRole
@@ -112,7 +102,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export motion data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: motion
         JobName: MotionParquet
         JobRole: !Ref JobRole
@@ -125,7 +114,6 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export weather data in parquet format
-        GlueDatabaseName: !Ref GlueDatabaseName
         GlueTableName: weather
         JobName: WeatherParquet
         JobRole: !Ref JobRole

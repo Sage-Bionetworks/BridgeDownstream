@@ -92,11 +92,6 @@ Parameters:
     Default: 'true'
     AllowedValues: ['true', 'false']
 
-  GlueDatabaseName:
-    Type: String
-    Description: Name of the Glue database
-    Default: ''
-
   S3OutputBucketName:
     Type: String
     Description: The name of the S3 bucket where temporary files are written.
@@ -116,7 +111,6 @@ Resources:
         ScriptLocation: !Ref S3ScriptLocation
       DefaultArguments:
         --TempDir: !Sub s3://${S3OutputBucketName}/tmp
-        --database: !Ref GlueDatabaseName
         --enable-continuous-cloudwatch-log: !Ref ContinuousLog
         --job-bookmark-option: !Ref BookmarkOption
         --job-language: !Ref JobLanguage
