@@ -1,0 +1,10 @@
+template_path: glue-workflows.yaml
+stack_name: glue-workflows
+parameters:
+  SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
+  SourceKey: ''
+  JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
+  ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
+  GlueDatabaseName: !stack_output_external glue-database::DatabaseName
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}
