@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A set of Glue triggers
+
+Parameters:
+
+  S3ToJsonWorkflowName:
+    Type: String
+
+  S3ToJsonS3JobName:
+    Type: String
+
+  JsonToParquetWorkflowName:
+    Type: String
+
+  AnswersParquetJobName:
+    Type: String
+
+  InfoParquetJobName:
+    Type: String
+
+  MetadataParquetJobName:
+    Type: String
+
+  MicrophoneLevelsParquetJobName:
+    Type: String
+
+  MotionParquetJobName:
+    Type: String
+
+  TaskDataParquetJobName:
+    Type: String
+
+  TaskResultParquetJobName:
+    Type: String
+
+  WeatherParquetJobName:
+    Type: String
+
+Resources:
+
+  NewDataTriger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        - JobName: !Ref S3ToJsonS3JobName
+      Description: >-
+        When new data is received this trigger starts the workflow
+        that unpacks the archive and stores JSON files separately
+      Name: NewDataReceived
+      Type: ON_DEMAND
+      WorkflowName: !Ref S3ToJsonWorkflowName
+
+  JsonToParquetTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        - JobName: !Ref AnswersParquetJobName
+        - JobName: !Ref InfoParquetJobName
+        - JobName: !Ref MetadataParquetJobName
+        - JobName: !Ref MicrophoneLevelsParquetJobName
+        - JobName: !Ref MotionParquetJobName
+        - JobName: !Ref TaskDataParquetJobName
+        - JobName: !Ref TaskResultParquetJobName
+        - JobName: !Ref WeatherParquetJobName
+      Description: Converts JSON to Parquet
+      Name: StartJsonToParquet
+      Type: ON_DEMAND
+      WorkflowName: !Ref JsonToParquetWorkflowName
