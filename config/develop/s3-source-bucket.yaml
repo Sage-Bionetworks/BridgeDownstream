@@ -1,7 +1,7 @@
 template_path: s3-bucket.yaml
-stack_name: bridge-downstream-dev-input-bucket
+stack_name: bridge-downstream-dev-source-bucket
 parameters:
-  BucketName: bridge-downstream-dev-input
+  BucketName: bridge-downstream-dev-source
   ReadOnlyAccessArns:
     - !stack_output_external glue-job-role::RoleArn
 stack_tags:
