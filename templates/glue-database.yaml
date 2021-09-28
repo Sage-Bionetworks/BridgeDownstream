@@ -15,6 +15,13 @@ Parameters:
     Description: Prefix of the object keys
     Default: raw_json
 
+  JsonBucketName:
+    Type: String
+
+  JsonPrefix:
+    Type: String
+    Default: raw_json
+
 Resources:
 
   GlueDatabase:
