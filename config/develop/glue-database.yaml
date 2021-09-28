@@ -2,5 +2,6 @@ template_path: glue-database.yaml
 stack_name: glue-database
 parameters:
   DatabaseName: bridge-downstream-etl
+  JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
