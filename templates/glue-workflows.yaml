@@ -51,3 +51,15 @@ Resources:
         parquet_prefix: !Ref ParquetPrefix
       Description: Workflow for converting json to parquet
       Name: JsonToParquetWorkflow
+
+Outputs:
+
+  S3ToJsonWorkflowName:
+    Value: !Ref S3ToJsonWorkflow
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-S3ToJsonWorkflowName'
+
+  JsonToParquetWorkflowName:
+    Value: !Ref JsonToParquetWorkflow
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-JsonToParquetWorkflowName'

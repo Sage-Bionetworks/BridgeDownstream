@@ -48,7 +48,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  AnswerParquetJob:
+  AnswersParquetJob:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -126,7 +126,54 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Convert data to JSONS3 data
-        JobName: S3_To_JSON_S3
+        JobName: S3ToJsonS3
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
+
+Outputs:
+
+  AnswersParquetJobName:
+    Value: !Ref AnswersParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-AnswersParquetJobName'
+
+  InfoParquetJobName:
+    Value: !Ref InfoParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-InfoParquetJobName'
+
+  MetadataParquetJobName:
+    Value: !Ref MetadataParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-MetadataParquetJobName'
+
+  MicrophoneLevelsParquetJobName:
+    Value: !Ref MicrophoneLevelsParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-MicrophoneLevelsParquetJobName'
+
+  MotionParquetJobName:
+    Value: !Ref MotionParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-MotionParquetJobName'
+
+  TaskDataParquetJobName:
+    Value: !Ref TaskDataParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-TaskDataParquetJobName'
+
+  TaskResultParquetJobName:
+    Value: !Ref TaskResultParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-TaskResultParquetJobName'
+
+  WeatherParquetJobName:
+    Value: !Ref WeatherParquetJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-WeatherParquetJobName'
+
+  S3ToJsonS3JobName:
+    Value: !Ref S3ToJsonS3Job
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-S3ToJsonS3JobName'
