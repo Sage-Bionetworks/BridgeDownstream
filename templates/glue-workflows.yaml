@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: A set of Glue workflows for a study
+
+Parameters:
+
+  SourceBucketName:
+    Type: String
+
+  SourceKey:
+    Type: String
+
+  JsonBucketName:
+    Type: String
+
+  JsonPrefix:
+    Type: String
+    Default: raw_json
+
+  ParquetBucketName:
+    Type: String
+
+  ParquetPrefix:
+    Type: String
+    Default: parquet
+
+  GlueDatabaseName:
+    Type: String
+
+Resources:
+
+  S3ToJsonWorkflow:
+    Type: AWS::Glue::Workflow
+    Properties:
+      DefaultRunProperties:
+        source_bucket: !Ref SourceBucketName
+        source_key: !Ref SourceKey
+        json_bucket: !Ref JsonBucketName
+        json_prefix: !Ref JsonPrefix
+      Description: >-
+        Workflow that breaks apart an archive and stores individual files in S3
+      Name: S3ToJsonWorkflow
+
+  JsonToParquetWorkflow:
+    Type: AWS::Glue::Workflow
+    Properties:
+      DefaultRunProperties:
+        database: !Ref GlueDatabaseName
+        json_bucket: !Ref JsonBucketName
+        json_prefix: !Ref JsonPrefix
+        parquet_bucket: !Ref ParquetBucketName
+        parquet_prefix: !Ref ParquetPrefix
+      Description: Workflow for converting json to parquet
+      Name: JsonToParquetWorkflow
