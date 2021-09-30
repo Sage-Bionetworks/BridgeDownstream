@@ -1,5 +1,10 @@
 template_path: glue-workflows.yaml
 stack_name: glue-workflows
+dependencies:
+  - develop/s3-source-bucket.yaml
+  - develop/s3-intermediate-bucket.yaml
+  - develop/s3-parquet-bucket.yaml
+  - develop/glue-database.yaml
 parameters:
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
   SourceKey: ''
