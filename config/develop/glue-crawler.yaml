@@ -1,0 +1,8 @@
+template_path: glue-crawler.yaml
+stack_name: glue-crawler
+parameters:
+  ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
+  CrawlerName: array-of-records
+  DatabaseName: !stack_output_external glue-database::DatabaseName
+  RoleArn: !stack_output_external glue-job-role::RoleArn
+  JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName

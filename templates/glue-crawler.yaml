@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Glue Crawler for mobile toolbox'
+
+Parameters:
+
+  ClassifierName:
+    Type: String
+    Description: Name of the Glue classifier
+
+  CrawlerName:
+    Type: String
+    Description: Name of this Glue crawler
+
+  DatabaseName:
+    Type: String
+    Description: Name of the Glue database
+
+  RoleArn:
+    Type: String
+    Description: The ARN of an IAM role that's used to access S3
+
+  JsonBucketName:
+    Type: String
+    Description: Name of the bucket to be crawled
+
+  JsonPrefix:
+    Type: String
+    Description: Prefx of the S3 keys to be crawled
+    Default: raw_json
+
+Resources:
+
+  ArrayOfRecordsCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Classifiers:
+        - !Ref ClassifierName
+      Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
+      DatabaseName: !Ref DatabaseName
+      Name: !Ref CrawlerName
+      RecrawlPolicy:
+        RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
+      Role: !Ref RoleArn
+      SchemaChangePolicy:
+        DeleteBehavior: LOG
+        UpdateBehavior: LOG
+      Targets:
+        S3Targets:
+        - Exclusions: []
+          Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=motions/
+        - Exclusions: []
+          Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=microphone_levels/
