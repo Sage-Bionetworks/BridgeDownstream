@@ -47,6 +47,6 @@ Resources:
       Targets:
         S3Targets:
         - Exclusions: []
-          Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=motions/
+          Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=motion/
         - Exclusions: []
           Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=microphone_levels/
