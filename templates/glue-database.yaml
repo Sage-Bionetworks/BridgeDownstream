@@ -1,9 +1,19 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Groups metadata tables for Glue.
+Description: Glue database and tables
 
 Parameters:
   DatabaseName:
     Type: String
+    Description: Name of the Glue database
+
+  JsonBucketName:
+    Type: String
+    Description: Name of the S3 bucket storing the datasets
+
+  JsonPrefix:
+    Type: String
+    Description: Prefix of the object keys
+    Default: raw_json
 
 Resources:
 
@@ -13,6 +23,603 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseInput:
         Name: !Ref DatabaseName
+
+  AnswersTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: answers
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: distractions
+              Type: boolean
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+            - Name: dimensional change card sort_abandonassessment
+              Type: boolean
+            - Name: flanker inhibitory control_abandonassessment
+              Type: boolean
+            - Name: number match_abandonassessment
+              Type: boolean
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=answers/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: Dimensional Change Card Sort_abandonAssessment,Flanker Inhibitory Control_abandonAssessment,Number Match_abandonAssessment,day,distractions,month,recordId,taskIdentifier,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  InfoTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: info
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: format
+              Type: string
+            - Name: appversion
+              Type: string
+            - Name: appname
+              Type: string
+            - Name: datafilename
+              Type: string
+            - Name: schemarevision
+              Type: int
+            - Name: phoneinfo
+              Type: string
+            - Name: files
+              Type: array<struct<contentType:string,filename:string,timestamp:string>>
+            - Name: item
+              Type: string
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=info/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: appName,appVersion,dataFilename,day,files,format,item,month,phoneInfo,recordId,schemaRevision,taskIdentifier,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          SortColumns: []
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  MetadataTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: metadata
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: scheduledactivityguid
+              Type: string
+            - Name: appname
+              Type: string
+            - Name: deviceinfo
+              Type: string
+            - Name: scheduledon
+              Type: string
+            - Name: rsdframeworkversion
+              Type: string
+            - Name: appversion
+              Type: string
+            - Name: taskidentifier
+              Type: string
+            - Name: enddate
+              Type: string
+            - Name: datagroups
+              Type: string
+            - Name: activitylabel
+              Type: string
+            - Name: files
+              Type: array<struct<filename:string,timestamp:string,contentType:string,identifier:string,stepPath:string>>
+            - Name: scheduleidentifier
+              Type: string
+            - Name: taskrunuuid
+              Type: string
+            - Name: devicetypeidentifier
+              Type: string
+            - Name: startdate
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+            - Name: substudymemberships
+              Type: string
+            - Name: healthcode
+              Type: string
+            - Name: createdon
+              Type: string
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=metadata/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: activityLabel,appName,appVersion,createdon,dataGroups,day,deviceInfo,deviceTypeIdentifier,endDate,files,healthcode,month,recordId,rsdFrameworkVersion,scheduleIdentifier,scheduledActivityGuid,scheduledOn,startDate,taskIdentifier,taskRunUUID,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  MicrophoneLevelsTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: microphone_levels
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: uptime
+              Type: double
+            - Name: unit
+              Type: string
+            - Name: peak
+              Type: double
+            - Name: average
+              Type: double
+            - Name: steppath
+              Type: string
+            - Name: timeinterval
+              Type: int
+            - Name: timestamp
+              Type: double
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=microphone_levels/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: average,day,month,peak,recordId,stepPath,taskIdentifier,timeInterval,timestamp,unit,uptime,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  MotionTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: motion
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: uptime
+              Type: double
+            - Name: timestamp
+              Type: double
+            - Name: timestampdate
+              Type: string
+            - Name: steppath
+              Type: string
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+            - Name: x
+              Type: double
+            - Name: y
+              Type: double
+            - Name: sensortype
+              Type: string
+            - Name: z
+              Type: double
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=motion/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: day,month,recordId,sensorType,stepPath,taskIdentifier,timestamp,timestampDate,uptime,x,y,year,z
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  TaskDataTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: taskdata
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: taskstatus
+              Type: string
+            - Name: accuracy
+              Type: double
+            - Name: testversion
+              Type: string
+            - Name: nanticipationpractice
+              Type: int
+            - Name: stephistory
+              Type: array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:string,score:int,failRuleSection:string,responseTime:bigint,anticipationError:int,stepGroup:string,se:double,theta:double,practice:boolean,timeRemaining:int>>
+            - Name: locale
+              Type: string
+            - Name: enddate
+              Type: string
+            - Name: nanticipationlive
+              Type: int
+            - Name: startdate
+              Type: string
+            - Name: taskname
+              Type: string
+            - Name: userinteractions
+              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>
+            - Name: rawscore
+              Type: int
+            - Name: steps
+              Type: array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:string,failRuleSection:string,score:int,responseTime:bigint,anticipationError:int,stepGroup:string,theta:double,se:double,practice:boolean,timeRemaining:int>>
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+            - Name: totalerrors
+              Type: int
+            - Name: ratescore
+              Type: double
+            - Name: consideredsteps
+              Type: array<struct<randomNumber:double,identifier:string,exposure:double,administered:boolean>>
+            - Name: starttheta
+              Type: int
+            - Name: startse
+              Type: int
+            - Name: itemcount
+              Type: int
+            - Name: administeredsteps
+              Type: array<struct<score:int,endDate:string,startDate:string,theta:double,se:double,identifier:string,practice:boolean,response:string,type:string,wasInterrupted:boolean>>
+            - Name: finalse
+              Type: double
+            - Name: finaltheta
+              Type: double
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskdata/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: accuracy,administeredSteps,consideredSteps,day,endDate,finalSE,finalTheta,itemCount,locale,month,nAnticipationLive,nAnticipationPractice,rateScore,rawScore,recordId,startDate,startSE,startTheta,stepHistory,steps,taskIdentifier,taskName,taskStatus,testVersion,totalErrors,userInteractions,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  TaskResultTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: taskresult
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: asyncresults
+              Type: array<struct<weather:struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string,rain:string,groundLevelPressure:int>,airQuality:struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>,startDate:string,type:string,identifier:string,endDate:string,contentType:string,startUptime:double,relativePath:string,errorDescription:string,errorDomain:string,errorCode:int>>
+            - Name: schemainfo
+              Type: struct<revision:int,identifier:string>
+            - Name: enddate
+              Type: string
+            - Name: startdate
+              Type: string
+            - Name: stephistory
+              Type: array<struct<asyncResults:array<struct<locale:string,testVersion:string,endDate:string,startDate:string,steps:array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int>>,taskName:string,userInteractions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int>>,taskStatus:string,answerType:struct<type:string>,value:boolean,type:string,identifier:string>>,schemaInfo:struct<revision:int,identifier:string>,endDate:string,startDate:string,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int,skipToIdentifier:string,inputResults:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean>>>>,taskRunUUID:string,identifier:string,type:string,nodePath:array<string>,assessmentIdentifier:string,schemaIdentifier:string,answerType:struct<type:string>,value:boolean,questionText:string>>
+            - Name: taskrunuuid
+              Type: string
+            - Name: identifier
+              Type: string
+            - Name: type
+              Type: string
+            - Name: nodepath
+              Type: array<string>
+            - Name: assessmentidentifier
+              Type: string
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskresult/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: assessmentIdentifier,asyncResults,day,endDate,identifier,month,nodePath,recordId,schemaInfo,startDate,stepHistory,taskIdentifier,taskRunUUID,type,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+
+  WeatherTable:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: weather
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys:
+          - Name: taskidentifier
+            Type: string
+          - Name: year
+            Type: string
+          - Name: month
+            Type: string
+          - Name: day
+            Type: string
+          - Name: recordid
+            Type: string
+        Retention: 0
+        StorageDescriptor:
+          Columns:
+            - Name: weather
+              Type: struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string,rain:string,groundLevelPressure:int>
+            - Name: airquality
+              Type: struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>
+            - Name: startdate
+              Type: string
+            - Name: type
+              Type: string
+            - Name: identifier
+              Type: string
+            - Name: enddate
+              Type: string
+            - Name: taskidentifier
+              Type: string
+            - Name: year
+              Type: int
+            - Name: month
+              Type: int
+            - Name: day
+              Type: int
+            - Name: recordid
+              Type: string
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=weather/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            typeOfData: file
+          SerdeInfo:
+            Parameters:
+              paths: airQuality,day,endDate,identifier,month,recordId,startDate,taskIdentifier,type,weather,year
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
 
 Outputs:
 
