@@ -15,3 +15,10 @@ Resources:
       JsonClassifier:
         Name: !Ref ClassifierName
         JsonPath: $[*]
+
+Outputs:
+
+  ClassifierName:
+    Value: !Ref Classifier
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-ClassifierName'
