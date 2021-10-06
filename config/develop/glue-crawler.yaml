@@ -1,5 +1,10 @@
 template_path: glue-crawler.yaml
 stack_name: glue-crawler
+dependencies:
+  - develop/glue-classifier-array-of-records.yaml
+  - develop/glue-database.yaml
+  - develop/glue-job-role.yaml
+  - develop/s3-intermediate-bucket.yaml
 parameters:
   ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
   CrawlerName: array-of-records
