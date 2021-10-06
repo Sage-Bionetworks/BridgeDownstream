@@ -39,7 +39,7 @@ Resources:
       DatabaseName: !Ref DatabaseName
       Name: !Ref CrawlerName
       RecrawlPolicy:
-        RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
+        RecrawlBehavior: CRAWL_EVERYTHING
       Role: !Ref RoleArn
       SchemaChangePolicy:
         DeleteBehavior: LOG
