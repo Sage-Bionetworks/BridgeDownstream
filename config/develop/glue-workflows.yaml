@@ -7,7 +7,7 @@ dependencies:
   - develop/glue-database.yaml
 parameters:
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
-  SourceKey: ''
+  SourceKey: 'mtb-sample-data'
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
   GlueDatabaseName: !stack_output_external glue-database::DatabaseName
