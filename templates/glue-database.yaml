@@ -63,6 +63,10 @@ Resources:
               Type: int
             - Name: recordid
               Type: string
+            - Name: dimensional change card sort_abandonassessment
+              Type: boolean
+            - Name: flanker inhibitory control_abandonassessment
+              Type: boolean
             - Name: number match_abandonassessment
               Type: boolean
           Compressed: false
@@ -77,7 +81,7 @@ Resources:
             typeOfData: file
           SerdeInfo:
             Parameters:
-              paths: Number Match_abandonAssessment,day,distractions,month,recordId,taskIdentifier,year
+              paths: Dimensional Change Card Sort_abandonAssessment,Flanker Inhibitory Control_abandonAssessment,Number Match_abandonAssessment,day,distractions,month,recordId,taskIdentifier,year
             SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
@@ -180,27 +184,35 @@ Resources:
         Retention: 0
         StorageDescriptor:
           Columns:
-            - Name: datagroups
+            - Name: scheduledactivityguid
+              Type: string
+            - Name: appname
               Type: string
             - Name: deviceinfo
               Type: string
+            - Name: scheduledon
+              Type: string
             - Name: rsdframeworkversion
+              Type: string
+            - Name: appversion
               Type: string
             - Name: taskidentifier
               Type: string
+            - Name: enddate
+              Type: string
+            - Name: datagroups
+              Type: string
+            - Name: activitylabel
+              Type: string
             - Name: files
-              Type: array<struct<contentType:string,filename:string,timestamp:string,identifier:string,stepPath:string>>
-            - Name: startdate
+              Type: array<struct<filename:string,timestamp:string,contentType:string,identifier:string,stepPath:string>>
+            - Name: scheduleidentifier
               Type: string
             - Name: taskrunuuid
               Type: string
             - Name: devicetypeidentifier
               Type: string
-            - Name: appname
-              Type: string
-            - Name: appversion
-              Type: string
-            - Name: enddate
+            - Name: startdate
               Type: string
             - Name: year
               Type: int
@@ -210,17 +222,11 @@ Resources:
               Type: int
             - Name: recordid
               Type: string
+            - Name: substudymemberships
+              Type: string
             - Name: healthcode
               Type: string
             - Name: createdon
-              Type: string
-            - Name: scheduleidentifier
-              Type: string
-            - Name: activitylabel
-              Type: string
-            - Name: scheduledactivityguid
-              Type: string
-            - Name: scheduledon
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
@@ -404,24 +410,32 @@ Resources:
         Retention: 0
         StorageDescriptor:
           Columns:
-            - Name: locale
+            - Name: taskstatus
               Type: string
+            - Name: accuracy
+              Type: double
             - Name: testversion
+              Type: string
+            - Name: nanticipationpractice
+              Type: int
+            - Name: stephistory
+              Type: array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:string,score:int,failRuleSection:string,responseTime:bigint,anticipationError:int,stepGroup:string,se:double,theta:double,practice:boolean,timeRemaining:int>>
+            - Name: locale
               Type: string
             - Name: enddate
               Type: string
+            - Name: nanticipationlive
+              Type: int
             - Name: startdate
               Type: string
-            - Name: steps
-              Type: array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int>>
             - Name: taskname
               Type: string
             - Name: userinteractions
-              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>
-            - Name: stephistory
-              Type: array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int>>
-            - Name: taskstatus
-              Type: string
+              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>
+            - Name: rawscore
+              Type: int
+            - Name: steps
+              Type: array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:string,failRuleSection:string,score:int,responseTime:bigint,anticipationError:int,stepGroup:string,theta:double,se:double,practice:boolean,timeRemaining:int>>
             - Name: taskidentifier
               Type: string
             - Name: year
@@ -432,6 +446,24 @@ Resources:
               Type: int
             - Name: recordid
               Type: string
+            - Name: totalerrors
+              Type: int
+            - Name: ratescore
+              Type: double
+            - Name: consideredsteps
+              Type: array<struct<randomNumber:double,identifier:string,exposure:double,administered:boolean>>
+            - Name: starttheta
+              Type: int
+            - Name: startse
+              Type: int
+            - Name: itemcount
+              Type: int
+            - Name: administeredsteps
+              Type: array<struct<score:int,endDate:string,startDate:string,theta:double,se:double,identifier:string,practice:boolean,response:string,type:string,wasInterrupted:boolean>>
+            - Name: finalse
+              Type: double
+            - Name: finaltheta
+              Type: double
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
           Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskdata/
@@ -444,7 +476,7 @@ Resources:
             typeOfData: file
           SerdeInfo:
             Parameters:
-              paths: day,endDate,locale,month,recordId,startDate,stepHistory,steps,taskIdentifier,taskName,taskStatus,testVersion,userInteractions,year
+              paths: accuracy,administeredSteps,consideredSteps,day,endDate,finalSE,finalTheta,itemCount,locale,month,nAnticipationLive,nAnticipationPractice,rateScore,rawScore,recordId,startDate,startSE,startTheta,stepHistory,steps,taskIdentifier,taskName,taskStatus,testVersion,totalErrors,userInteractions,year
             SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
