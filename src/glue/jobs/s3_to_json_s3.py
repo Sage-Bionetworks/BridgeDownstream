@@ -9,6 +9,12 @@ import zipfile
 import boto3
 from datetime import datetime
 from awsglue.utils import getResolvedOptions
+from awsglue.context import GlueContext
+from pyspark.context import SparkContext
+
+sc = SparkContext()
+glueContext = GlueContext(sc)
+log = glueContext.get_logger()
 
 glue_client = boto3.client("glue")
 s3_client = boto3.client("s3")
@@ -78,7 +84,7 @@ def process_record(s3_obj, s3_obj_metadata):
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
-
+log.info(f'Retrieving S3 object for Bucket {workflow_run_properties["source_bucket"]} and Key {workflow_run_properties["source_key"]}')
 s3_obj = s3_client.get_object(
         Bucket = workflow_run_properties["source_bucket"],
         Key = workflow_run_properties["source_key"])

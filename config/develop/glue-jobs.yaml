@@ -7,5 +7,6 @@ parameters:
   SourceBucketName: {{ stack_group_config.artifact_bucket_name }}
   JobRole: !stack_output_external glue-job-role::RoleArn
   S3OutputBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
+  BranchOrTagName: pipeline-fixes
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
