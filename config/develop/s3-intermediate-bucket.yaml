@@ -4,7 +4,7 @@ dependencies:
   - develop/glue-job-role.yaml
 parameters:
   BucketName: bridge-downstream-dev-intermediate-data
-  ReadOnlyAccessArns:
+  ReadWriteAccessArns:
     - !stack_output_external glue-job-role::RoleArn
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
