@@ -52,37 +52,41 @@ Resources:
         Version: '2012-10-17'
         Statement:
           - Sid: AccountRead
-            Effect: 'Allow'
+            Effect: Allow
             Principal:
               AWS: !Sub '${AWS::AccountId}'
-            Action: 's3:GetObject'
-            Resource: !Sub 'arn:aws:s3:::${Bucket}/*'
+            Action:
+              - 's3:Get*'
+              - 's3:List*'
+            Resource:
+              - !Sub 'arn:aws:s3:::${Bucket}'
+              - !Sub 'arn:aws:s3:::${Bucket}/*'
           - !If
             - HasReadWriteAccessArns
-            - Sid: WriteAccess
+            - Sid: ReadWriteAccess
               Effect: Allow
               Principal:
                 AWS: !Ref ReadWriteAccessArns
               Action:
-                - 's3:PutObject*'
-              Condition:
-                StringEquals:
-                  s3:x-amz-acl: bucket-owner-full-control
+                - 's3:*MultipartUpload*'
+                - 's3:DeleteObject*'
+                - 's3:Get*'
+                - 's3:List*'
+                - 's3:PutObject'
+                - 's3:PutObjectTagging'
               Resource:
+                - !Sub 'arn:aws:s3:::${Bucket}'
                 - !Sub 'arn:aws:s3:::${Bucket}/*'
             - !Ref AWS::NoValue
           - !If
             - HasReadOnlyAccessArns
-            - Sid: ReadAccess
+            - Sid: ReadOnlyAccess
               Effect: Allow
               Principal:
                 AWS: !Ref ReadOnlyAccessArns
               Action:
-                - 's3:GetObject*'
-                - 's3:DeleteObject*'
-                - 's3:*MultipartUpload*'
-                - 's3:ListBucket*'
-                - 's3:GetBucketLocation'
+                - 's3:Get*'
+                - 's3:List*'
               Resource:
                 - !Sub 'arn:aws:s3:::${Bucket}'
                 - !Sub 'arn:aws:s3:::${Bucket}/*'
