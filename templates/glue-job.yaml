@@ -6,10 +6,6 @@ Description: >-
 
 Parameters:
 
-  JobName:
-    Type: String
-    Description: A short name to assign to this job definition.
-
   JobDescription:
     Type: String
     Description: A fuller description of what the job does.
@@ -120,7 +116,7 @@ Resources:
         MaxConcurrentRuns: !Ref MaxConcurrentRuns
       GlueVersion: !Ref GlueVersion
       MaxRetries: !Ref MaxRetries
-      Name: !Ref JobName
+      Name: !Sub '${AWS::StackName}-Job'
       NumberOfWorkers: !Ref NumberOfWorkers
       Role: !Ref JobRole
       Timeout: !Ref TimeoutInMinutes
