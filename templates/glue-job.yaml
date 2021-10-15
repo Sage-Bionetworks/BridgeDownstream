@@ -121,3 +121,10 @@ Resources:
       Role: !Ref JobRole
       Timeout: !Ref TimeoutInMinutes
       WorkerType: !Ref WorkerType
+
+Outputs:
+
+  JobName:
+    Value: !Ref Job
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-JobName'

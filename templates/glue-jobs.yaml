@@ -24,7 +24,7 @@ Parameters:
 
 Resources:
 
-  TaskResultParquetJob:
+  TaskResultParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -35,7 +35,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  TaskDataParquetJob:
+  TaskDataParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -46,7 +46,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  AnswersParquetJob:
+  AnswersParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -57,7 +57,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  InfoParquetJob:
+  InfoParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -68,7 +68,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  MetadataParquetJob:
+  MetadataParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -79,7 +79,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  MicrophoneLevelsParquetJob:
+  MicrophoneLevelsParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -90,7 +90,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  MotionParquetJob:
+  MotionParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -101,7 +101,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  WeatherParquetJob:
+  WeatherParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -112,7 +112,7 @@ Resources:
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
-  S3ToJsonS3Job:
+  S3ToJsonS3JobStack:
     Type:  AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
@@ -125,46 +125,46 @@ Resources:
 Outputs:
 
   AnswersParquetJobName:
-    Value: !Ref AnswersParquetJob
+    Value: !Sub ${AnswersParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-AnswersParquetJobName'
 
   InfoParquetJobName:
-    Value: !Ref InfoParquetJob
+    Value: !Sub ${InfoParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-InfoParquetJobName'
 
   MetadataParquetJobName:
-    Value: !Ref MetadataParquetJob
+    Value: !Sub ${MetadataParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-MetadataParquetJobName'
 
   MicrophoneLevelsParquetJobName:
-    Value: !Ref MicrophoneLevelsParquetJob
+    Value: !Sub ${MicrophoneLevelsParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-MicrophoneLevelsParquetJobName'
 
   MotionParquetJobName:
-    Value: !Ref MotionParquetJob
+    Value: !Sub ${MotionParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-MotionParquetJobName'
 
   TaskDataParquetJobName:
-    Value: !Ref TaskDataParquetJob
+    Value: !Sub ${TaskDataParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-TaskDataParquetJobName'
 
   TaskResultParquetJobName:
-    Value: !Ref TaskResultParquetJob
+    Value: !Sub ${TaskResultParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-TaskResultParquetJobName'
 
   WeatherParquetJobName:
-    Value: !Ref WeatherParquetJob
+    Value: !Sub ${WeatherParquetJobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-WeatherParquetJobName'
 
   S3ToJsonS3JobName:
-    Value: !Ref S3ToJsonS3Job
+    Value: !Sub ${S3ToJsonS3JobStack.Outputs.JobName}
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-S3ToJsonS3JobName'
