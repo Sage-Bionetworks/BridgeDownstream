@@ -63,12 +63,6 @@ Resources:
               Type: int
             - Name: recordid
               Type: string
-            - Name: dimensional change card sort_abandonassessment
-              Type: boolean
-            - Name: flanker inhibitory control_abandonassessment
-              Type: boolean
-            - Name: number match_abandonassessment
-              Type: boolean
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
           Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=answers/
@@ -81,7 +75,7 @@ Resources:
             typeOfData: file
           SerdeInfo:
             Parameters:
-              paths: Dimensional Change Card Sort_abandonAssessment,Flanker Inhibitory Control_abandonAssessment,Number Match_abandonAssessment,day,distractions,month,recordId,taskIdentifier,year
+              paths: day,distractions,month,recordId,taskIdentifier,year
             SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
@@ -184,35 +178,27 @@ Resources:
         Retention: 0
         StorageDescriptor:
           Columns:
-            - Name: scheduledactivityguid
-              Type: string
-            - Name: appname
-              Type: string
             - Name: deviceinfo
-              Type: string
-            - Name: scheduledon
-              Type: string
-            - Name: rsdframeworkversion
-              Type: string
-            - Name: appversion
               Type: string
             - Name: taskidentifier
               Type: string
             - Name: enddate
               Type: string
-            - Name: datagroups
-              Type: string
-            - Name: activitylabel
-              Type: string
-            - Name: files
-              Type: array<struct<filename:string,timestamp:string,contentType:string,identifier:string,stepPath:string>>
-            - Name: scheduleidentifier
-              Type: string
-            - Name: taskrunuuid
-              Type: string
             - Name: devicetypeidentifier
               Type: string
             - Name: startdate
+              Type: string
+            - Name: rsdframeworkversion
+              Type: string
+            - Name: datagroups
+              Type: string
+            - Name: files
+              Type: array<struct<filename:string,timestamp:string,contentType:string,identifier:string,stepPath:string>>
+            - Name: appname
+              Type: string
+            - Name: appversion
+              Type: string
+            - Name: taskrunuuid
               Type: string
             - Name: year
               Type: int
@@ -240,7 +226,7 @@ Resources:
             typeOfData: file
           SerdeInfo:
             Parameters:
-              paths: activityLabel,appName,appVersion,createdon,dataGroups,day,deviceInfo,deviceTypeIdentifier,endDate,files,healthcode,month,recordId,rsdFrameworkVersion,scheduleIdentifier,scheduledActivityGuid,scheduledOn,startDate,taskIdentifier,taskRunUUID,year
+              paths: appName,appVersion,createdon,dataGroups,day,deviceInfo,deviceTypeIdentifier,endDate,files,healthcode,month,recordId,rsdFrameworkVersion,startDate,substudymemberships,taskIdentifier,taskRunUUID,year
             SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
@@ -257,6 +243,7 @@ Resources:
           CrawlerSchemaSerializerVersion: '1.0'
           classification: json
           compressionType: none
+          jsonPath: $[*]
           typeOfData: file
         PartitionKeys:
           - Name: taskidentifier
@@ -305,6 +292,7 @@ Resources:
             CrawlerSchemaSerializerVersion: '1.0'
             classification: json
             compressionType: none
+            jsonPath: $[*]
             typeOfData: file
           SerdeInfo:
             Parameters:
@@ -325,6 +313,7 @@ Resources:
           CrawlerSchemaSerializerVersion: '1.0'
           classification: json
           compressionType: none
+          jsonPath: $[*]
           typeOfData: file
         PartitionKeys:
           - Name: taskidentifier
@@ -375,6 +364,7 @@ Resources:
             CrawlerSchemaSerializerVersion: '1.0'
             classification: json
             compressionType: none
+            jsonPath: $[*]
             typeOfData: file
           SerdeInfo:
             Parameters:
@@ -431,11 +421,11 @@ Resources:
             - Name: taskname
               Type: string
             - Name: userinteractions
-              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>
+              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>
             - Name: rawscore
               Type: int
             - Name: steps
-              Type: array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:string,failRuleSection:string,score:int,responseTime:bigint,anticipationError:int,stepGroup:string,theta:double,se:double,practice:boolean,timeRemaining:int>>
+              Type: array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,failRuleSection:string,score:int,responseTime:int,anticipationError:int,stepGroup:string>>
             - Name: taskidentifier
               Type: string
             - Name: year
@@ -449,20 +439,6 @@ Resources:
             - Name: totalerrors
               Type: int
             - Name: ratescore
-              Type: double
-            - Name: consideredsteps
-              Type: array<struct<randomNumber:double,identifier:string,exposure:double,administered:boolean>>
-            - Name: starttheta
-              Type: int
-            - Name: startse
-              Type: int
-            - Name: itemcount
-              Type: int
-            - Name: administeredsteps
-              Type: array<struct<score:int,endDate:string,startDate:string,theta:double,se:double,identifier:string,practice:boolean,response:string,type:string,wasInterrupted:boolean>>
-            - Name: finalse
-              Type: double
-            - Name: finaltheta
               Type: double
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
@@ -509,7 +485,7 @@ Resources:
         StorageDescriptor:
           Columns:
             - Name: asyncresults
-              Type: array<struct<weather:struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string,rain:string,groundLevelPressure:int>,airQuality:struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>,startDate:string,type:string,identifier:string,endDate:string,contentType:string,startUptime:double,relativePath:string,errorDescription:string,errorDomain:string,errorCode:int>>
+              Type: array<struct<weather:struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string,groundLevelPressure:int,rain:string>,airQuality:struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>,startDate:string,type:string,identifier:string,endDate:string,contentType:string,startUptime:double,relativePath:string,errorDescription:string,errorDomain:string,errorCode:int>>
             - Name: schemainfo
               Type: struct<revision:int,identifier:string>
             - Name: enddate
@@ -517,7 +493,7 @@ Resources:
             - Name: startdate
               Type: string
             - Name: stephistory
-              Type: array<struct<asyncResults:array<struct<locale:string,testVersion:string,endDate:string,startDate:string,steps:array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int>>,taskName:string,userInteractions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int>>,taskStatus:string,answerType:struct<type:string>,value:boolean,type:string,identifier:string>>,schemaInfo:struct<revision:int,identifier:string>,endDate:string,startDate:string,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,responseTime:bigint,timeRemaining:int,skipToIdentifier:string,inputResults:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean>>>>,taskRunUUID:string,identifier:string,type:string,nodePath:array<string>,assessmentIdentifier:string,schemaIdentifier:string,answerType:struct<type:string>,value:boolean,questionText:string>>
+              Type: array<struct<asyncResults:array<struct<taskStatus:string,accuracy:double,testVersion:string,nAnticipationPractice:int,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string>>,locale:string,endDate:string,nAnticipationLive:int,startDate:string,taskName:string,userInteractions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,rawScore:int,steps:array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,failRuleSection:string,score:int,responseTime:int,anticipationError:int,stepGroup:string>>,totalErrors:int,rateScore:double>>,schemaInfo:struct<revision:int,identifier:string>,endDate:string,startDate:string,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string>>,taskRunUUID:string,identifier:string,type:string,nodePath:array<string>,assessmentIdentifier:string,schemaIdentifier:string,answerType:struct<type:string>,value:boolean,questionText:string>>
             - Name: taskrunuuid
               Type: string
             - Name: identifier

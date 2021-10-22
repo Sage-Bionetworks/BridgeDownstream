@@ -12,6 +12,12 @@ Parameters:
   JsonToParquetWorkflowName:
     Type: String
 
+  StandardCrawlerName:
+    Type: String
+
+  ArrayCrawlerName:
+    Type: String
+
   AnswersParquetJobName:
     Type: String
 
@@ -54,6 +60,17 @@ Resources:
     Type: AWS::Glue::Trigger
     Properties:
       Actions:
+        - CrawlerName: !Ref StandardCrawlerName
+        - CrawlerName: !Ref ArrayCrawlerName
+      Description: Starts crawlers for the JSON to Parquet workflow
+      Name: StartJsonToParquet
+      Type: ON_DEMAND
+      WorkflowName: !Ref JsonToParquetWorkflowName
+
+  JsonCrawlersDoneTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
         - JobName: !Ref AnswersParquetJobName
         - JobName: !Ref InfoParquetJobName
         - JobName: !Ref MetadataParquetJobName
@@ -62,7 +79,15 @@ Resources:
         - JobName: !Ref TaskDataParquetJobName
         - JobName: !Ref TaskResultParquetJobName
         - JobName: !Ref WeatherParquetJobName
-      Description: Converts JSON to Parquet
-      Name: StartJsonToParquet
-      Type: ON_DEMAND
+      Name: JsonCrawlersDone
+      Predicate:
+        Conditions:
+        - CrawlState: SUCCEEDED
+          CrawlerName: !Ref StandardCrawlerName
+          LogicalOperator: EQUALS
+        - CrawlState: SUCCEEDED
+          CrawlerName: !Ref ArrayCrawlerName
+          LogicalOperator: EQUALS
+        Logical: AND
+      Type: CONDITIONAL
       WorkflowName: !Ref JsonToParquetWorkflowName

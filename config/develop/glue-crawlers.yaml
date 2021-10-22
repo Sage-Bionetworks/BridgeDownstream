@@ -1,13 +1,14 @@
-template_path: glue-crawler.yaml
-stack_name: glue-crawler
+template_path: glue-crawlers.yaml
+stack_name: glue-crawlers
 dependencies:
   - develop/glue-classifier-array-of-records.yaml
   - develop/glue-database.yaml
   - develop/glue-job-role.yaml
   - develop/s3-intermediate-bucket.yaml
 parameters:
-  ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
-  CrawlerName: array-of-records
   DatabaseName: !stack_output_external glue-database::DatabaseName
   RoleArn: !stack_output_external glue-job-role::RoleArn
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
+  StandardCrawlerName: mtb_construct_standard
+  ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
+  ArrayOfRecordsCrawlerName: mtb_construct_array
