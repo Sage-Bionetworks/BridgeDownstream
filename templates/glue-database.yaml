@@ -243,6 +243,7 @@ Resources:
           CrawlerSchemaSerializerVersion: '1.0'
           classification: json
           compressionType: none
+          jsonPath: $[*]
           typeOfData: file
         PartitionKeys:
           - Name: taskidentifier
@@ -291,6 +292,7 @@ Resources:
             CrawlerSchemaSerializerVersion: '1.0'
             classification: json
             compressionType: none
+            jsonPath: $[*]
             typeOfData: file
           SerdeInfo:
             Parameters:
@@ -311,6 +313,7 @@ Resources:
           CrawlerSchemaSerializerVersion: '1.0'
           classification: json
           compressionType: none
+          jsonPath: $[*]
           typeOfData: file
         PartitionKeys:
           - Name: taskidentifier
@@ -361,6 +364,7 @@ Resources:
             CrawlerSchemaSerializerVersion: '1.0'
             classification: json
             compressionType: none
+            jsonPath: $[*]
             typeOfData: file
           SerdeInfo:
             Parameters:

@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Glue Crawlers for mobile study Bridge files
+
+Parameters:
+
+  # Parameters shared by crawlers
+
+  DatabaseName:
+    Type: String
+    Description: Name of the Glue database
+
+  RoleArn:
+    Type: String
+    Description: The ARN of an IAM role that's used to access S3
+
+  JsonBucketName:
+    Type: String
+    Description: Name of the bucket to be crawled
+
+  JsonPrefix:
+    Type: String
+    Description: Prefx of the S3 keys to be crawled
+    Default: raw_json
+
+  # Parameters for the "standard" crawler
+
+  StandardCrawlerName:
+    Type: String
+    Description: Name of the "standard" crawler #TODO come up with more specific names
+
+  # Parameters for the "array of records" crawler
+
+  ClassifierName:
+    Type: String
+    Description: Name of the Glue classifier
+
+  ArrayOfRecordsCrawlerName:
+    Type: String
+    Description: Name of the "array of records" crawler #TODO come up with more specific names
+
+
+Resources:
+
+  StandardCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
+      DatabaseName: !Ref DatabaseName
+      Name: !Ref StandardCrawlerName
+      RecrawlPolicy:
+        RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
+      Role: !Ref RoleArn
+      SchemaChangePolicy:
+        DeleteBehavior: LOG
+        UpdateBehavior: LOG
+      Targets:
+        S3Targets:
+          - Exclusions: []
+            Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=answers/
+          - Exclusions: []
+            Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=info/
+          - Exclusions: []
+            Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=metadata/
+          - Exclusions: []
+            Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskData/
+          - Exclusions: []
+            Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskResult/
+          - Exclusions: []
+            Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=weather/
+
+  ArrayOfRecordsCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Classifiers:
+        - !Ref ClassifierName
+      Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
+      DatabaseName: !Ref DatabaseName
+      Name: !Ref ArrayOfRecordsCrawlerName
+      RecrawlPolicy:
+        RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
+      Role: !Ref RoleArn
+      SchemaChangePolicy:
+        DeleteBehavior: LOG
+        UpdateBehavior: LOG
+      Targets:
+        S3Targets:
+        - Exclusions: []
+          Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=motion/
+        - Exclusions: []
+          Path: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=microphone_levels/
+
+Outputs:
+
+  StandardCrawlerName:
+    Value: !Ref StandardCrawler
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-StandardCrawlerName'
+
+  ArrayCrawlerName:
+    Value: !Ref ArrayOfRecordsCrawler
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-ArrayCrawlerName'
