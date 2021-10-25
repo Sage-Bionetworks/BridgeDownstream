@@ -3,6 +3,10 @@ Description: A set of Glue workflows for a study
 
 Parameters:
 
+  StudyName:
+    Type: String
+    Description: Study name, used to name workflows
+
   SourceBucketName:
     Type: String
 
@@ -23,7 +27,7 @@ Parameters:
     Type: String
     Default: parquet
 
-  GlueDatabaseName:
+  DatabaseName:
     Type: String
 
 Resources:
@@ -35,31 +39,31 @@ Resources:
         source_bucket: !Ref SourceBucketName
         source_key: !Ref SourceKey
         json_bucket: !Ref JsonBucketName
-        json_prefix: !Ref JsonPrefix
+        json_prefix: !Sub ${StudyName}/${JsonPrefix}
       Description: >-
         Workflow that breaks apart an archive and stores individual files in S3
-      Name: S3ToJsonWorkflow
+      Name: !Sub ${StudyName}-S3ToJsonWorkflow
 
   JsonToParquetWorkflow:
     Type: AWS::Glue::Workflow
     Properties:
       DefaultRunProperties:
-        database: !Ref GlueDatabaseName
+        database: !Ref DatabaseName
         json_bucket: !Ref JsonBucketName
-        json_prefix: !Ref JsonPrefix
+        json_prefix: !Sub ${StudyName}/${JsonPrefix}
         parquet_bucket: !Ref ParquetBucketName
-        parquet_prefix: !Ref ParquetPrefix
+        parquet_prefix: !Sub ${StudyName}/${ParquetPrefix}
       Description: Workflow for converting json to parquet
-      Name: JsonToParquetWorkflow
+      Name: !Sub ${StudyName}-JsonToParquetWorkflow
 
 Outputs:
 
   S3ToJsonWorkflowName:
     Value: !Ref S3ToJsonWorkflow
     Export:
-      Name: !Sub '${AWS::Region}-${AWS::StackName}-S3ToJsonWorkflowName'
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-S3ToJsonWorkflowName
 
   JsonToParquetWorkflowName:
     Value: !Ref JsonToParquetWorkflow
     Export:
-      Name: !Sub '${AWS::Region}-${AWS::StackName}-JsonToParquetWorkflowName'
+      Name: !Sub ${AWS::Region}-${AWS::StackName}-JsonToParquetWorkflowName

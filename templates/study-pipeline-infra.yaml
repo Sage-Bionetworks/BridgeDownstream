@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The set of Glue jobs created for each study
+
+Parameters:
+
+  BranchOrTagName:
+    Type: String
+    Description: >-
+      Relevant branch or tag from where templates and scripts are sourced;
+      this is used to build up the path to the correct object keys in the bucket
+    Default: main
+
+  StudyName:
+    Type: String
+    Description: Study whose data this pipeline infrastructure processes
+    AllowedPattern: '[a-z]{1}[a-z0-9.-]*'
+
+  RoleArn:
+    Type: String
+    Description: The ARN of an IAM role that's used to access S3
+
+  ClassifierName:
+    Type: String
+    Description: Name of the Glue classifier
+
+# buckets
+  TemplateBucketName:
+    Type: String
+    Description: Name of the S3 bucket which stores CFN templates
+
+  JsonBucketName:
+    Type: String
+    Description: Name of the S3 bucket storing json
+
+  ParquetBucketName:
+    Type: String
+    Description: Name of the S3 bucket where the finished parquet files are stored
+
+  # temporary: this will be replaced with the sns lambda that pulls data from a bridge bucket
+  SourceBucketName:
+    Type: String
+    Description: Name of the S3 bucket containing source data
+
+  SourceKey:
+    Type: String
+
+Resources:
+
+  DatabaseStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-database.yaml
+      Parameters:
+        StudyName: !Ref StudyName
+        BucketName: !Ref JsonBucketName
+
+  CrawlersStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-crawlers.yaml
+      Parameters:
+        StudyName: !Ref StudyName
+        DatabaseName: !Sub ${DatabaseStack.Outputs.DatabaseName}
+        RoleArn: !Ref RoleArn
+        BucketName: !Ref JsonBucketName
+        ClassifierName: !Ref ClassifierName
+
+  WorkflowsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-workflows.yaml
+      Parameters:
+        StudyName: !Ref StudyName
+        DatabaseName: !Sub ${DatabaseStack.Outputs.DatabaseName}
+        JsonBucketName: !Ref JsonBucketName
+        ParquetBucketName: !Ref ParquetBucketName
+        SourceBucketName: !Ref SourceBucketName
+        SourceKey: !Ref SourceKey
+
+  TriggersStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-triggers.yaml
+      Parameters:
+        StudyName: !Ref StudyName
+        S3ToJsonWorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
+        S3ToJsonS3JobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-S3ToJsonS3JobName
+        JsonToParquetWorkflowName: !Sub ${WorkflowsStack.Outputs.JsonToParquetWorkflowName}
+        StandardCrawlerName: !Sub ${CrawlersStack.Outputs.StandardCrawlerName}
+        ArrayCrawlerName: !Sub ${CrawlersStack.Outputs.ArrayCrawlerName}
+        AnswersParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-AnswersParquetJobName
+        InfoParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-InfoParquetJobName
+        MetadataParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-MetadataParquetJobName
+        MicrophoneLevelsParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-MicrophoneLevelsParquetJobName
+        MotionParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-MotionParquetJobName
+        TaskDataParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-TaskDataParquetJobName
+        TaskResultParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-TaskResultParquetJobName
+        WeatherParquetJobName: !ImportValue
+          Fn::Sub: ${AWS::Region}-glue-jobs-WeatherParquetJobName
