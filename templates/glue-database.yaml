@@ -30,7 +30,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: answers
+        Name: dataset_answers
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -86,7 +86,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: info
+        Name: dataset_info
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -157,7 +157,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: metadata
+        Name: dataset_metadata
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -237,7 +237,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: microphone_levels
+        Name: dataset_microphone_levels
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -307,7 +307,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: motion
+        Name: dataset_motion
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -379,7 +379,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: taskdata
+        Name: dataset_taskdata
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -463,7 +463,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: taskresult
+        Name: dataset_taskresult
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -537,7 +537,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: weather
+        Name: dataset_weather
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
