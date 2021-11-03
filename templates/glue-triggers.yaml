@@ -93,5 +93,6 @@ Resources:
           CrawlerName: !Ref ArrayCrawlerName
           LogicalOperator: EQUALS
         Logical: AND
+      StartOnCreation: true
       Type: CONDITIONAL
       WorkflowName: !Ref JsonToParquetWorkflowName
