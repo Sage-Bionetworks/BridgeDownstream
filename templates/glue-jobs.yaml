@@ -30,7 +30,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export taskresult data in parquet format
-        GlueTableName: taskresult
+        GlueTableName: dataset_taskresult
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -41,7 +41,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export taskdata data in parquet format
-        GlueTableName: taskdata
+        GlueTableName: dataset_taskdata
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -52,7 +52,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export answers data in parquet format
-        GlueTableName: answers
+        GlueTableName: dataset_answers
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -63,7 +63,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export info data in parquet format
-        GlueTableName: info
+        GlueTableName: dataset_info
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -74,7 +74,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export metadata data in parquet format
-        GlueTableName: metadata
+        GlueTableName: dataset_metadata
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -85,7 +85,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export microphone levels data in parquet format
-        GlueTableName: microphone_levels
+        GlueTableName: dataset_microphone_levels
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -96,7 +96,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export motion data in parquet format
-        GlueTableName: motion
+        GlueTableName: dataset_motion
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -107,7 +107,7 @@ Resources:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export weather data in parquet format
-        GlueTableName: weather
+        GlueTableName: dataset_weather
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py

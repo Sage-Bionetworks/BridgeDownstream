@@ -1,15 +1,14 @@
-template_path: glue-workflows.yaml
-stack_name: glue-workflows
-dependencies:
-  - develop/s3-source-bucket.yaml
-  - develop/s3-intermediate-bucket.yaml
-  - develop/s3-parquet-bucket.yaml
-  - develop/glue-database.yaml
+template_path: study-pipeline-infra.yaml
+stack_name: study-example-1
 parameters:
+  StudyName: example-study-1
+  BranchOrTagName: ETL-71/study-stacks
+  TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
   SourceKey: 'mtb-sample-data/0y38x2N2b4LHPBpZ-djfCoGx-raw.zip'
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
-  GlueDatabaseName: !stack_output_external glue-database::DatabaseName
+  RoleArn: !stack_output_external glue-job-role::RoleArn
+  ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

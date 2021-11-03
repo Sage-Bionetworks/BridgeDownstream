@@ -2,11 +2,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Glue database and tables
 
 Parameters:
-  DatabaseName:
+  StudyName:
     Type: String
-    Description: Name of the Glue database
+    Description: Study name, used to determine database name and S3 keyprefix
 
-  JsonBucketName:
+  BucketName:
     Type: String
     Description: Name of the S3 bucket storing the datasets
 
@@ -22,7 +22,7 @@ Resources:
     Properties:
       CatalogId: !Ref AWS::AccountId
       DatabaseInput:
-        Name: !Ref DatabaseName
+        Name: !Sub '${StudyName}-db'
 
   AnswersTable:
     Type: AWS::Glue::Table
@@ -30,7 +30,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: answers
+        Name: dataset_answers
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -65,7 +65,7 @@ Resources:
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=answers/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=answers/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -86,7 +86,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: info
+        Name: dataset_info
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -135,7 +135,7 @@ Resources:
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=info/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=info/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -157,7 +157,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: metadata
+        Name: dataset_metadata
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -216,7 +216,7 @@ Resources:
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=metadata/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=metadata/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -237,7 +237,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: microphone_levels
+        Name: dataset_microphone_levels
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -285,7 +285,7 @@ Resources:
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=microphone_levels/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=microphone_levels/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -307,7 +307,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: motion
+        Name: dataset_motion
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -357,7 +357,7 @@ Resources:
               Type: double
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=motion/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=motion/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -379,7 +379,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: taskdata
+        Name: dataset_taskdata
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -442,7 +442,7 @@ Resources:
               Type: double
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskdata/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=taskdata/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -463,7 +463,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: taskresult
+        Name: dataset_taskresult
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -516,7 +516,7 @@ Resources:
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=taskresult/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=taskresult/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
@@ -537,7 +537,7 @@ Resources:
       CatalogId: !Ref AWS::AccountId
       DatabaseName: !Ref GlueDatabase
       TableInput:
-        Name: weather
+        Name: dataset_weather
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
@@ -582,7 +582,7 @@ Resources:
               Type: string
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${JsonPrefix}/dataset=weather/
+          Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=weather/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
