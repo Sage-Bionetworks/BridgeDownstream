@@ -13,5 +13,4 @@ sceptre = "==2.*"
 [packages]
 boto3 = "==1.*"
 pyspark = "==3.*"
-synapseclient = "==2.*"
-pyyaml = "*"
+synapseclient = "==2.5.*"
