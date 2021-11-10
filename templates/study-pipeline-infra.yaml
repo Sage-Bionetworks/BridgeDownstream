@@ -41,9 +41,6 @@ Parameters:
     Type: String
     Description: Name of the S3 bucket containing source data
 
-  SourceKey:
-    Type: String
-
 Resources:
 
   DatabaseStack:
@@ -75,7 +72,6 @@ Resources:
         JsonBucketName: !Ref JsonBucketName
         ParquetBucketName: !Ref ParquetBucketName
         SourceBucketName: !Ref SourceBucketName
-        SourceKey: !Ref SourceKey
 
   TriggersStack:
     Type: AWS::CloudFormation::Stack
