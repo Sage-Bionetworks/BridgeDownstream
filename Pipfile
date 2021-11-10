@@ -9,9 +9,11 @@ python_version = "3.8"
 [dev-packages]
 pre-commit = "==2.*"
 sceptre = "==2.*"
+synapseformation = "0.0.2"
+ipykernel = "*"
+pandas = "*"
 
 [packages]
 boto3 = "==1.*"
 pyspark = "==3.*"
-synapseclient = "==2.*"
-pyyaml = "*"
+synapseclient = "==2.5.*"

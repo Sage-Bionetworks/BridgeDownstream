@@ -136,3 +136,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# directory where remote sceptre templates are stored
+/templates/remote/

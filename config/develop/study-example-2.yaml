@@ -2,10 +2,8 @@ template_path: study-pipeline-infra.yaml
 stack_name: study-example-2
 parameters:
   StudyName: example-study-2
-  BranchOrTagName: ETL-71/study-stacks
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
-  SourceKey: 'mtb-sample-data/0y38x2N2b4LHPBpZ-djfCoGx-raw.zip'
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
   RoleArn: !stack_output_external glue-job-role::RoleArn

@@ -6,5 +6,10 @@ parameters:
   BucketName: bridge-downstream-dev-source
   ReadOnlyAccessArns:
     - !stack_output_external glue-job-role::RoleArn
+  SynapseIds: '3432808'
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
+stack_timeout: 10
+hooks:
+  after_launch:
+    - !cmd "python src/scripts/setup_test_data/setup_test_data.py"

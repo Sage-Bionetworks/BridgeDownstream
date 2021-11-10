@@ -10,9 +10,6 @@ Parameters:
   SourceBucketName:
     Type: String
 
-  SourceKey:
-    Type: String
-
   JsonBucketName:
     Type: String
 
@@ -37,7 +34,6 @@ Resources:
     Properties:
       DefaultRunProperties:
         source_bucket: !Ref SourceBucketName
-        source_key: !Ref SourceKey
         json_bucket: !Ref JsonBucketName
         json_prefix: !Sub ${StudyName}/${JsonPrefix}
       Description: >-

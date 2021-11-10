@@ -1,0 +1,16 @@
+- name: BridgeDownstreamTest
+  type: Project
+  acl:
+    - principal_id: 3432808 # BridgeDownstream Service Account
+      access_type:
+        - READ
+        - DOWNLOAD
+        - UPDATE
+        - CREATE
+        - DELETE
+        - CHANGE_SETTINGS
+        - MODERATE
+        - CHANGE_PERMISSIONS
+  children:
+    - name: test-data
+      type: Folder
