@@ -1,5 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Transform: S3Objects
+
 Description: >-
   An S3 bucket for use in development. This bucket will serve as the landing
   bucket for incoming data, mimicking the Bridge bucket.
@@ -25,12 +27,22 @@ Parameters:
       (Optional) List of IAM users and roles (strings)
       who should only have read-access to the S3 bucket.
 
+  SynapseIds:
+    Type: List<String>
+    Default: ''
+    Description: Synapse ids to set as owners of this bucket
+    ConstraintDescription: >-
+      List of Synapse users or team IDs separated by commas
+      (i.e. 1111111, 2222222)
+
 Conditions:
   HasReadWriteAccessArns:
     !Not [!Equals [!Join [",", !Ref ReadWriteAccessArns], ""]]
   HasReadOnlyAccessArns:
     !Not [!Equals [!Join [",", !Ref ReadOnlyAccessArns], ""]]
   HasBucketName: !Not [!Equals [!Ref BucketName, ""]]
+  ConnectToSynapse:
+    !Not [!Equals [!Join [",", !Ref SynapseIds], ""]]
 
 Resources:
 
@@ -91,6 +103,44 @@ Resources:
                 - !Sub 'arn:aws:s3:::${Bucket}'
                 - !Sub 'arn:aws:s3:::${Bucket}/*'
             - !Ref AWS::NoValue
+          - !If
+            - ConnectToSynapse
+            - Sid: SynapseBucketAccess
+              Effect: Allow
+              Principal:
+                AWS: '325565585839'
+              Action:
+                - 's3:ListBucket*'
+                - 's3:GetBucketLocation'
+              Resource: !Sub ${Bucket.Arn}
+            - !Ref AWS::NoValue
+          - !If
+            - ConnectToSynapse
+            - Sid: SynapseObjectAccess
+              Effect: Allow
+              Principal:
+                AWS: '325565585839'
+              Action:
+                - 's3:*Object*'
+                - 's3:*MultipartUpload*'
+              Resource: !Sub ${Bucket.Arn}/*
+            - !Ref AWS::NoValue
+
+  SynapseOwnerFile:
+    Type: AWS::S3::Object
+    Condition: ConnectToSynapse
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - E3001
+    Properties:
+      Target:
+        Bucket: !Ref Bucket
+        Key: owner.txt
+        ContentType: text
+        ACL: authenticated-read
+      Body: !Join [ ",", !Ref SynapseIds ]
 
 Outputs:
 
