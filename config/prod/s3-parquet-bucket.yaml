@@ -1,0 +1,10 @@
+template_path: s3-bucket.yaml
+stack_name: bridge-downstream-parquet-bucket
+dependencies:
+  - develop/glue-job-role.yaml
+parameters:
+  BucketName: bridge-downstream-parquet
+  ReadWriteAccessArns:
+    - !stack_output_external glue-job-role::RoleArn
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}
