@@ -2,7 +2,6 @@ template_path: study-pipeline-infra.yaml
 stack_name: study-example-1
 parameters:
   StudyName: example-study-1
-  BranchOrTagName: ETL-71/study-stacks
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
