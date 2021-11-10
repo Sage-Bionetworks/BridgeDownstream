@@ -116,5 +116,8 @@ jobs:
           role-to-assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
           role-duration-seconds: 1200
 
+      - name: Create directory for remote sceptre templates
+        run: mkdir -p templates/remote/
+
       - name: Deploy sceptre stacks
         run: pipenv run sceptre launch ${{ matrix.sceptre-environment }} --yes

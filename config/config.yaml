@@ -1,6 +1,7 @@
 project_code: bridge_downstream
 region: us-east-1
 artifact_bucket_name: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
+admincentral_cf_bucket: bootstrap-awss3cloudformationbucket-19qromfd235z9
 default_stack_tags:
   Department: IBC
   Project: mobile-toolbox
