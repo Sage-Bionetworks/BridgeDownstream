@@ -14,6 +14,13 @@ Parameters:
       this is used to build up the path to the correct object keys in the bucket
     Default: main
 
+  CodeRepositoryName:
+    Type: String
+    Description: >-
+      Name of code repository, used to build up the path to the correct
+      object keys in the bucket
+    Default: BridgeDownstream
+
   JobRole:
     Type: String
     Description: The name or ARN of the IAM role that will run this job.
@@ -27,100 +34,100 @@ Resources:
   TaskResultParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export taskresult data in parquet format
         GlueTableName: dataset_taskresult
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   TaskDataParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export taskdata data in parquet format
         GlueTableName: dataset_taskdata
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   AnswersParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export answers data in parquet format
         GlueTableName: dataset_answers
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   InfoParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export info data in parquet format
         GlueTableName: dataset_info
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   MetadataParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export metadata data in parquet format
         GlueTableName: dataset_metadata
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   MicrophoneLevelsParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export microphone levels data in parquet format
         GlueTableName: dataset_microphone_levels
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   MotionParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export motion data in parquet format
         GlueTableName: dataset_motion
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   WeatherParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Export weather data in parquet format
         GlueTableName: dataset_weather
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
 
   S3ToJsonS3JobStack:
     Type:  AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
       Parameters:
         JobDescription: Convert data to JSONS3 data
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
-        S3ScriptLocation: !Sub s3://${SourceBucketName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
+        S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
 
 Outputs:
 

@@ -10,6 +10,13 @@ Parameters:
       this is used to build up the path to the correct object keys in the bucket
     Default: main
 
+  CodeRepositoryName:
+    Type: String
+    Description: >-
+      Name of code repository, used to build up the path to the correct
+      object keys in the bucket
+    Default: BridgeDownstream
+
   StudyName:
     Type: String
     Description: Study whose data this pipeline infrastructure processes
@@ -46,7 +53,7 @@ Resources:
   DatabaseStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-database.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-database.yaml
       Parameters:
         StudyName: !Ref StudyName
         BucketName: !Ref JsonBucketName
@@ -54,7 +61,7 @@ Resources:
   CrawlersStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-crawlers.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-crawlers.yaml
       Parameters:
         StudyName: !Ref StudyName
         DatabaseName: !Sub ${DatabaseStack.Outputs.DatabaseName}
@@ -65,7 +72,7 @@ Resources:
   WorkflowsStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-workflows.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-workflows.yaml
       Parameters:
         StudyName: !Ref StudyName
         DatabaseName: !Sub ${DatabaseStack.Outputs.DatabaseName}
@@ -76,7 +83,7 @@ Resources:
   TriggersStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${BranchOrTagName}/templates/glue-triggers.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-triggers.yaml
       Parameters:
         StudyName: !Ref StudyName
         S3ToJsonWorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}

@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Transform: AWS::Serverless-2016-10-31
+
+Description:  >
+  python3.8
+
+  SAM Template for sns-to-glue
+
+Parameters:
+
+  WorkflowName:
+    Type: String
+    Description: Name of the glue workflow to start when new data arrives
+
+  SsmParameterName:
+    Type: String
+    Description: Name of the ssm parameter used by the lambda to authenticate with
+      Synapse
+    Default: synapse-bridgedownstream-auth
+
+Resources:
+
+  SnsToGlueRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: glue
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - glue:StartWorkflow
+            Resource:
+            - Fn::Sub: arn:aws:glue:${AWS::Region}:${AWS::AccountId}:workflow/${WorkflowName}
+
+  SnsToGlueFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Role:
+        Fn::GetAtt:
+        - SnsToGlueRole
+        - Arn
+      Events:
+        SnsToGlue:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SnsTopic
+      Environment:
+        Variables:
+          SSM_PARAMETER_NAME:
+            Ref: SsmParameterName
+          GLUE_WORKFLOW_NAME:
+            Ref: WorkflowName
+      Timeout: 60
+      ImageUri: snstogluefunction:python3.8-v1
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./sns_to_glue
+      DockerTag: v0.1
+
+  SnsTopic:
+    Type: AWS::SNS::Topic
+
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: lambda
+      TopicArn:
+        Ref: SnsTopic
+      Endpoint:
+        Fn::GetAtt:
+        - SnsToGlueFunction
+        - Arn
+
+  LambdaInvocationPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - SnsToGlueFunction
+        - Arn
+      Action: lambda:InvokeFunction
+      SourceArn:
+        Ref: SnsTopic
+      Principal: sns.amazonaws.com

@@ -2,6 +2,12 @@ name: upload-and-deploy
 
 on: [push, pull_request]
 
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+  LAMBDA_BUCKET: sceptre-lambda-bucket-bucket-iw8km58inb0i
+  CFN_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
+  ECR_REPOSITORY: 634761300905.dkr.ecr.us-east-1.amazonaws.com/sns_to_glue
+
 jobs:
 
   pre-commit:
@@ -30,6 +36,9 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Setup sam
+        uses: aws-actions/setup-sam@v1
+
       - name: Assume AWS role
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -39,37 +48,28 @@ jobs:
           role-to-assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
           role-duration-seconds: 1200
 
-      - name: Set bucket directory path
-        shell: python
-        run: |
-          import os
-          import sys
-
-          ref = os.environ['GITHUB_REF']
-
-          print(f'GITHUB_REF: {ref}')
-          branch_prefix = 'refs/heads/'
-          tag_prefix = 'refs/tags/'
-          if(ref.startswith(branch_prefix)):
-            dir_path = ref[len(branch_prefix):]
-          elif(ref.startswith(tag_prefix)):
-            dir_path = ref[len(tag_prefix):]
-          else:
-            sys.exit(1)
-
-          with open(os.environ['GITHUB_ENV'], 'w') as env_file:
-            env_file.write(f'BUCKET_DIR_PATH={dir_path}')
-
-      - name: Copy files to S3 bucket
-        env:
-          S3_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
+      - name: Copy files to templates bucket
         run: |
           # copy glue python scripts to bucket
-          aws s3 sync src/glue/jobs/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH/glue/jobs/
+          aws s3 sync src/glue/jobs/ \
+            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/glue/jobs/
 
           # copy CFN templates to bucket
-          aws s3 sync templates/ s3://${{ env.S3_BUCKET }}/$BUCKET_DIR_PATH/templates/
+          aws s3 sync templates/ \
+            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/
 
+      - name: Sam build and package
+        run: |
+          sam build -s src/lambda/ -t src/lambda/template.yaml
+
+          sam package --template-file .aws-sam/build/template.yaml \
+            --s3-bucket $LAMBDA_BUCKET \
+            --output-template-file .aws-sam/build/template.yaml \
+            --image-repository $ECR_REPOSITORY \
+            --no-progressbar
+
+          aws s3 cp .aws-sam/build/template.yaml \
+            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/lambda/sns_to_glue/
 
   sceptre-deploy:
 
