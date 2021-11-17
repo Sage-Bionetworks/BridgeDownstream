@@ -48,6 +48,12 @@ Parameters:
     Type: String
     Description: Name of the S3 bucket containing source data
 
+  SynapseAuthSsmParameterName:
+    Type: String
+    Description: >-
+      The name of an ssm parameter whose value is Synapse service account
+      personal access token
+
 Resources:
 
   DatabaseStack:
@@ -108,3 +114,11 @@ Resources:
           Fn::Sub: ${AWS::Region}-glue-jobs-TaskResultParquetJobName
         WeatherParquetJobName: !ImportValue
           Fn::Sub: ${AWS::Region}-glue-jobs-WeatherParquetJobName
+
+  LambdaStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/lambda/sns_to_glue/template.yaml
+      Parameters:
+        WorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
+        SsmParameterName: !Ref SynapseAuthSsmParameterName
