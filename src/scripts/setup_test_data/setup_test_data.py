@@ -30,7 +30,7 @@ def get_synapse_client(ssm_parameter):
   syn = synapseclient.Synapse()
   synapse_auth_token = token['Parameter']['Value']
   os.environ['SYNAPSE_AUTH_TOKEN'] = synapse_auth_token
-  syn.login(authToken=synapse_auth_token)
+  syn.login(authToken=synapse_auth_token, silent=True)
   return syn
 
 
@@ -38,6 +38,7 @@ def get_project_id(syn, principal_id):
   '''Get the id of the synapse project if it exists'''
   log.info(f'Get project id for {project_name}')
   projects = syn.restGET(f'/projects/user/{principal_id}')
+  log.info(projects)
   BridgeDownstreamTest = next(
     filter(
       lambda x: x['name'] == project_name,
@@ -92,8 +93,14 @@ def main():
   syn = get_synapse_client(ssm_parameter=ssm_parameter)
 
   # see if project exists and get its id
+
   principal_id = '3432808' # BridgeDownstream Synapse service account
   project_id = get_project_id(syn, principal_id)
+
+  # if there's a project id, assume the project is already connected to synapse
+  connected_to_synapse = True if project_id else False
+
+  # if no project id is available, create a new project
   if not project_id:
     template_path = './src/scripts/setup_test_data/synapse-formation.yaml'
     create_project(syn, template_path)
@@ -104,10 +111,11 @@ def main():
   folder_id = get_folder_id(syn, project_id, synapse_folder_name)
   log.info(f'folder_id: {folder_id}')
 
-  # connect bucket and project
-  bucket_name = 'bridge-downstream-dev-source'
-  storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
-  log.info(f'storage_location_info: {storage_location_info}')
+  # connect bucket and project if this is a newly made project
+  if not connected_to_synapse:
+    bucket_name = 'bridge-downstream-dev-source'
+    storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
+    log.info(f'storage_location_info: {storage_location_info}')
 
   # generate synapse manifest
   data_dir = './src/scripts/setup_test_data/data'
@@ -122,7 +130,6 @@ def main():
   df.to_csv(manifest_path, sep = '\t', index = False)
 
   # sync the test data files to Synapse
-
   sync_response = synapseutils.sync.syncToSynapse(syn, manifest_path, dryRun=False, sendMessages=True)
 
 
