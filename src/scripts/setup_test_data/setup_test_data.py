@@ -2,17 +2,17 @@
 This script creates a Synpase project, connects to an existing S3 bucket,
 and syncs test data files to the project.
 '''
+import json
 import logging
 import os
+from pathlib import Path
 import sys
 
 import boto3
-import numpy as np
-import pandas as pd
 import synapseclient
+from synapseclient import File
 from synapseformation import client as synapseformation_client
 import synapseutils
-
 
 project_name = 'BridgeDownstreamTest'
 
@@ -84,6 +84,38 @@ def get_folder_id(syn, project_id, synapse_folder_name):
   log.debug(f'folder: {folder}')
   return '' if folder is None else folder.get('id')
 
+
+def add_test_data(syn, dir_path, bucket_name, synapse_folder_id):
+  '''Upload files to S3 then create handles in Synapse'''
+  data_dir = f'{dir_path}/data'
+  files = (item for item in Path(data_dir).iterdir() if item.is_file())
+
+  with open(f'{dir_path}/metadata.json') as metadata_file:
+      metadata = json.load(metadata_file)
+  s3 = boto3.resource('s3')
+  bucket = s3.Bucket(bucket_name)
+  for file_path in files:
+      filename = file_path.parts[-1]
+      file_metadata = metadata[filename]
+      with open(file_path, 'rb') as f:
+          bucket.put_object(
+              Body=f,
+              Key=filename,
+              Metadata=file_metadata
+          )
+      file_handle=syn.create_external_s3_file_handle(
+          bucket_name=bucket_name,
+          s3_file_key=filename,
+          file_path=file_path,
+          parent=synapse_folder_id)
+      file = File(
+          parentId=synapse_folder_id,
+          name=filename,
+          synapseStore=False,
+          dataFileHandleId=file_handle['id'])
+      syn.store(file)
+
+
 def main():
 
   log.info(f'Begin setting up test data')
@@ -112,25 +144,29 @@ def main():
   log.info(f'folder_id: {folder_id}')
 
   # connect bucket and project if this is a newly made project
+  bucket_name = 'bridge-downstream-dev-source'
   if not connected_to_synapse:
-    bucket_name = 'bridge-downstream-dev-source'
     storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
     log.info(f'storage_location_info: {storage_location_info}')
 
-  # generate synapse manifest
-  data_dir = './src/scripts/setup_test_data/data'
-  manifest_data = np.array([
-    [f'{data_dir}/1Dbywpp4w2zhXjZPgItrKvlh-raw.zip', folder_id, '1Dbywpp4w2zhXjZPgItrKvlh', '|mtb-alpha=NNJ18004|', 'SdVJHmCC8Dcpd_X-sjEK-wH3', '1623421775829', 'FNAME Test Form 1'],
-    [f'{data_dir}/ugJWvqPLhnFV-ifu246CeZjZ-raw.zip', folder_id, 'ugJWvqPLhnFV-ifu246CeZjZ', '|mtb-alpha=MCH20002|', 'vsq7vt_iuT6xjntX09QoQtwk', '1624574992880', 'Vocabulary Form 1'],
-    [f'{data_dir}/R7mBYI63NpCo3sJa9l0qnpza-raw.zip', folder_id, 'R7mBYI63NpCo3sJa9l0qnpza', '|mtb-alpha=NBS22002|', 'nzaLFo5nhlqHc1TyUKhvsBP7', '1625238358060', 'MTB Spelling Form 1'],
-    [f'{data_dir}/Le9-WBxplHhGXo_FLNiY3SaI-raw.zip', folder_id, 'Le9-WBxplHhGXo_FLNiY3SaI', '|mtb-alpha=SBM50004|', 'XrvTSTKobPJAbxGwZ4sceNBf', '1624322928949', 'Vocabulary Form 1']
-  ])
-  df = pd.DataFrame(manifest_data, columns = ['path', 'parent', 'recordid', 'substudymemberships', 'healthcode', 'createdon', 'taskidentifier'])
-  manifest_path = '/tmp/manifest.tsv'
-  df.to_csv(manifest_path, sep = '\t', index = False)
+  # add test data to Synapse
+  script_dir = './src/scripts/setup_test_data'
+  add_test_data(syn, script_dir, bucket_name, folder_id)
 
-  # sync the test data files to Synapse
-  sync_response = synapseutils.sync.syncToSynapse(syn, manifest_path, dryRun=False, sendMessages=True)
+  # generate synapse manifest
+  # data_dir = './src/scripts/setup_test_data/data'
+  # manifest_data = np.array([
+  #   [f'{data_dir}/1Dbywpp4w2zhXjZPgItrKvlh-raw.zip', folder_id, '1Dbywpp4w2zhXjZPgItrKvlh', '|mtb-alpha=NNJ18004|', 'SdVJHmCC8Dcpd_X-sjEK-wH3', '1623421775829', 'FNAME Test Form 1'],
+  #   [f'{data_dir}/ugJWvqPLhnFV-ifu246CeZjZ-raw.zip', folder_id, 'ugJWvqPLhnFV-ifu246CeZjZ', '|mtb-alpha=MCH20002|', 'vsq7vt_iuT6xjntX09QoQtwk', '1624574992880', 'Vocabulary Form 1'],
+  #   [f'{data_dir}/R7mBYI63NpCo3sJa9l0qnpza-raw.zip', folder_id, 'R7mBYI63NpCo3sJa9l0qnpza', '|mtb-alpha=NBS22002|', 'nzaLFo5nhlqHc1TyUKhvsBP7', '1625238358060', 'MTB Spelling Form 1'],
+  #   [f'{data_dir}/Le9-WBxplHhGXo_FLNiY3SaI-raw.zip', folder_id, 'Le9-WBxplHhGXo_FLNiY3SaI', '|mtb-alpha=SBM50004|', 'XrvTSTKobPJAbxGwZ4sceNBf', '1624322928949', 'Vocabulary Form 1']
+  # ])
+  # df = pd.DataFrame(manifest_data, columns = ['path', 'parent', 'recordid', 'substudymemberships', 'healthcode', 'createdon', 'taskidentifier'])
+  # manifest_path = '/tmp/manifest.tsv'
+  # df.to_csv(manifest_path, sep = '\t', index = False)
+
+  # # sync the test data files to Synapse
+  # sync_response = synapseutils.sync.syncToSynapse(syn, manifest_path, dryRun=False, sendMessages=True)
 
 
 if __name__ == "__main__":
