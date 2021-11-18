@@ -15,9 +15,8 @@ Parameters:
 
   SsmParameterName:
     Type: String
-    Description: Name of the ssm parameter used by the lambda to authenticate with
-      Synapse
-    Default: synapse-bridgedownstream-auth
+    Description: >-
+      Name of the ssm parameter used by the lambda to authenticate with Synapse
 
 Resources:
 
@@ -34,7 +33,16 @@ Resources:
           Action:
           - sts:AssumeRole
       Policies:
-      - PolicyName: glue
+      - PolicyName: GetSsmParam
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - ssm:GetParameter
+            Resource:
+            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${SsmParameterName}
+      - PolicyName: StartGlueWorkflow
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -42,7 +50,7 @@ Resources:
             Action:
             - glue:StartWorkflow
             Resource:
-            - Fn::Sub: arn:aws:glue:${AWS::Region}:${AWS::AccountId}:workflow/${WorkflowName}
+            - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:workflow/${WorkflowName}
 
   SnsToGlueFunction:
     Type: AWS::Serverless::Function
@@ -56,8 +64,7 @@ Resources:
         SnsToGlue:
           Type: SNS
           Properties:
-            Topic:
-              Ref: SnsTopic
+            Topic: !Ref SnsTopic
       Environment:
         Variables:
           SSM_PARAMETER_NAME:
@@ -78,12 +85,8 @@ Resources:
     Type: AWS::SNS::Subscription
     Properties:
       Protocol: lambda
-      TopicArn:
-        Ref: SnsTopic
-      Endpoint:
-        Fn::GetAtt:
-        - SnsToGlueFunction
-        - Arn
+      TopicArn: !Ref SnsTopic
+      Endpoint: !GetAtt SnsToGlueFunction.Arn
 
   LambdaInvocationPermission:
     Type: AWS::Lambda::Permission
@@ -93,6 +96,5 @@ Resources:
         - SnsToGlueFunction
         - Arn
       Action: lambda:InvokeFunction
-      SourceArn:
-        Ref: SnsTopic
+      SourceArn: !Ref SnsTopic
       Principal: sns.amazonaws.com
