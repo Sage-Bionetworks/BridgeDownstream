@@ -1,5 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-RUN pip3 install synapseclient
-COPY app.py .
-CMD ["app.handler"]
+COPY app.py requirements.txt ./
+
+RUN python3.8 -m pip install -r requirements.txt -t .
+
+CMD ["app.lambda_handler"]

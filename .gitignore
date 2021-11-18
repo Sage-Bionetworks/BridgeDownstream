@@ -139,3 +139,6 @@ cython_debug/
 
 # directory where remote sceptre templates are stored
 /templates/remote/
+
+# lambda
+.aws-sam/

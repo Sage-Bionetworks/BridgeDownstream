@@ -1,34 +1,48 @@
+import json
+import logging
 import os
+
 import boto3
 import synapseclient
 
-SSM_PARAMETER_NAME = os.getenv("SSM_PARAMETER_NAME")
-GLUE_WORKFLOW_NAME = os.getenv("GLUE_WORKFLOW_NAME")
+SSM_PARAMETER_NAME = os.getenv('SSM_PARAMETER_NAME')
+GLUE_WORKFLOW_NAME = os.getenv('GLUE_WORKFLOW_NAME')
 synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
 
-def handler(sns_event, context):
-    message = sns_event['Records'][0]['Sns']['Message']
-    ssm_client = boto3.client("ssm")
-    glue_client = boto3.client("glue")
-    token = ssm_client.get_parameter(
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+def lambda_handler(sns_event, context):
+    logger.info(sns_event)
+    try:
+      sns_payload = sns_event['Records'][0]['Sns']
+      synapse_id = sns_payload['MessageAttributes']['SynapseId']['Value']
+      ssm_client = boto3.client('ssm')
+      glue_client = boto3.client('glue')
+      token = ssm_client.get_parameter(
         Name=SSM_PARAMETER_NAME,
         WithDecryption=True)
-    s3_loc = get_s3_loc(
-            synapse_id=message,
-            auth_token=token["Parameter"]["Value"])
-    workflow_run = glue_client.start_workflow_run(Name=GLUE_WORKFLOW_NAME)
-    glue_client.put_workflow_run_properties(
-            Name=GLUE_WORKFLOW_NAME,
-            RunId=workflow_run["RunId"],
-            RunProperties={
-                "input_bucket": s3_loc["bucket"],
-                "input_key": s3_loc["key"]})
+      s3_loc = get_s3_loc(
+        synapse_id=synapse_id,
+        auth_token=token['Parameter']['Value'])
+      logger.debug(f's3 location info: {s3_loc}')
+      workflow_run = glue_client.start_workflow_run(Name=GLUE_WORKFLOW_NAME)
+      glue_client.put_workflow_run_properties(
+        Name=GLUE_WORKFLOW_NAME,
+        RunId=workflow_run['RunId'],
+        RunProperties={
+          'source_bucket': s3_loc['bucket'],
+          'source_key': s3_loc['key']})
+    except Exception as e:
+      logger.error(f'An error occurred while processing SNS message: {e}')
+
 
 def get_s3_loc(synapse_id, auth_token):
     syn = synapseclient.Synapse()
-    syn.login(authToken=auth_token)
+    syn.login(authToken=auth_token, silent=True)
     f = syn.get(synapse_id, downloadFile=False)
-    bucket = f["_file_handle"]["bucketName"]
-    key = f["_file_handle"]["key"]
-    s3_loc = {"bucket": bucket, "key": key}
+    logger.debug(f'synapse get response: {f}')
+    bucket = f['_file_handle']['bucketName']
+    key = f['_file_handle']['key']
+    s3_loc = {'bucket': bucket, 'key': key}
     return s3_loc
