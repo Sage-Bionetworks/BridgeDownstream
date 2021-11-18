@@ -25,7 +25,7 @@ def lambda_handler(sns_event, context):
       s3_loc = get_s3_loc(
         synapse_id=synapse_id,
         auth_token=token['Parameter']['Value'])
-      logger.info(f's3 location info: {s3_loc}')
+      logger.debug(f's3 location info: {s3_loc}')
       workflow_run = glue_client.start_workflow_run(Name=GLUE_WORKFLOW_NAME)
       glue_client.put_workflow_run_properties(
         Name=GLUE_WORKFLOW_NAME,
@@ -34,17 +34,14 @@ def lambda_handler(sns_event, context):
           'source_bucket': s3_loc['bucket'],
           'source_key': s3_loc['key']})
     except Exception as e:
-      print(e)
-      logger.error(
-        'An error occurred while processing SNS message:',
-        extra=e)
+      logger.error(f'An error occurred while processing SNS message: {e}')
 
 
 def get_s3_loc(synapse_id, auth_token):
     syn = synapseclient.Synapse()
     syn.login(authToken=auth_token, silent=True)
     f = syn.get(synapse_id, downloadFile=False)
-    logger.info(f'synapse get response: {f}')
+    logger.debug(f'synapse get response: {f}')
     bucket = f['_file_handle']['bucketName']
     key = f['_file_handle']['key']
     s3_loc = {'bucket': bucket, 'key': key}

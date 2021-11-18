@@ -28,7 +28,6 @@ workflow_run_properties = glue_client.get_workflow_run_properties(
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 
 def process_record(s3_obj, s3_obj_metadata):
-    logger.info('s3 object metadata:', extra=s3_obj_metadata)
     created_on = datetime.fromtimestamp(
             int(s3_obj_metadata["createdon"]) / 1000)
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
