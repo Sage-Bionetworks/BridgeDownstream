@@ -8,5 +8,6 @@ parameters:
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
   RoleArn: !stack_output_external glue-job-role::RoleArn
   ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
+  SynapseAuthSsmParameterName: synapse-bridgedownstream-auth
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
