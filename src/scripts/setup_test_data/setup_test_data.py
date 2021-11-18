@@ -4,7 +4,6 @@ and syncs test data files to the project.
 '''
 import json
 import logging
-import os
 import sys
 from pathlib import Path
 
@@ -28,7 +27,6 @@ def get_synapse_client(ssm_parameter):
     WithDecryption=True)
   syn = synapseclient.Synapse()
   synapse_auth_token = token['Parameter']['Value']
-  os.environ['SYNAPSE_AUTH_TOKEN'] = synapse_auth_token
   syn.login(authToken=synapse_auth_token, silent=True)
   return syn
 
