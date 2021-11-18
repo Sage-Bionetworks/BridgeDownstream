@@ -57,10 +57,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      Role:
-        Fn::GetAtt:
-        - SnsToGlueRole
-        - Arn
+      Role: !GetAtt SnsToGlueRole.Arn
       Events:
         SnsToGlue:
           Type: SNS
@@ -68,12 +65,9 @@ Resources:
             Topic: !Ref SnsTopic
       Environment:
         Variables:
-          SSM_PARAMETER_NAME:
-            Ref: SsmParameterName
-          GLUE_WORKFLOW_NAME:
-            Ref: WorkflowName
+          SSM_PARAMETER_NAME: !Ref SsmParameterName
+          GLUE_WORKFLOW_NAME: !Ref WorkflowName
       Timeout: 60
-      ImageUri: snstogluefunction:python3.8-v1
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./sns_to_glue
@@ -92,10 +86,7 @@ Resources:
   LambdaInvocationPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName:
-        Fn::GetAtt:
-        - SnsToGlueFunction
-        - Arn
+      FunctionName: !GetAtt SnsToGlueFunction.Arn
       Action: lambda:InvokeFunction
       SourceArn: !Ref SnsTopic
       Principal: sns.amazonaws.com
