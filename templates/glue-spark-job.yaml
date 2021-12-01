@@ -99,7 +99,7 @@ Parameters:
 
 Resources:
 
-  Job:
+  SparkJob:
     Type: AWS::Glue::Job
     Properties:
       Command:
@@ -125,6 +125,6 @@ Resources:
 Outputs:
 
   JobName:
-    Value: !Ref Job
+    Value: !Ref SparkJob
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-JobName'
