@@ -2,19 +2,20 @@
 # so that the schema (specific to the taskIdentifier) can be maintained
 # by a Glue crawler.
 import io
+import json
+import logging
 import os
 import sys
-import json
 import zipfile
-import boto3
 from datetime import datetime
-from awsglue.utils import getResolvedOptions
-from awsglue.context import GlueContext
-from pyspark.context import SparkContext
 
-sc = SparkContext()
-glueContext = GlueContext(sc)
-logger = glueContext.get_logger()
+import boto3
+from awsglue.utils import getResolvedOptions
+
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 glue_client = boto3.client("glue")
 s3_client = boto3.client("s3")
