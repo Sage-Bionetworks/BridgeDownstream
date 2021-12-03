@@ -1,5 +1,5 @@
 '''
-This script creates a Synpase project, connects to an existing S3 bucket,
+This script creates a Synapse project, connects to an existing S3 bucket,
 and syncs test data files to the project.
 '''
 import json
