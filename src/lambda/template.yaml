@@ -67,7 +67,7 @@ Resources:
         Variables:
           SSM_PARAMETER_NAME: !Ref SsmParameterName
           GLUE_WORKFLOW_NAME: !Ref WorkflowName
-      Timeout: 60
+      Timeout: 600
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./sns_to_glue
