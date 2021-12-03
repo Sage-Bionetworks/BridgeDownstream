@@ -1,0 +1,1383 @@
+{
+    "Records":
+    [
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486881"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486892"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486893"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486868"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486925"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486924"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486891"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486906"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486900"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486898"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486886"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486911"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486887"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486897"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486877"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486878"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486890"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486873"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486905"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486874"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486916"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486894"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486869"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486871"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486902"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486909"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486889"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486880"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486904"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486896"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486888"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486910"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486913"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486903"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486875"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486917"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486912"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486882"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486885"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486872"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486895"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486915"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486901"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486870"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486908"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486907"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486883"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486918"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486879"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486876"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486899"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486884"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        },
+        {
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+            "EventSource": "aws:sns",
+            "Sns":
+            {
+                "SignatureVersion": "1",
+                "Timestamp": "2019-01-02T12:45:07.000Z",
+                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
+                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+                "Message": "Bridge data update",
+                "MessageAttributes":
+                {
+                    "SynapseId":
+                    {
+                        "Type": "String",
+                        "Value": "syn26486914"
+                    }
+                },
+                "Type": "Notification",
+                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
+                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
+                "Subject": "TestInvoke"
+            }
+        }
+    ]
+}

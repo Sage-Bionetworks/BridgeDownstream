@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: An AWS Glue pythonshell job in the data catalog.
+
+Parameters:
+
+  JobDescription:
+    Type: String
+    Description: A fuller description of what the job does.
+    Default: ''
+
+  JobRole:
+    Type: String
+    Description: The name or ARN of the IAM role that will run this job.
+
+  GlueVersion:
+    Type: String
+    Description: AWS Glue version determines the version of Python available
+    Default: '3.0' # Python 3.7
+
+  S3ScriptLocation:
+    Type: String
+    Description: The S3 path to the script that the job runs.
+
+  MaxConcurrentRuns:
+    Type: Number
+    Description: >-
+      Number of this type of glue job that can be run at same time (double).
+    Default: 1 # Anticipate this will actually be something we want to require
+
+  MaxRetries:
+    Type: Number
+    Description: How many times to retry the job if it fails (integer).
+    Default: 0 # TODO change this to 1 after initial development
+
+  TimeoutInMinutes:
+    Type: Number
+    Description: The job timeout in minutes (integer).
+    Default: 120
+
+  ContinuousLog:
+    Type: String
+    Default: 'true'
+    AllowedValues: ['true', 'false']
+
+  S3OutputBucketName:
+    Type: String
+    Description: The name of the S3 bucket where temporary files are written.
+
+  GlueTableName:
+    Type: String
+    Description: Name of the Glue table
+    Default: ''
+
+Resources:
+
+  PythonShellJob:
+    Type: AWS::Glue::Job
+    Properties:
+      Command:
+        Name: pythonshell
+        ScriptLocation: !Ref S3ScriptLocation
+      DefaultArguments:
+        --TempDir: !Sub s3://${S3OutputBucketName}/tmp
+        --enable-continuous-cloudwatch-log: !Ref ContinuousLog
+        --table: !Ref GlueTableName
+      Description: !Ref JobDescription
+      ExecutionProperty:
+        MaxConcurrentRuns: !Ref MaxConcurrentRuns
+      GlueVersion: !Ref GlueVersion
+      MaxRetries: !Ref MaxRetries
+      Name: !Sub '${AWS::StackName}-Job'
+      Role: !Ref JobRole
+      Timeout: !Ref TimeoutInMinutes
+
+Outputs:
+
+  JobName:
+    Value: !Ref PythonShellJob
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-JobName'

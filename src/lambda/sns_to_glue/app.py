@@ -15,24 +15,25 @@ logger.setLevel(logging.DEBUG)
 def lambda_handler(sns_event, context):
     logger.info(sns_event)
     try:
-      sns_payload = sns_event['Records'][0]['Sns']
-      synapse_id = sns_payload['MessageAttributes']['SynapseId']['Value']
-      ssm_client = boto3.client('ssm')
-      glue_client = boto3.client('glue')
-      token = ssm_client.get_parameter(
-        Name=SSM_PARAMETER_NAME,
-        WithDecryption=True)
-      s3_loc = get_s3_loc(
-        synapse_id=synapse_id,
-        auth_token=token['Parameter']['Value'])
-      logger.debug(f's3 location info: {s3_loc}')
-      workflow_run = glue_client.start_workflow_run(Name=GLUE_WORKFLOW_NAME)
-      glue_client.put_workflow_run_properties(
-        Name=GLUE_WORKFLOW_NAME,
-        RunId=workflow_run['RunId'],
-        RunProperties={
-          'source_bucket': s3_loc['bucket'],
-          'source_key': s3_loc['key']})
+      for record in sns_event['Records']:
+        payload = record['Sns']
+        synapse_id = payload['MessageAttributes']['SynapseId']['Value']
+        ssm_client = boto3.client('ssm')
+        glue_client = boto3.client('glue')
+        token = ssm_client.get_parameter(
+          Name=SSM_PARAMETER_NAME,
+          WithDecryption=True)
+        s3_loc = get_s3_loc(
+          synapse_id=synapse_id,
+          auth_token=token['Parameter']['Value'])
+        logger.debug(f's3 location info: {s3_loc}')
+        workflow_run = glue_client.start_workflow_run(Name=GLUE_WORKFLOW_NAME)
+        glue_client.put_workflow_run_properties(
+          Name=GLUE_WORKFLOW_NAME,
+          RunId=workflow_run['RunId'],
+          RunProperties={
+            'source_bucket': s3_loc['bucket'],
+            'source_key': s3_loc['key']})
     except Exception as e:
       logger.error(f'An error occurred while processing SNS message: {e}')
 

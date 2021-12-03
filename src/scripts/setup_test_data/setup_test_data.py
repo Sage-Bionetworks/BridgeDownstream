@@ -1,11 +1,12 @@
 '''
-This script creates a Synpase project, connects to an existing S3 bucket,
+This script creates a Synapse project, connects to an existing S3 bucket,
 and syncs test data files to the project.
 '''
 import json
 import logging
 import sys
 from pathlib import Path
+from zipfile import ZipFile
 
 import boto3
 import synapseclient
@@ -87,13 +88,17 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
   data_dir = f'{dir_path}/data'
   files = (item for item in Path(data_dir).iterdir() if item.is_file())
 
-  with open(f'{dir_path}/metadata.json') as metadata_file:
-      metadata = json.load(metadata_file)
   s3 = boto3.resource('s3')
   bucket = s3.Bucket(bucket_name)
   for file_path in files:
       filename = file_path.parts[-1]
-      file_metadata = metadata[filename]
+      file_metadata = {}
+      file_metadata['recordid'] = filename.split('-')[0]
+      with ZipFile(file_path) as archive:
+          with archive.open('metadata.json') as metadata_file:
+            metadata = json.load(metadata_file)
+            file_metadata['taskIdentifier'] = metadata['taskIdentifier']
+      file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
       logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
       with open(file_path, 'rb') as f:
           bucket.put_object(

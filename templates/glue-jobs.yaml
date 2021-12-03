@@ -34,7 +34,7 @@ Resources:
   TaskResultParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export taskresult data in parquet format
         GlueTableName: dataset_taskresult
@@ -45,7 +45,7 @@ Resources:
   TaskDataParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export taskdata data in parquet format
         GlueTableName: dataset_taskdata
@@ -56,7 +56,7 @@ Resources:
   AnswersParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export answers data in parquet format
         GlueTableName: dataset_answers
@@ -67,7 +67,7 @@ Resources:
   InfoParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export info data in parquet format
         GlueTableName: dataset_info
@@ -78,7 +78,7 @@ Resources:
   MetadataParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export metadata data in parquet format
         GlueTableName: dataset_metadata
@@ -89,7 +89,7 @@ Resources:
   MicrophoneLevelsParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export microphone levels data in parquet format
         GlueTableName: dataset_microphone_levels
@@ -100,7 +100,7 @@ Resources:
   MotionParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export motion data in parquet format
         GlueTableName: dataset_motion
@@ -111,7 +111,7 @@ Resources:
   WeatherParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: Export weather data in parquet format
         GlueTableName: dataset_weather
@@ -122,10 +122,11 @@ Resources:
   S3ToJsonS3JobStack:
     Type:  AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-job.yaml
+      TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-python-job.yaml
       Parameters:
         JobDescription: Convert data to JSONS3 data
         JobRole: !Ref JobRole
+        MaxConcurrentRuns: 100
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
 

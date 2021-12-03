@@ -14,7 +14,7 @@
         "MessageAttributes": {
           "SynapseId": {
             "Type": "String",
-            "Value": "syn26469802"
+            "Value": "syn26486881"
           }
         },
         "Type": "Notification",
