@@ -55,8 +55,8 @@ jobs:
       - name: Copy files to templates bucket
         run: |
           # copy glue python scripts to bucket
-          aws s3 sync src/glue/jobs/ \
-            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/glue/jobs/
+          aws s3 sync src/glue/ \
+            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/glue/
 
           # copy CFN templates to bucket
           aws s3 sync templates/ \
