@@ -1,0 +1,19 @@
+{
+  "appVersion":
+    {
+      "version 1.0.2, build 57":
+        {
+          "dataset":
+            {
+              "answers": "v1",
+              "info": "v2",
+              "metadata": "v1",
+              "microphone_levels": "v1",
+              "motion": "v1",
+              "taskData": "v1",
+              "taskResult": "v1",
+              "weather": "v1"
+            }
+        }
+    }
+}
