@@ -12,14 +12,17 @@ Parameters:
     Type: String
     Description: The name or ARN of the IAM role that will run this job.
 
-  GlueVersion:
-    Type: String
-    Description: AWS Glue version determines the version of Python available
-    Default: '3.0' # Python 3.7
-
   S3ScriptLocation:
     Type: String
     Description: The S3 path to the script that the job runs.
+
+  PythonVersion:
+    Type: String
+    Description: Version of Python
+    AllowedValues:
+      - '2'
+      - '3'
+    Default: '3'
 
   MaxConcurrentRuns:
     Type: Number
@@ -51,6 +54,11 @@ Parameters:
     Description: Name of the Glue table
     Default: ''
 
+  UniqueId:
+    Type: String
+    Description: A unique id for producing unique job names
+    Default: ''
+
 Resources:
 
   PythonShellJob:
@@ -59,6 +67,7 @@ Resources:
       Command:
         Name: pythonshell
         ScriptLocation: !Ref S3ScriptLocation
+        PythonVersion: !Ref PythonVersion
       DefaultArguments:
         --TempDir: !Sub s3://${S3OutputBucketName}/tmp
         --enable-continuous-cloudwatch-log: !Ref ContinuousLog
@@ -66,9 +75,8 @@ Resources:
       Description: !Ref JobDescription
       ExecutionProperty:
         MaxConcurrentRuns: !Ref MaxConcurrentRuns
-      GlueVersion: !Ref GlueVersion
       MaxRetries: !Ref MaxRetries
-      Name: !Sub '${AWS::StackName}-Job'
+      Name: !Sub '${AWS::StackName}-Job-${UniqueId}'
       Role: !Ref JobRole
       Timeout: !Ref TimeoutInMinutes
 

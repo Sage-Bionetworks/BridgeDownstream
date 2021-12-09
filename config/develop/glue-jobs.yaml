@@ -8,5 +8,6 @@ parameters:
   JobRole: !stack_output_external glue-job-role::RoleArn
   S3OutputBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
   BranchOrTagName: main
+  UniqueId: !rcmd git rev-parse HEAD
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

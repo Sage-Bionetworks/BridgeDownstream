@@ -54,6 +54,26 @@ Parameters:
       The name of an ssm parameter whose value is Synapse service account
       personal access token
 
+# Job Names
+  S3ToJsonS3JobName:
+    Type: String
+  AnswersParquetJobName:
+    Type: String
+  InfoParquetJobName:
+    Type: String
+  MetadataParquetJobName:
+    Type: String
+  MicrophoneLevelsParquetJobName:
+    Type: String
+  MotionParquetJobName:
+    Type: String
+  TaskDataParquetJobName:
+    Type: String
+  TaskResultParquetJobName:
+    Type: String
+  WeatherParquetJobName:
+    Type: String
+
 Resources:
 
   DatabaseStack:
@@ -93,27 +113,18 @@ Resources:
       Parameters:
         StudyName: !Ref StudyName
         S3ToJsonWorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
-        S3ToJsonS3JobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-S3ToJsonS3JobName
+        S3ToJsonS3JobName: !Ref S3ToJsonS3JobName
         JsonToParquetWorkflowName: !Sub ${WorkflowsStack.Outputs.JsonToParquetWorkflowName}
         StandardCrawlerName: !Sub ${CrawlersStack.Outputs.StandardCrawlerName}
         ArrayCrawlerName: !Sub ${CrawlersStack.Outputs.ArrayCrawlerName}
-        AnswersParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-AnswersParquetJobName
-        InfoParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-InfoParquetJobName
-        MetadataParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-MetadataParquetJobName
-        MicrophoneLevelsParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-MicrophoneLevelsParquetJobName
-        MotionParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-MotionParquetJobName
-        TaskDataParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-TaskDataParquetJobName
-        TaskResultParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-TaskResultParquetJobName
-        WeatherParquetJobName: !ImportValue
-          Fn::Sub: ${AWS::Region}-glue-jobs-WeatherParquetJobName
+        AnswersParquetJobName: !Ref AnswersParquetJobName
+        InfoParquetJobName: !Ref InfoParquetJobName
+        MetadataParquetJobName: !Ref MetadataParquetJobName
+        MicrophoneLevelsParquetJobName: !Ref MicrophoneLevelsParquetJobName
+        MotionParquetJobName: !Ref MotionParquetJobName
+        TaskDataParquetJobName: !Ref TaskDataParquetJobName
+        TaskResultParquetJobName: !Ref TaskResultParquetJobName
+        WeatherParquetJobName: !Ref WeatherParquetJobName
 
   LambdaStack:
     Type: AWS::CloudFormation::Stack

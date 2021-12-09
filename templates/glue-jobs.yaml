@@ -29,6 +29,11 @@ Parameters:
     Type: String
     Description: The S3 output bucket where temporary files will be written.
 
+  UniqueId:
+    Type: String
+    Description: A unique id for producing unique job names.
+    Default: ''
+
 Resources:
 
   TaskResultParquetJobStack:
@@ -41,6 +46,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   TaskDataParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -52,6 +58,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   AnswersParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -63,6 +70,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   InfoParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -74,6 +82,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   MetadataParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -85,6 +94,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   MicrophoneLevelsParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -96,6 +106,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   MotionParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -107,6 +118,7 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   WeatherParquetJobStack:
     Type: AWS::CloudFormation::Stack
@@ -118,17 +130,20 @@ Resources:
         JobRole: !Ref JobRole
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
 
   S3ToJsonS3JobStack:
     Type:  AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${SourceBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-python-job.yaml
       Parameters:
-        JobDescription: Convert data to JSONS3 data
+        JobDescription: Convert data to JSONS3 data - test
         JobRole: !Ref JobRole
-        MaxConcurrentRuns: 100
+        MaxConcurrentRuns: 150
         S3OutputBucketName: !Ref S3OutputBucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
+        UniqueId: !Ref UniqueId
+        PythonVersion: 3
 
 Outputs:
 
