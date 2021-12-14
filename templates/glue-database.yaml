@@ -400,32 +400,34 @@ Resources:
         Retention: 0
         StorageDescriptor:
           Columns:
-            - Name: taskstatus
-              Type: string
-            - Name: accuracy
-              Type: double
+            - Name: fnmscore
+              Type: int
+            - Name: fnlscore
+              Type: int
             - Name: testversion
               Type: string
-            - Name: nanticipationpractice
-              Type: int
             - Name: stephistory
-              Type: array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:string,score:int,failRuleSection:string,responseTime:bigint,anticipationError:int,stepGroup:string,se:double,theta:double,practice:boolean,timeRemaining:int>>
+              Type: >-
+                array<struct<interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,endDate:string,identifier:string,practice:boolean,type:string,wasInterrupted:boolean,score:int,section:string,response:int,responseTime:int>>
             - Name: locale
               Type: string
             - Name: enddate
               Type: string
-            - Name: nanticipationlive
+            - Name: fsbscore
               Type: int
+            - Name: taskstatus
+              Type: string
             - Name: startdate
               Type: string
             - Name: taskname
               Type: string
             - Name: userinteractions
-              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>
+              Type: array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>
             - Name: rawscore
               Type: int
             - Name: steps
-              Type: array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,failRuleSection:string,score:int,responseTime:int,anticipationError:int,stepGroup:string>>
+              Type: >-
+                array<struct<position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,identifier:string,practice:boolean,type:string,wasInterrupted:boolean,section:string,response:int,score:int,responseTime:int>>
             - Name: taskidentifier
               Type: string
             - Name: year
@@ -436,10 +438,6 @@ Resources:
               Type: int
             - Name: recordid
               Type: string
-            - Name: totalerrors
-              Type: int
-            - Name: ratescore
-              Type: double
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
           Location: !Sub s3://${BucketName}/${StudyName}/${JsonPrefix}/dataset=taskdata/
@@ -485,7 +483,7 @@ Resources:
         StorageDescriptor:
           Columns:
             - Name: asyncresults
-              Type: array<struct<weather:struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string,groundLevelPressure:int,rain:string>,airQuality:struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>,startDate:string,type:string,identifier:string,endDate:string,contentType:string,startUptime:double,relativePath:string,errorDescription:string,errorDomain:string,errorCode:int>>
+              Type: array<struct<weather:struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string>,startDate:string,type:string,identifier:string,endDate:string,contentType:string,startUptime:double,relativePath:string>>
             - Name: schemainfo
               Type: struct<revision:int,identifier:string>
             - Name: enddate
@@ -493,7 +491,7 @@ Resources:
             - Name: startdate
               Type: string
             - Name: stephistory
-              Type: array<struct<asyncResults:array<struct<taskStatus:string,accuracy:double,testVersion:string,nAnticipationPractice:int,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string>>,locale:string,endDate:string,nAnticipationLive:int,startDate:string,taskName:string,userInteractions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,rawScore:int,steps:array<struct<wasInterrupted:boolean,position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,identifier:string,type:string,instruction:boolean,response:int,failRuleSection:string,score:int,responseTime:int,anticipationError:int,stepGroup:string>>,totalErrors:int,rateScore:double>>,schemaInfo:struct<revision:int,identifier:string>,endDate:string,startDate:string,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string>>,taskRunUUID:string,identifier:string,type:string,nodePath:array<string>,assessmentIdentifier:string,schemaIdentifier:string,answerType:struct<type:string>,value:boolean,questionText:string>>
+              Type: array<struct<asyncResults:array<struct<fnmScore:int,fnlScore:int,testVersion:string,stepHistory:array<struct<interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,endDate:string,identifier:string,practice:boolean,type:string,wasInterrupted:boolean,score:int,section:string,response:int,responseTime:int>>,locale:string,endDate:string,fsbScore:int,taskStatus:string,startDate:string,taskName:string,userInteractions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,rawScore:int,steps:array<struct<position:int,endDate:string,interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,identifier:string,practice:boolean,type:string,wasInterrupted:boolean,section:string,response:int,score:int,responseTime:int>>>>,schemaInfo:struct<revision:int,identifier:string>,endDate:string,startDate:string,stepHistory:array<struct<interactions:array<struct<stepIdentifier:string,timestamp:string,identifier:string,controlEvent:string,value:string>>,startDate:string,endDate:string,identifier:string,practice:boolean,type:string,wasInterrupted:boolean,score:int,section:string,response:int,responseTime:int>>,taskRunUUID:string,identifier:string,type:string,nodePath:array<string>,assessmentIdentifier:string,schemaIdentifier:string,answerType:struct<type:string>,value:boolean,questionText:string>>
             - Name: taskrunuuid
               Type: string
             - Name: identifier
@@ -559,9 +557,7 @@ Resources:
         StorageDescriptor:
           Columns:
             - Name: weather
-              Type: struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string,rain:string,groundLevelPressure:int>
-            - Name: airquality
-              Type: struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>
+              Type: struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int,gust:double>,seaLevelPressure:int,temperature:double,identifier:string,type:string>
             - Name: startdate
               Type: string
             - Name: type
