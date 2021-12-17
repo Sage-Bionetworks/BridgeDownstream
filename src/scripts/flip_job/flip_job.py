@@ -1,14 +1,21 @@
 """
 This script is intended to be used as part of the schema change protocol.
 Run this script to disable a job in preperation of archiving that job's
-outputted parquet dataset. Likewise, run this script with a different
-parameterization to re-enable that job after archiving. This script uses
-a `contains`-like function to select applicable jobs, but its intended
+outputted parquet dataset. Likewise, re-enable that job after archiving
+by omitting --disable and specifying --triggers. This script uses
+a `contains`-like function to select jobs, but its intended
 use is to only affect one job at a time. The `contains` functionality is
 intended as a generic way of selecting a specific job, a job whose exact
 name may change with the specific stack it is deployed in. For example,
 passing --name-contains MetadataParquetJobStack_v2 is intended to only
 select one job: that which produces the metadata_v2 parquet dataset.
+
+Jobs are disabled by removing them from the `Actions` list of every trigger
+which references that job. Any running job runs are then stopped. Jobs are
+re-enabled by adding them back to the `Actions` list of each trigger,
+but stopped jobs are not resumed. The records which were being processed by
+the stopped job run will be processed next job run, assuming job bookmarks
+are being used.
 """
 import argparse
 import boto3

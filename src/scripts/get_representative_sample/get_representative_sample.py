@@ -1,3 +1,23 @@
+"""
+This script returns a SQL query that can be used to select a representative
+sample of archives for a specific dataset and dataset version.
+A representative sample consists of a single archive from each app version
+which maps to that dataset and dataset version. This SQL query can
+be used with the related script `backfill_json_datasets`.
+
+The --dataset-mapping is a JSON file formatted like:
+https://github.com/Sage-Bionetworks/BridgeDownstream/blob/20884531739037f4bb045f31f15c1deacc403130/src/glue/resources/dataset_mapping.json
+
+This script is used as part of the new schema testing process. To determine
+whether a new schema is able to conform to the current, latest dataset version,
+we build a JSON dataset consisting of a representative sample of archives
+(as defined above) and the JSON with the new schema. If we can construct
+a Glue table capable of reading the data in this dataset by only making
+additive changes to the Glue table which we already have for this dataset
+and dataset version, then the change is compatible. Otherwise a new dataset
+version and associated AWS resources must be deployed to accomodate data
+from the new schema.
+"""
 import argparse
 import json
 import synapseclient as sc
