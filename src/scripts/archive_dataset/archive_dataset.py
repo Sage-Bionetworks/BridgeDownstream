@@ -34,12 +34,14 @@ operation will also occur. Although this is the first time that the
 named `metadata_folders_v2_3`.
 """
 import argparse
+import os
 import shlex
 import subprocess
 import boto3
 
 
 def read_args():
+    """Read command line arguments."""
     parser = argparse.ArgumentParser(
             description=("Archive a parquet dataset for each study of an app "
                          "by copying it to the standard archive location: "
@@ -60,6 +62,19 @@ def read_args():
 
 
 def get_source_and_dest_prefix(s3_client, bucket, app, dataset, dataset_version):
+    """Construct the source and destination S3 prefixes of the archives.
+
+    Keyword arguments:
+    s3_client -- An AWS S3 client object.
+    bucket -- The S3 bucket name.
+    app -- The app identifier, as used in the S3 prefix in the bucket, to archive.
+    dataset -- The name of the dataset to archive.
+    dataset_version -- The dataset version to archive.
+
+    Returns:
+    A dictionary with source prefixes as keys and destination
+    prefixes as values.
+    """
     source_and_dest = dict()
     study_prefix_obj = s3_client.list_objects_v2(
             Bucket=bucket,
@@ -82,20 +97,46 @@ def get_source_and_dest_prefix(s3_client, bucket, app, dataset, dataset_version)
                 dataset=dataset,
                 dataset_version=dataset_version)
         for descendent_dataset_prefix in descendent_dataset_prefixes:
-            source_path = f"s3://{bucket}/{descendent_dataset_prefix}"
+            source_path = os.path.join(
+                    "s3://",
+                    bucket,
+                    descendent_dataset_prefix)
             descendent_dataset = "_".join(
                     descendent_dataset_prefix
                     .split("/")[-2]
                     .split("_")[:-1])
-            dest_path = (f"s3://{bucket}/{study_prefix}parquet/"
-                         f"archive/{descendent_dataset}_{dataset_version}_"
-                         f"{latest_archive_dataset_update+1}/")
+            archive_dataset_name = "_".join([
+                    descendent_dataset,
+                    dataset_version,
+                    str(latest_archive_dataset_update+1)])
+            dest_path = os.path.join(
+                    "s3://",
+                    bucket,
+                    study_prefix,
+                    "parquet",
+                    "archive",
+                    archive_dataset_name)
             source_and_dest[source_path] = dest_path
     return source_and_dest
 
 
 def get_archive_dataset_update_number(s3_client, bucket, study_prefix,
                                       dataset, dataset_version):
+    """Get the most recent update number for the specified dataset and
+    dataset version. The update number of the archive we are creating should
+    be one more than this.
+
+    Keyword arguments:
+    s3_client -- An AWS S3 client object.
+    bucket -- The S3 bucket name.
+    study_prefix -- The S3 prefix down to the study level, e.g., {app}/{study}/
+    dataset -- The name of the dataset to archive.
+    dataset_version -- The dataset version to archive.
+
+    Returns:
+    An integer representing how many times this dataset and dataset version
+    have been archived previously.
+    """
     archive_prefix = f"{study_prefix}parquet/archive/"
     archive_dataset_prefix_obj = s3_client.list_objects_v2(
             Bucket=bucket,
@@ -116,10 +157,18 @@ def get_archive_dataset_update_number(s3_client, bucket, study_prefix,
 
 
 def copy_source_to_dest(source_and_dest):
+    """Recursively copy each item in a dictionary from its key to its value.
+
+    Keyword arguments:
+    source_and_dest -- A dictionary with S3 source prefixes as keys
+    and S3 destination prefixes as values.
+
+    Returns: None
+    """
     for source in source_and_dest:
         dest = source_and_dest[source]
         bash_command = f"aws s3 cp --recursive {source} {dest}"
-        process = subprocess.run(
+        subprocess.run(
                 shlex.split(bash_command),
                 check=True)
 
