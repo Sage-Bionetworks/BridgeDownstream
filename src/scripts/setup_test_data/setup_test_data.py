@@ -98,6 +98,7 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
           with archive.open('metadata.json') as metadata_file:
             metadata = json.load(metadata_file)
             file_metadata['taskIdentifier'] = metadata['taskIdentifier']
+            file_metadata['appversion'] = metadata['appVersion']
       file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
       logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
       with open(file_path, 'rb') as f:
@@ -118,6 +119,20 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
           synapseStore=False,
           dataFileHandleId=file_handle['id'])
       syn.store(file)
+
+
+def remove_test_data(syn, bucket_name, project_id, folder_id):
+  '''Remove all test objects from S3 and Synapse.'''
+
+  # remove objects from S3
+  s3 = boto3.resource('s3')
+  bucket = s3.Bucket(bucket_name)
+  bucket.objects.all().delete()
+
+  # recreate Synapse project test folder, wiping old data
+  syn.delete(folder_id)
+  new_folder = Folder('test-data', parent=project_id)
+  syn.store(new_folder)
 
 
 def main():
@@ -156,6 +171,7 @@ def main():
   # add test data to Synapse
   script_dir = './src/scripts/setup_test_data'
   add_test_data(syn, script_dir, bucket_name, folder_id)
+  #remove_test_data(syn, bucket_name, project_id, folder_id)
 
 
 if __name__ == "__main__":
