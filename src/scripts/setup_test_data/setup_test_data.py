@@ -97,7 +97,8 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
       with ZipFile(file_path) as archive:
           with archive.open('metadata.json') as metadata_file:
             metadata = json.load(metadata_file)
-            file_metadata['taskIdentifier'] = metadata['taskIdentifier']
+            file_metadata['taskidentifier'] = metadata['taskIdentifier']
+            file_metadata['appversion'] = metadata['appVersion']
       file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
       logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
       with open(file_path, 'rb') as f:
@@ -120,6 +121,21 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
       syn.store(file)
 
 
+def remove_test_data(syn, bucket_name, project_id, folder_id):
+  '''Remove all test objects from S3 and Synapse.'''
+
+  # remove objects from S3
+  s3 = boto3.resource('s3')
+  bucket = s3.Bucket(bucket_name)
+  bucket.objects.all().delete()
+
+  # recreate Synapse project test folder, wiping old data
+  syn.delete(folder_id)
+  new_folder = Folder('test-data', parent=project_id)
+  syn.store(new_folder)
+  setup_external_storage(syn, bucket_name, project_id, folder_id)
+
+
 def main():
 
   logger.info(f'Begin setting up test data')
@@ -132,9 +148,6 @@ def main():
 
   principal_id = '3432808' # BridgeDownstream Synapse service account
   project_id = get_project_id(syn, principal_id)
-
-  # if there's a project id, assume the project is already connected to synapse
-  connected_to_synapse = True if project_id else False
 
   # if no project id is available, create a new project
   if not project_id:
@@ -149,9 +162,8 @@ def main():
 
   # connect bucket and project if this is a newly made project
   bucket_name = 'bridge-downstream-dev-source'
-  if not connected_to_synapse:
-    storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
-    logger.debug(f'storage_location_info: {storage_location_info}')
+  storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
+  logger.debug(f'storage_location_info: {storage_location_info}')
 
   # add test data to Synapse
   script_dir = './src/scripts/setup_test_data'
