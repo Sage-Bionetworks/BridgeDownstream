@@ -133,6 +133,7 @@ def remove_test_data(syn, bucket_name, project_id, folder_id):
   syn.delete(folder_id)
   new_folder = Folder('test-data', parent=project_id)
   syn.store(new_folder)
+  setup_external_storage(syn, bucket_name, project_id, folder_id)
 
 
 def main():
@@ -148,9 +149,6 @@ def main():
   principal_id = '3432808' # BridgeDownstream Synapse service account
   project_id = get_project_id(syn, principal_id)
 
-  # if there's a project id, assume the project is already connected to synapse
-  connected_to_synapse = True if project_id else False
-
   # if no project id is available, create a new project
   if not project_id:
     template_path = './src/scripts/setup_test_data/synapse-formation.yaml'
@@ -164,14 +162,12 @@ def main():
 
   # connect bucket and project if this is a newly made project
   bucket_name = 'bridge-downstream-dev-source'
-  if not connected_to_synapse:
-    storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
-    logger.debug(f'storage_location_info: {storage_location_info}')
+  storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
+  logger.debug(f'storage_location_info: {storage_location_info}')
 
   # add test data to Synapse
   script_dir = './src/scripts/setup_test_data'
   add_test_data(syn, script_dir, bucket_name, folder_id)
-  #remove_test_data(syn, bucket_name, project_id, folder_id)
 
 
 if __name__ == "__main__":

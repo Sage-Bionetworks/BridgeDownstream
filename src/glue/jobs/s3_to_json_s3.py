@@ -48,7 +48,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
     created_on = datetime.fromtimestamp(
             int(s3_obj_metadata["createdon"]) / 1000)
     this_dataset_mapping = dataset_mapping[
-            "appVersion"][s3_obj_metadata["appversion"]]["dataset"]
+            "appVersion"][s3_obj_metadata["appVersion"]]["dataset"]
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
         contents = z.namelist()
         for json_path in z.namelist():
