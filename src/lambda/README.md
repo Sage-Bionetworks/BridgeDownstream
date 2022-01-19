@@ -45,5 +45,3 @@ contains all the environment vars that are expected in `sns_to_glue/app.py`.
 ```bash
 lambda$ sam local invoke -e events/event.json --env-vars test-env-vars.json
 ```
-
-You do need to log into ECR
