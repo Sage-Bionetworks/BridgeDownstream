@@ -97,7 +97,7 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
       with ZipFile(file_path) as archive:
           with archive.open('metadata.json') as metadata_file:
             metadata = json.load(metadata_file)
-            file_metadata['taskIdentifier'] = metadata['taskIdentifier']
+            file_metadata['taskidentifier'] = metadata['taskIdentifier']
             file_metadata['appversion'] = metadata['appVersion']
       file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
       logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
