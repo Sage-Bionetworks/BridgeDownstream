@@ -61,18 +61,21 @@ def create_project(syn, template_path):
 
 def setup_external_storage(syn, bucket_name, project_id, folder_id):
   '''Connect bucket as external storage for the Synapse project'''
-  logger.info(f'Setting s3 bucket {bucket_name} as storage for {project_name}, ' +
-    f'with Synapse folder {folder_id}.')
-  storage_location = syn.create_s3_storage_location(
-          parent = project_id,
-          folder = folder_id,
-          bucket_name = bucket_name,
-          sts_enabled=True)
-  storage_location_info = {
-         k: v for k, v in
-         zip(['synapse_folder', 'storage_location', 'synapse_project'],
-             storage_location)}
-  return(storage_location_info)
+  try:
+    syn.get_sts_storage_token(entity=folder_id, permission='read_only')
+    logger.info(f'External storage already configured for Synapse folder {folder_id}')
+  except SynapseHTTPError as err:
+    logger.info(f'Setting s3 bucket {bucket_name} as storage for {project_name}, ' +
+      f'with Synapse folder {folder_id}.')
+    storage_location = syn.create_s3_storage_location(
+            parent = project_id,
+            folder = folder_id,
+            bucket_name = bucket_name,
+            sts_enabled=True)
+    storage_location_info = {
+           k: v for k, v in
+           zip(['synapse_folder', 'storage_location', 'synapse_project'],
+               storage_location)}
 
 
 def get_folder_id(syn, project_id, synapse_folder_name):
@@ -90,35 +93,40 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
 
   s3 = boto3.resource('s3')
   bucket = s3.Bucket(bucket_name)
+  objects = list(bucket.objects.all())
+  object_keys = [o.key for o in objects if o.key.endswith('.zip')]
   for file_path in files:
-      filename = file_path.parts[-1]
+    filename = file_path.parts[-1]
+    if filename not in object_keys:
       file_metadata = {}
       file_metadata['recordid'] = filename.split('-')[0]
       with ZipFile(file_path) as archive:
-          with archive.open('metadata.json') as metadata_file:
-            metadata = json.load(metadata_file)
-            file_metadata['taskidentifier'] = metadata['taskIdentifier']
-            file_metadata['appversion'] = metadata['appVersion']
-      file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
-      logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
-      with open(file_path, 'rb') as f:
+        with archive.open('metadata.json') as metadata_file:
+          metadata = json.load(metadata_file)
+          file_metadata['taskidentifier'] = metadata['taskIdentifier']
+          file_metadata['appversion'] = metadata['appVersion']
+        file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
+        logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
+        with open(file_path, 'rb') as f:
           bucket.put_object(
-              Body=f,
-              Key=filename,
-              Metadata=file_metadata
-          )
-      logger.info(f'Storing {filename} as handle in folder {folder_id}')
-      file_handle=syn.create_external_s3_file_handle(
+            Body=f,
+            Key=filename,
+            Metadata=file_metadata
+            )
+        logger.info(f'Storing {filename} as handle in folder {folder_id}')
+        file_handle=syn.create_external_s3_file_handle(
           bucket_name=bucket_name,
           s3_file_key=filename,
           file_path=file_path,
           parent=folder_id)
-      file = File(
+        file = File(
           parentId=folder_id,
           name=filename,
           synapseStore=False,
           dataFileHandleId=file_handle['id'])
-      syn.store(file)
+        syn.store(file)
+    else:
+      logger.info(f'{filename} was already added to S3 bucket {bucket_name}')
 
 
 def remove_test_data(syn, bucket_name, project_id, folder_id):
@@ -138,7 +146,7 @@ def remove_test_data(syn, bucket_name, project_id, folder_id):
 
 def main():
 
-  logger.info(f'Begin setting up test data')
+  logger.info(f'Begin setting up test data.')
 
   # get synapse client
   ssm_parameter = 'synapse-bridgedownstream-auth'
@@ -162,12 +170,13 @@ def main():
 
   # connect bucket and project if this is a newly made project
   bucket_name = 'bridge-downstream-dev-source'
-  storage_location_info = setup_external_storage(syn, bucket_name, project_id, folder_id)
-  logger.debug(f'storage_location_info: {storage_location_info}')
+  setup_external_storage(syn, bucket_name, project_id, folder_id)
 
   # add test data to Synapse
   script_dir = './src/scripts/setup_test_data'
   add_test_data(syn, script_dir, bucket_name, folder_id)
+
+  logger.info('Test data setup complete.')
 
 
 if __name__ == "__main__":
