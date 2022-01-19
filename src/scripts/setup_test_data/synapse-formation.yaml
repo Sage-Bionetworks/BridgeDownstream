@@ -1,7 +1,7 @@
 - name: BridgeDownstreamTest
   type: Project
   acl:
-    - principal_id: 3432808 # BridgeDownstream Service Account
+    - principal_id: 3437883 #BridgeDownstreamTest team
       access_type:
         - READ
         - DOWNLOAD

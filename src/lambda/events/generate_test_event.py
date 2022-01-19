@@ -35,7 +35,7 @@ def read_args():
   parser = argparse.ArgumentParser(
     description='Generate a json file of a mocked SNS event for testing.')
   parser.add_argument('--synapse-folder-id',
-    default='syn26467502',
+    default='syn26721260',
     help='Synapse ID of the test-data folder in the BridgeDownstreamTest project')
   parser.add_argument('--filename',
     default='records.json',
@@ -59,9 +59,12 @@ def main():
     record = copy.deepcopy(record_template)
     record['Sns']['MessageAttributes']['SynapseId']['Value'] = item['id']
     records.append(record)
+  event = {}
+  event['Records'] = records
+
 
   with open(filename, 'w') as outfile:
-    json.dump(records, outfile)
+    json.dump(event, outfile)
     print(f'Done. Event written to {outfile.name}.')
 
 

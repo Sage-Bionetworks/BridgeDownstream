@@ -19,6 +19,12 @@ You may need the following for local testing.
 
 ## Use the SAM CLI to build and test locally
 
+Log into ECR. Set environment variables for AWS_PROFILE, AWS_REGION, and AWS_ACCOUNT_ID, then run:
+
+```bash
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+```
+
 Build your application with the `sam build` command.
 
 ```bash
@@ -39,3 +45,5 @@ contains all the environment vars that are expected in `sns_to_glue/app.py`.
 ```bash
 lambda$ sam local invoke -e events/event.json --env-vars test-env-vars.json
 ```
+
+You do need to log into ECR
