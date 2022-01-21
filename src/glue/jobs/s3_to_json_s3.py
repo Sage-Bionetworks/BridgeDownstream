@@ -45,8 +45,8 @@ def get_dataset_mapping(script_location):
 
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
-    created_on = datetime.fromtimestamp(
-            int(s3_obj_metadata["createdon"]) / 1000)
+    uploaded_on = datetime.fromtimestamp(
+            int(s3_obj_metadata["uploadedon"][:-1])) # remove trailing "Z"
     this_dataset_mapping = dataset_mapping[
             "appVersion"][s3_obj_metadata["appversion"]]["dataset"]
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
@@ -63,9 +63,9 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                 j = json.load(p)
                 # We inject all S3 metadata into the metadata file
                 if dataset_name == "metadata":
-                    j["year"] = int(created_on.year)
-                    j["month"] = int(created_on.month)
-                    j["day"] = int(created_on.day)
+                    j["year"] = int(uploaded_on.year)
+                    j["month"] = int(uploaded_on.month)
+                    j["day"] = int(uploaded_on.day)
                     for key in s3_obj_metadata:
                         # We revert partition fields back to camelCase
                         if key == "taskidentifier":
@@ -78,15 +78,15 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                     if type(j) == list:
                         for item in j:
                             item["taskIdentifier"] = s3_obj_metadata["taskidentifier"]
-                            item["year"] = int(created_on.year)
-                            item["month"] = int(created_on.month)
-                            item["day"] = int(created_on.day)
+                            item["year"] = int(uploaded_on.year)
+                            item["month"] = int(uploaded_on.month)
+                            item["day"] = int(uploaded_on.day)
                             item["recordId"] = s3_obj_metadata["recordid"]
                     else:
                         j["taskIdentifier"] = s3_obj_metadata["taskidentifier"]
-                        j["year"] = int(created_on.year)
-                        j["month"] = int(created_on.month)
-                        j["day"] = int(created_on.day)
+                        j["year"] = int(uploaded_on.year)
+                        j["month"] = int(uploaded_on.month)
+                        j["day"] = int(uploaded_on.day)
                         j["recordId"] = s3_obj_metadata["recordid"]
                 output_fname = s3_obj_metadata["recordid"] + ".ndjson"
                 output_path = os.path.join(dataset_name, output_fname)
@@ -96,9 +96,9 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         workflow_run_properties["json_prefix"],
                         f"dataset={dataset_name}",
                         f"taskIdentifier={s3_obj_metadata['taskidentifier']}",
-                        f"year={str(created_on.year)}",
-                        f"month={str(created_on.month)}",
-                        f"day={str(created_on.day)}",
+                        f"year={str(uploaded_on.year)}",
+                        f"month={str(uploaded_on.month)}",
+                        f"day={str(uploaded_on.day)}",
                         f"recordId={s3_obj_metadata['recordid']}",
                         output_fname)
                 with open(output_path, "rb") as f_in:
