@@ -105,7 +105,7 @@ def add_test_data(syn, dir_path, bucket_name, folder_id):
           metadata = json.load(metadata_file)
           file_metadata['taskidentifier'] = metadata['taskIdentifier']
           file_metadata['appversion'] = metadata['appVersion']
-        file_metadata['createdon'] = '1623421775829' # any datetime will do for the test data
+          file_metadata['uploadedon'] = "2022-01-20T21:26:07.641Z" # any datetime will do for the test data
         logger.info(f'Adding {filename} to S3 bucket {bucket_name}')
         with open(file_path, 'rb') as f:
           bucket.put_object(
