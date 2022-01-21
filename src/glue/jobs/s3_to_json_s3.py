@@ -45,7 +45,7 @@ def get_dataset_mapping(script_location):
 
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
-    uploaded_on = datetime.fromtimestamp(
+    uploaded_on = datetime.fromisoformat(
             int(s3_obj_metadata["uploadedon"][:-1])) # remove trailing "Z"
     this_dataset_mapping = dataset_mapping[
             "appVersion"][s3_obj_metadata["appversion"]]["dataset"]
