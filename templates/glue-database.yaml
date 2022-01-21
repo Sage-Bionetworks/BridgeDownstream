@@ -73,10 +73,6 @@ Resources:
             classification: json
             compressionType: none
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: day,distractions,month,recordId,taskIdentifier,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
@@ -143,10 +139,6 @@ Resources:
             classification: json
             compressionType: none
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: appName,appVersion,dataFilename,day,files,format,item,month,phoneInfo,recordId,schemaRevision,taskIdentifier,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           SortColumns: []
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
@@ -224,10 +216,6 @@ Resources:
             classification: json
             compressionType: none
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: appName,appVersion,createdon,dataGroups,day,deviceInfo,deviceTypeIdentifier,endDate,files,healthcode,month,recordId,rsdFrameworkVersion,startDate,substudymemberships,taskIdentifier,taskRunUUID,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
@@ -294,10 +282,6 @@ Resources:
             compressionType: none
             jsonPath: $[*]
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: average,day,month,peak,recordId,stepPath,taskIdentifier,timeInterval,timestamp,unit,uptime,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
@@ -366,10 +350,6 @@ Resources:
             compressionType: none
             jsonPath: $[*]
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: day,month,recordId,sensorType,stepPath,taskIdentifier,timestamp,timestampDate,uptime,x,y,year,z
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
@@ -448,10 +428,6 @@ Resources:
             classification: json
             compressionType: none
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: consideredSteps,day,endDate,locale,month,recordId,schemaIdentifier,scores,startDate,stepHistory,steps,taskIdentifier,taskName,taskRunUUID,taskStatus,testVersion,userInteractions,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
@@ -520,10 +496,6 @@ Resources:
             classification: json
             compressionType: none
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: asyncResults,day,endDate,identifier,month,nodePath,recordId,startDate,stepHistory,taskIdentifier,taskRunUUID,type,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
@@ -584,10 +556,6 @@ Resources:
             classification: json
             compressionType: none
             typeOfData: file
-          SerdeInfo:
-            Parameters:
-              paths: airQuality,day,endDate,identifier,month,recordId,startDate,taskIdentifier,type,weather,year
-            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
 
