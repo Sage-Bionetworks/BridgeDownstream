@@ -45,7 +45,7 @@ Parameters:
     Default: 'true'
     AllowedValues: ['true', 'false']
 
-  S3OutputBucketName:
+  S3BucketName:
     Type: String
     Description: The name of the S3 bucket where temporary files are written.
 
@@ -69,8 +69,9 @@ Resources:
         ScriptLocation: !Ref S3ScriptLocation
         PythonVersion: !Ref PythonVersion
       DefaultArguments:
-        --TempDir: !Sub s3://${S3OutputBucketName}/tmp
+        --TempDir: !Sub s3://${S3BucketName}/tmp
         --enable-continuous-cloudwatch-log: !Ref ContinuousLog
+        --enable-metrics: true
         --table: !Ref GlueTableName
       Description: !Ref JobDescription
       ExecutionProperty:

@@ -4,6 +4,7 @@ dependencies:
   - develop/glue-jobs.yaml
 parameters:
   StudyName: example-study-2
+  BranchOrTagName: main
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName

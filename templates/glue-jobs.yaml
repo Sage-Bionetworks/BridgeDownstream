@@ -25,9 +25,9 @@ Parameters:
     Type: String
     Description: The name or ARN of the IAM role that will run this job.
 
-  S3OutputBucketName:
+  S3BucketName:
     Type: String
-    Description: The S3 output bucket where temporary files will be written.
+    Description: The name of the S3 bucket where temporary files and logs are written.
 
   UniqueId:
     Type: String
@@ -44,7 +44,7 @@ Resources:
         JobDescription: Export taskresult data in parquet format
         GlueTableName: dataset_taskresult
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -56,7 +56,7 @@ Resources:
         JobDescription: Export taskdata data in parquet format
         GlueTableName: dataset_taskdata
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -68,7 +68,7 @@ Resources:
         JobDescription: Export answers data in parquet format
         GlueTableName: dataset_answers
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -80,7 +80,7 @@ Resources:
         JobDescription: Export info data in parquet format
         GlueTableName: dataset_info
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -92,7 +92,7 @@ Resources:
         JobDescription: Export metadata data in parquet format
         GlueTableName: dataset_metadata
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -104,7 +104,7 @@ Resources:
         JobDescription: Export microphone levels data in parquet format
         GlueTableName: dataset_microphone_levels
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -116,7 +116,7 @@ Resources:
         JobDescription: Export motion data in parquet format
         GlueTableName: dataset_motion
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -128,7 +128,7 @@ Resources:
         JobDescription: Export weather data in parquet format
         GlueTableName: dataset_weather
         JobRole: !Ref JobRole
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
         UniqueId: !Ref UniqueId
 
@@ -140,7 +140,7 @@ Resources:
         JobDescription: Convert data to JSONS3 data - test
         JobRole: !Ref JobRole
         MaxConcurrentRuns: 150
-        S3OutputBucketName: !Ref S3OutputBucketName
+        S3BucketName: !Ref S3BucketName
         S3ScriptLocation: !Sub s3://${SourceBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
         UniqueId: !Ref UniqueId
         PythonVersion: 3

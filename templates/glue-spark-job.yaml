@@ -93,9 +93,9 @@ Parameters:
     Default: 'true'
     AllowedValues: ['true', 'false']
 
-  S3OutputBucketName:
+  S3BucketName:
     Type: String
-    Description: The name of the S3 bucket where temporary files are written.
+    Description: The name of the S3 bucket where temporary files and logs are written.
 
   GlueTableName:
     Type: String
@@ -111,11 +111,15 @@ Resources:
         Name: !Ref JobCommand
         ScriptLocation: !Ref S3ScriptLocation
       DefaultArguments:
-        --TempDir: !Sub s3://${S3OutputBucketName}/tmp
+        --TempDir: !Sub s3://${S3BucketName}/tmp
         --enable-continuous-cloudwatch-log: !Ref ContinuousLog
+        --enable-metrics: true
+        --enable-spark-ui: true
+        --spark-event-logs-path: !Sub s3://${S3BucketName}/spark-logs/${AWS::StackName}/
         --job-bookmark-option: !Ref BookmarkOption
         --job-language: !Ref JobLanguage
         --table: !Ref GlueTableName
+        # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:
         MaxConcurrentRuns: !Ref MaxConcurrentRuns

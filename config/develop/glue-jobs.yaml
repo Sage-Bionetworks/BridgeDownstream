@@ -6,7 +6,7 @@ dependencies:
 parameters:
   SourceBucketName: {{ stack_group_config.artifact_bucket_name }}
   JobRole: !stack_output_external glue-job-role::RoleArn
-  S3OutputBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
+  S3BucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
   BranchOrTagName: main
   UniqueId: !rcmd git rev-parse HEAD
 stack_tags:
