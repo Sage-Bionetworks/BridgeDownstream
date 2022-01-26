@@ -8,9 +8,9 @@ python_version = "3.8"
 
 [dev-packages]
 pre-commit = "==2.*"
-sceptre = "==2.*"
 pandas = "*"
 synapseformation = {editable = true, ref = "2d5edf8c673b4adb26df54f222b0e7ea99ab6e78", git = "https://github.com/Sage-Bionetworks/synapseformation.git"}
+sceptre = ">=2.7.1"
 
 [packages]
 boto3 = "==1.*"

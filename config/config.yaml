@@ -6,3 +6,7 @@ default_stack_tags:
   Department: IBC
   Project: mobile-toolbox
   OwnerEmail: aws-mobilehealth-dataengineering-dev@sagebase.org
+j2_environment:
+   extensions:
+      - jinja2.ext.do
+      - jinja2.ext.debug

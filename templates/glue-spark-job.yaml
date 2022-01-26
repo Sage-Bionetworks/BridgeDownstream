@@ -97,10 +97,9 @@ Parameters:
     Type: String
     Description: The name of the S3 bucket where temporary files and logs are written.
 
-  GlueTableName:
+  GlueTableNames:
     Type: String
-    Description: Name of the Glue table
-    Default: ''
+    Description: Names of the Glue tables
 
 Resources:
 
@@ -118,7 +117,7 @@ Resources:
         --spark-event-logs-path: !Sub s3://${S3BucketName}/spark-logs/${AWS::StackName}/
         --job-bookmark-option: !Ref BookmarkOption
         --job-language: !Ref JobLanguage
-        --table: !Ref GlueTableName
+        --tables: !Ref GlueTableNames
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:

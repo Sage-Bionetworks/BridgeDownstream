@@ -3,6 +3,10 @@ Description: A set of Glue workflows for a study
 
 Parameters:
 
+  AppName:
+    Type: String
+    Description: App whose data this pipeline infrastructure processes
+
   StudyName:
     Type: String
     Description: Study name, used to name workflows
@@ -33,24 +37,28 @@ Resources:
     Type: AWS::Glue::Workflow
     Properties:
       DefaultRunProperties:
+        app_name: !Ref AppName
+        study_name: !Ref StudyName
         source_bucket: !Ref SourceBucketName
         json_bucket: !Ref JsonBucketName
-        json_prefix: !Sub ${StudyName}/${JsonPrefix}
+        json_prefix: !Ref JsonPrefix
       Description: >-
         Workflow that breaks apart an archive and stores individual files in S3
-      Name: !Sub ${StudyName}-S3ToJsonWorkflow
+      Name: !Sub ${AppName}-${StudyName}-S3ToJsonWorkflow
 
   JsonToParquetWorkflow:
     Type: AWS::Glue::Workflow
     Properties:
       DefaultRunProperties:
+        app_name: !Ref AppName
+        study_name: !Ref StudyName
         database: !Ref DatabaseName
         json_bucket: !Ref JsonBucketName
         json_prefix: !Sub ${StudyName}/${JsonPrefix}
         parquet_bucket: !Ref ParquetBucketName
         parquet_prefix: !Sub ${StudyName}/${ParquetPrefix}
       Description: Workflow for converting json to parquet
-      Name: !Sub ${StudyName}-JsonToParquetWorkflow
+      Name: !Sub ${AppName}-${StudyName}-JsonToParquetWorkflow
 
 Outputs:
 

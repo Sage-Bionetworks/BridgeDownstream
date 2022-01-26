@@ -41,23 +41,25 @@ def get_dataset_mapping(script_location):
             Filename=dataset_mapping_fname)
     with open(dataset_mapping_fname, "r") as f:
         dataset_mapping = json.load(f)
+    logger.debug(f'dataset_mapping: {dataset_mapping}')
     return(dataset_mapping)
 
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
-    uploaded_on = datetime.fromisoformat(
-            int(s3_obj_metadata["uploadedon"][:-1])) # remove trailing "Z"
+    uploaded_on = datetime.strptime(s3_obj_metadata["uploadedon"], '%Y-%m-%dT%H:%M:%S.%fZ')
     this_dataset_mapping = dataset_mapping[
             "appVersion"][s3_obj_metadata["appversion"]]["dataset"]
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
         contents = z.namelist()
+        logger.debug(f'contents: {contents}')
         for json_path in z.namelist():
             dataset_key = os.path.splitext(json_path)[0]
             dataset_version = this_dataset_mapping[dataset_key]
-            if dataset_version == "v1":
-                dataset_name = dataset_key
-            else:
-                dataset_name = f"{dataset_key}_{dataset_version}"
+            dataset_name = dataset_key
+            # if dataset_version == "v1":
+            #     dataset_name = dataset_key
+            # else:
+            #     dataset_name = f"{dataset_key}_{dataset_version}"
             os.makedirs(dataset_name, exist_ok=True)
             with z.open(json_path, "r") as p:
                 j = json.load(p)
@@ -90,11 +92,14 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         j["recordId"] = s3_obj_metadata["recordid"]
                 output_fname = s3_obj_metadata["recordid"] + ".ndjson"
                 output_path = os.path.join(dataset_name, output_fname)
+                logger.debug(f'output_path: {output_path}')
                 with open(output_path, "w") as f_out:
                     json.dump(j, f_out, indent=None)
-                s3_output_key = os.path.join(
+                    s3_output_key = os.path.join(
+                        workflow_run_properties["app_name"],
+                        workflow_run_properties["study_name"],
                         workflow_run_properties["json_prefix"],
-                        f"dataset={dataset_name}",
+                        f"dataset={dataset_name.lower()}_{dataset_version}",
                         f"taskIdentifier={s3_obj_metadata['taskidentifier']}",
                         f"year={str(uploaded_on.year)}",
                         f"month={str(uploaded_on.month)}",

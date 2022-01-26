@@ -10,8 +10,8 @@
               "metadata": "v1",
               "microphone_levels": "v1",
               "motion": "v1",
-              "taskData": "v1",
-              "taskResult": "v1",
+              "taskdata": "v1",
+              "taskresult": "v1",
               "weather": "v1"
             }
         }

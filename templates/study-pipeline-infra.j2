@@ -1,0 +1,264 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The set of Glue jobs created for each study
+
+Parameters:
+
+  BranchOrTagName:
+    Type: String
+    Description: >-
+      Relevant branch or tag from where templates and scripts are sourced;
+      this is used to build up the path to the correct object keys in the bucket
+    Default: main
+
+  CodeRepositoryName:
+    Type: String
+    Description: >-
+      Name of code repository, used to build up the path to the correct
+      object keys in the bucket
+    Default: BridgeDownstream
+
+  AppName:
+    Type: String
+    Description: App whose data this pipeline infrastructure processes
+    AllowedPattern: '[a-z]{1}[a-z0-9.-]*'
+
+  StudyName:
+    Type: String
+    Description: Study whose data this pipeline infrastructure processes
+    AllowedPattern: '[a-z]{1}[a-z0-9.-]*'
+
+  RoleArn:
+    Type: String
+    Description: The ARN of an IAM role that's used to access S3
+
+  ClassifierName:
+    Type: String
+    Description: Name of the Glue classifier
+
+# buckets
+  TemplateBucketName:
+    Type: String
+    Description: Name of the S3 bucket which stores CFN templates
+
+  JsonBucketName:
+    Type: String
+    Description: Name of the S3 bucket storing json
+
+  JsonPrefix:
+    Type: String
+    Description: Prefix of the object keys for ndjson data
+    Default: raw_json
+
+  ParquetBucketName:
+    Type: String
+    Description: Name of the S3 bucket where the finished parquet files are stored
+
+  ParquetPrefix:
+    Type: String
+    Description: Prefix of the object keys for parquet data
+    Default: parquet
+
+  # TODO: review use of SourceBucketName
+  # temporary: this will be replaced with the sns lambda that pulls data from a bridge bucket
+  SourceBucketName:
+    Type: String
+    Description: Name of the S3 bucket containing source data
+
+  SynapseAuthSsmParameterName:
+    Type: String
+    Description: >-
+      The name of an ssm parameter whose value is Synapse service account
+      personal access token
+
+  UniqueId:
+    Type: String
+    Description: A unique id for producing unique job names.
+    Default: ''
+
+Resources:
+  {% set dataset_schemas = sceptre_user_data.dataset_schemas %}
+  {% set dataset_versions = sceptre_user_data.dataset_version_mapping['appVersion'][sceptre_user_data.app_version]['dataset'] %}
+
+  # Json to Parquet Job Stacks
+  {% set parquet_job_stack_names = [] %}
+  {% for schema in dataset_schemas %}
+  {% set version = dataset_versions[schema.table_name] %}
+  {% set stack_name = schema.table_name.replace('_','').capitalize() + 'ParquetJobStack' %}
+  {% do parquet_job_stack_names.append(stack_name) %}
+  {{ stack_name }}:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
+      Parameters:
+        JobDescription: {{ 'Export {} {} data in parquet format'.format(schema.table_name, version) }}
+        GlueTableNames: {{ 'dataset_{}_{}'.format(schema.table_name, version) }}
+        JobRole: !Ref RoleArn
+        S3BucketName: !Ref JsonBucketName
+        S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        UniqueId: !Ref UniqueId
+  {% endfor %}
+
+  S3ToJsonS3JobStack:
+    Type:  AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-python-job.yaml
+      Parameters:
+        JobDescription: Convert data to JSONS3 data
+        MaxConcurrentRuns: 150
+        JobRole: !Ref RoleArn
+        S3BucketName: !Ref JsonBucketName
+        S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
+        UniqueId: !Ref UniqueId
+        PythonVersion: 3
+
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Sub '${AppName}-${StudyName}-db'
+
+  # Table stacks
+  {% for schema in dataset_schemas %}
+  {% set table_name = schema.table_name %}
+  {% set stack_name = table_name.replace('_','').capitalize() + 'Table' %}
+  {% set version = dataset_versions[schema.table_name] %}
+  {{ stack_name }}:
+    Type: AWS::Glue::Table
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseName: !Ref GlueDatabase
+      TableInput:
+        Name: dataset_{{ table_name }}_{{ version }}
+        Parameters:
+          CrawlerSchemaDeserializerVersion: '1.0'
+          CrawlerSchemaSerializerVersion: '1.0'
+          classification: json
+          compressionType: none
+          typeOfData: file
+        PartitionKeys: {{ schema.partition_keys }}
+        Retention: 0
+        StorageDescriptor:
+          Columns: {{ schema.columns }}
+          Compressed: false
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          Location: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/dataset={{ table_name }}_{{ version }}/
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Parameters:
+            CrawlerSchemaDeserializerVersion: '1.0'
+            CrawlerSchemaSerializerVersion: '1.0'
+            classification: json
+            compressionType: none
+            {% if table_name in sceptre_user_data.dataset_crawler_assignments.array_of_records %}
+            jsonPath: '$[*]'
+            {% endif %}
+            typeOfData: file
+          StoredAsSubDirectories: false
+        TableType: EXTERNAL_TABLE
+    {% endfor %}
+
+  StandardCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
+      DatabaseName: !Ref GlueDatabase
+      Name: !Sub ${AppName}-${StudyName}-standard
+      RecrawlPolicy:
+        RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
+      Role: !Ref RoleArn
+      SchemaChangePolicy:
+        DeleteBehavior: LOG
+        UpdateBehavior: LOG
+      Targets:
+        S3Targets:
+          {% for schema in dataset_schemas %}
+          {% set version = dataset_versions[schema.table_name] %}
+          {% if schema.table_name in sceptre_user_data.dataset_crawler_assignments.standard %}
+          - Path: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/dataset={{schema.table_name}}_{{version}}
+          {% endif %}
+          {% endfor %}
+
+  ArrayOfRecordsCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Classifiers:
+        - !Ref ClassifierName
+      Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
+      DatabaseName: !Ref GlueDatabase
+      Name: !Sub ${AppName}-${StudyName}-array-of-records
+      RecrawlPolicy:
+        RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
+      Role: !Ref RoleArn
+      SchemaChangePolicy:
+        DeleteBehavior: LOG
+        UpdateBehavior: LOG
+      Targets:
+        S3Targets:
+          {% for schema in dataset_schemas %}
+          {% set version = dataset_versions[schema.table_name] %}
+          {% if schema.table_name in sceptre_user_data.dataset_crawler_assignments.array_of_records %}
+          - Path: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/dataset={{schema.table_name}}_{{version}}
+          {% endif %}
+          {% endfor %}
+
+  WorkflowsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-workflows.yaml
+      Parameters:
+        AppName: !Ref AppName
+        StudyName: !Ref StudyName
+        DatabaseName: !Ref GlueDatabase
+        JsonBucketName: !Ref JsonBucketName
+        ParquetBucketName: !Ref ParquetBucketName
+        SourceBucketName: !Ref SourceBucketName
+
+  NewDataTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        - JobName: !Sub ${S3ToJsonS3JobStack.Outputs.JobName}
+      Description: >-
+        When new data is received this trigger starts the workflow
+        that unpacks the archive and stores JSON files separately
+      Type: ON_DEMAND
+      WorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
+
+  JsonToParquetTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        - CrawlerName: !Ref StandardCrawler
+        - CrawlerName: !Ref ArrayOfRecordsCrawler
+      Description: Starts crawlers for the JSON to Parquet workflow
+      Type: ON_DEMAND
+      WorkflowName: !Sub ${WorkflowsStack.Outputs.JsonToParquetWorkflowName}
+
+  JsonCrawlersDoneTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        {% for stack_name in parquet_job_stack_names %}
+        - JobName: !Sub ${ {{stack_name}}.Outputs.JobName }
+        {% endfor %}
+      #Name: !Sub ${AppName}-${StudyName}-json-crawlers-done
+      Predicate:
+        Conditions:
+        - CrawlState: SUCCEEDED
+          CrawlerName: !Ref StandardCrawler
+          LogicalOperator: EQUALS
+        - CrawlState: SUCCEEDED
+          CrawlerName: !Ref ArrayOfRecordsCrawler
+          LogicalOperator: EQUALS
+        Logical: AND
+      StartOnCreation: true
+      Type: CONDITIONAL
+      WorkflowName: !Sub ${WorkflowsStack.Outputs.JsonToParquetWorkflowName}
+
+  LambdaStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/lambda/sns_to_glue/template.yaml
+      Parameters:
+        WorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
+        SsmParameterName: !Ref SynapseAuthSsmParameterName
