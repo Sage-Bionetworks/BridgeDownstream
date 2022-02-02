@@ -113,7 +113,7 @@ Resources:
       TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
         JobDescription: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
-        GlueTableNames: {{ '{}'.format(dataset['table_name']) }}
+        GlueTableName: {{ '{}'.format(dataset['table_name']) }}
         JobRole: !Ref RoleArn
         S3BucketName: !Ref JsonBucketName
         S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
