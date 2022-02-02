@@ -1,5 +1,11 @@
 template_path: study-pipeline-infra.j2
 stack_name: example-app-1-study-1
+dependencies:
+  - develop/glue-job-role.yaml
+  - develop/s3-intermediate-bucket.yaml
+  - develop/s3-parquet-bucket.yaml
+  - develop/glue-classifier-array-of-records.yaml
+  - develop/glue-database.yaml
 parameters:
   BranchOrTagName: ETL-93/add-versioning
   AppName: example-app-1
@@ -10,6 +16,7 @@ parameters:
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
   RoleArn: !stack_output_external glue-job-role::RoleArn
   ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
+  DatabaseName: !stack_output_external bridge-downstream-glue-database::DatabaseName
   SynapseAuthSsmParameterName: synapse-bridgedownstream-auth
   UniqueId: !rcmd git rev-parse HEAD
 
@@ -19,16 +26,6 @@ stack_tags:
 sceptre_user_data:
   app_version: 'version 1.0.2, build 57'
   dataset_version_mapping: !file src/glue/resources/dataset_mapping.json
-  dataset_crawler_assignments:
-    standard:
-      - taskresult
-      - taskdata
-      - answers
-      - info
-      - metadata
-      - weather
-    array_of_records:
-      - microphone_levels
-      - motion
+  dataset_crawler_assignments: !file src/glue/resources/dataset_crawler_assignments.yaml
   # this needs to be replaced with real versioned schemas
-  dataset_schemas: !file src/glue/resources/table_columns.json
+  dataset_schemas: !file src/glue/resources/table_columns.yaml

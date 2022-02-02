@@ -1,0 +1,10 @@
+standard:
+  - answers_v1
+  - info_v2
+  - metadata_v1
+  - taskdata_v1
+  - taskresult_v1
+  - weather_v1
+array_of_records:
+  - microphone_levels_v1
+  - motion_v1

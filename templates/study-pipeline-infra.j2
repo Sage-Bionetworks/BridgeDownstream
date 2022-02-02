@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
+
 Description: The set of Glue jobs created for each study
 
 Parameters:
@@ -30,6 +31,10 @@ Parameters:
   RoleArn:
     Type: String
     Description: The ARN of an IAM role that's used to access S3
+
+  DatabaseName:
+    Type: String
+    Description: Name of the BridgeDownstream Glue database
 
   ClassifierName:
     Type: String
@@ -76,22 +81,39 @@ Parameters:
     Default: ''
 
 Resources:
-  {% set dataset_schemas = sceptre_user_data.dataset_schemas %}
-  {% set dataset_versions = sceptre_user_data.dataset_version_mapping['appVersion'][sceptre_user_data.app_version]['dataset'] %}
+  # convert crawler assignments to map for ease of lookup
+  {% set crawler_assignments = {} %}
+  {% for crawler_name, datasets in sceptre_user_data.dataset_crawler_assignments.items() %}
+  {% for dataset in datasets %}
+  {% do crawler_assignments.update({dataset: crawler_name}) %}
+  {% endfor %}
+  {% endfor %}
+
+  # combine all configuration data into a "datasets" collection
+  {% set datasets = [] %}
+  {% for k,v in sceptre_user_data.dataset_version_mapping['appVersion'][sceptre_user_data.app_version]['dataset'].items() %}
+  {% set dataset_name = '{}_{}'.format(k,v) %}
+  {% set dataset = {} %}
+  {% do dataset.update({'dataset_name': dataset_name}) %}
+  {% do dataset.update({'table_name': 'dataset_' + dataset_name})%}
+  {% do dataset.update({'s3_partition': 'dataset=' + dataset_name})%}
+  {% do dataset.update({'crawler': crawler_assignments[dataset_name]}) %}
+  {% set schema = sceptre_user_data.dataset_schemas.tables[dataset_name] %}
+  {% do dataset.update({'columns': schema['columns']}) %}
+  {% do dataset.update({'partition_keys': schema['partition_keys']}) %}
+  {% do dataset.update({'stackname_prefix': '{}{}'.format(k.replace('_','').capitalize(), v.capitalize())}) %}
+  {% do datasets.append(dataset) %}
+  {% endfor %}
 
   # Json to Parquet Job Stacks
-  {% set parquet_job_stack_names = [] %}
-  {% for schema in dataset_schemas %}
-  {% set version = dataset_versions[schema.table_name] %}
-  {% set stack_name = schema.table_name.replace('_','').capitalize() + 'ParquetJobStack' %}
-  {% do parquet_job_stack_names.append(stack_name) %}
-  {{ stack_name }}:
+  {% for dataset in datasets %}
+  {{ dataset['stackname_prefix'] }}ParquetJobStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
-        JobDescription: {{ 'Export {} {} data in parquet format'.format(schema.table_name, version) }}
-        GlueTableNames: {{ 'dataset_{}_{}'.format(schema.table_name, version) }}
+        JobDescription: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
+        GlueTableNames: {{ '{}'.format(dataset['table_name']) }}
         JobRole: !Ref RoleArn
         S3BucketName: !Ref JsonBucketName
         S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
@@ -111,45 +133,35 @@ Resources:
         UniqueId: !Ref UniqueId
         PythonVersion: 3
 
-  GlueDatabase:
-    Type: AWS::Glue::Database
-    Properties:
-      CatalogId: !Ref AWS::AccountId
-      DatabaseInput:
-        Name: !Sub '${AppName}-${StudyName}-db'
-
   # Table stacks
-  {% for schema in dataset_schemas %}
-  {% set table_name = schema.table_name %}
-  {% set stack_name = table_name.replace('_','').capitalize() + 'Table' %}
-  {% set version = dataset_versions[schema.table_name] %}
-  {{ stack_name }}:
+  {% for dataset in datasets %}
+  {{ dataset.stackname_prefix }}Table:
     Type: AWS::Glue::Table
     Properties:
       CatalogId: !Ref AWS::AccountId
-      DatabaseName: !Ref GlueDatabase
+      DatabaseName: !Ref DatabaseName
       TableInput:
-        Name: dataset_{{ table_name }}_{{ version }}
+        Name: {{ dataset.table_name }}
         Parameters:
           CrawlerSchemaDeserializerVersion: '1.0'
           CrawlerSchemaSerializerVersion: '1.0'
           classification: json
           compressionType: none
           typeOfData: file
-        PartitionKeys: {{ schema.partition_keys }}
+        PartitionKeys: {{ dataset.partition_keys }}
         Retention: 0
         StorageDescriptor:
-          Columns: {{ schema.columns }}
+          Columns: {{ dataset.columns }}
           Compressed: false
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
-          Location: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/dataset={{ table_name }}_{{ version }}/
+          Location: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/{{dataset.s3_partition}}/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           Parameters:
             CrawlerSchemaDeserializerVersion: '1.0'
             CrawlerSchemaSerializerVersion: '1.0'
             classification: json
             compressionType: none
-            {% if table_name in sceptre_user_data.dataset_crawler_assignments.array_of_records %}
+            {% if dataset.crawler == 'array_of_records' %}
             jsonPath: '$[*]'
             {% endif %}
             typeOfData: file
@@ -161,7 +173,7 @@ Resources:
     Type: AWS::Glue::Crawler
     Properties:
       Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
-      DatabaseName: !Ref GlueDatabase
+      DatabaseName: !Ref DatabaseName
       Name: !Sub ${AppName}-${StudyName}-standard
       RecrawlPolicy:
         RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
@@ -171,10 +183,9 @@ Resources:
         UpdateBehavior: LOG
       Targets:
         S3Targets:
-          {% for schema in dataset_schemas %}
-          {% set version = dataset_versions[schema.table_name] %}
-          {% if schema.table_name in sceptre_user_data.dataset_crawler_assignments.standard %}
-          - Path: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/dataset={{schema.table_name}}_{{version}}
+          {% for dataset in datasets %}
+          {% if dataset.crawler == 'standard' %}
+          - Path: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/{{dataset.s3_partition}}/
           {% endif %}
           {% endfor %}
 
@@ -184,7 +195,7 @@ Resources:
       Classifiers:
         - !Ref ClassifierName
       Configuration: '{"Version":1.0,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}'
-      DatabaseName: !Ref GlueDatabase
+      DatabaseName: !Ref DatabaseName
       Name: !Sub ${AppName}-${StudyName}-array-of-records
       RecrawlPolicy:
         RecrawlBehavior: CRAWL_NEW_FOLDERS_ONLY
@@ -194,10 +205,9 @@ Resources:
         UpdateBehavior: LOG
       Targets:
         S3Targets:
-          {% for schema in dataset_schemas %}
-          {% set version = dataset_versions[schema.table_name] %}
-          {% if schema.table_name in sceptre_user_data.dataset_crawler_assignments.array_of_records %}
-          - Path: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/dataset={{schema.table_name}}_{{version}}
+          {% for dataset in datasets %}
+          {% if dataset.crawler == 'array_of_records' %}
+          - Path: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/{{dataset.s3_partition}}/
           {% endif %}
           {% endfor %}
 
@@ -208,7 +218,7 @@ Resources:
       Parameters:
         AppName: !Ref AppName
         StudyName: !Ref StudyName
-        DatabaseName: !Ref GlueDatabase
+        DatabaseName: !Ref DatabaseName
         JsonBucketName: !Ref JsonBucketName
         ParquetBucketName: !Ref ParquetBucketName
         SourceBucketName: !Ref SourceBucketName
@@ -238,10 +248,9 @@ Resources:
     Type: AWS::Glue::Trigger
     Properties:
       Actions:
-        {% for stack_name in parquet_job_stack_names %}
-        - JobName: !Sub ${ {{stack_name}}.Outputs.JobName }
+        {% for dataset in datasets %}
+        - JobName: !Sub ${ {{dataset.stackname_prefix}}ParquetJobStack.Outputs.JobName }
         {% endfor %}
-      #Name: !Sub ${AppName}-${StudyName}-json-crawlers-done
       Predicate:
         Conditions:
         - CrawlState: SUCCEEDED
