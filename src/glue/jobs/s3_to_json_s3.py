@@ -55,11 +55,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
         for json_path in z.namelist():
             dataset_key = os.path.splitext(json_path)[0]
             dataset_version = this_dataset_mapping[dataset_key]
-            dataset_name = dataset_key
-            # if dataset_version == "v1":
-            #     dataset_name = dataset_key
-            # else:
-            #     dataset_name = f"{dataset_key}_{dataset_version}"
+            dataset_name = dataset_key.lower()
             os.makedirs(dataset_name, exist_ok=True)
             with z.open(json_path, "r") as p:
                 j = json.load(p)
@@ -99,7 +95,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         workflow_run_properties["app_name"],
                         workflow_run_properties["study_name"],
                         workflow_run_properties["json_prefix"],
-                        f"dataset={dataset_name.lower()}_{dataset_version}",
+                        f"dataset={dataset_name}_{dataset_version}",
                         f"taskIdentifier={s3_obj_metadata['taskidentifier']}",
                         f"year={str(uploaded_on.year)}",
                         f"month={str(uploaded_on.month)}",
