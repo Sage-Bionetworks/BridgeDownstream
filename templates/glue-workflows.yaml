@@ -53,10 +53,8 @@ Resources:
         app_name: !Ref AppName
         study_name: !Ref StudyName
         database: !Ref DatabaseName
-        json_bucket: !Ref JsonBucketName
-        json_prefix: !Sub ${StudyName}/${JsonPrefix}
         parquet_bucket: !Ref ParquetBucketName
-        parquet_prefix: !Sub ${StudyName}/${ParquetPrefix}
+        parquet_prefix: !Sub ${AppName}/${StudyName}/${ParquetPrefix}
       Description: Workflow for converting json to parquet
       Name: !Sub ${AppName}-${StudyName}-JsonToParquetWorkflow
 
