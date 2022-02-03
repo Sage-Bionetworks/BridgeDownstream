@@ -31,12 +31,13 @@ record_template = {
   }
 }
 
+
 def read_args():
   parser = argparse.ArgumentParser(
     description='Generate a json file of a mocked SNS event for testing.')
-  parser.add_argument('--synapse-folder-id',
-    default='syn26721260',
-    help='Synapse ID of the test-data folder in the BridgeDownstreamTest project')
+  parser.add_argument('--synapse-project-id',
+    default='syn26721259',
+    help='Synapse ID of the BridgeDownstreamTest project')
   parser.add_argument('--filename',
     default='records.json',
     help='Name of the output file.')
@@ -46,11 +47,19 @@ def read_args():
 
 def main():
   args = read_args()
-  folder_id = args.synapse_folder_id
+  project_id = args.synapse_project_id
   filename = args.filename
   syn = synapseclient.Synapse()
   syn.login()
 
+  folder_name = 'test-data'
+  print(f'Get folder id')
+  response = list(syn.getChildren(project_id, includeTypes=['folder']))
+  folder = next(item for item in response if item['name'] == folder_name)
+  folder_id = '' if folder is None else folder.get('id')
+  if not folder_id:
+    print(f'No folder {folder_name} exists')
+    sys.exit(1)
   print(f'Fetching children of synapse id {folder_id}...')
   response = list(syn.getChildren(folder_id, includeTypes=['file']))
   records = []

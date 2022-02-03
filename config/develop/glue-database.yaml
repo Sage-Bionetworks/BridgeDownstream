@@ -1,0 +1,2 @@
+template_path: glue-database.yaml
+stack_name: bridge-downstream-glue-database

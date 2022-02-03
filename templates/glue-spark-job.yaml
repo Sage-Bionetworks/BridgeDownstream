@@ -99,8 +99,7 @@ Parameters:
 
   GlueTableName:
     Type: String
-    Description: Name of the Glue table
-    Default: ''
+    Description: Name of the Glue table associated with this job
 
 Resources:
 

@@ -26,7 +26,8 @@ def lambda_handler(sns_event, context):
         s3_loc = get_s3_loc(
           synapse_id=synapse_id,
           auth_token=token['Parameter']['Value'])
-        logger.debug(f's3 location info: {s3_loc}')
+        logger.debug(f'S3 location info: {s3_loc}')
+        logger.debug(f'Start workflow {GLUE_WORKFLOW_NAME}')
         workflow_run = glue_client.start_workflow_run(Name=GLUE_WORKFLOW_NAME)
         glue_client.put_workflow_run_properties(
           Name=GLUE_WORKFLOW_NAME,
