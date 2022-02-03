@@ -148,6 +148,9 @@ Resources:
           classification: json
           compressionType: none
           typeOfData: file
+          {% if dataset.crawler == 'array_of_records' %}
+          jsonPath: '$[*]'
+          {% endif %}
         PartitionKeys: {{ dataset.partition_keys }}
         Retention: 0
         StorageDescriptor:
@@ -156,15 +159,6 @@ Resources:
           InputFormat: org.apache.hadoop.mapred.TextInputFormat
           Location: !Sub s3://${JsonBucketName}/${AppName}/${StudyName}/${JsonPrefix}/{{dataset.s3_partition}}/
           OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-          Parameters:
-            CrawlerSchemaDeserializerVersion: '1.0'
-            CrawlerSchemaSerializerVersion: '1.0'
-            classification: json
-            compressionType: none
-            {% if dataset.crawler == 'array_of_records' %}
-            jsonPath: '$[*]'
-            {% endif %}
-            typeOfData: file
           StoredAsSubDirectories: false
         TableType: EXTERNAL_TABLE
     {% endfor %}
