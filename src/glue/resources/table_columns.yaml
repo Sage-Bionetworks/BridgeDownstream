@@ -24,7 +24,7 @@ tables:
         Type: string
       - Name: recordid
         Type: string
-  info_v2:
+  info_v1:
     columns:
       - Name: format
         Type: string

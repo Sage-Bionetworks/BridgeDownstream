@@ -6,7 +6,7 @@
           "dataset":
             {
               "answers": "v1",
-              "info": "v2",
+              "info": "v1",
               "metadata": "v1",
               "microphone_levels": "v1",
               "motion": "v1",

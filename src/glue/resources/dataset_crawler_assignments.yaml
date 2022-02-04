@@ -1,6 +1,6 @@
 standard:
   - answers_v1
-  - info_v2
+  - info_v1
   - metadata_v1
   - taskdata_v1
   - taskresult_v1
