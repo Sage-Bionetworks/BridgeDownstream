@@ -7,7 +7,7 @@ dependencies:
   - develop/glue-classifier-array-of-records.yaml
   - develop/glue-database.yaml
 parameters:
-  BranchOrTagName: ETL-93/add-versioning
+  BranchOrTagName: main
   AppName: example-app-1
   StudyName: study-1
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
