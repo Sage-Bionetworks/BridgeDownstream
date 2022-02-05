@@ -73,6 +73,7 @@ Resources:
         --enable-continuous-cloudwatch-log: !Ref ContinuousLog
         --enable-metrics: true
         --table: !Ref GlueTableName
+        --additional-python-modules: 'synapseclient==2.5.1'
       Description: !Ref JobDescription
       ExecutionProperty:
         MaxConcurrentRuns: !Ref MaxConcurrentRuns

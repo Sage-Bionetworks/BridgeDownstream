@@ -7,6 +7,7 @@ import logging
 import os
 import sys
 import zipfile
+import synapseclient
 from datetime import datetime
 from urllib.parse import urlparse
 
@@ -20,12 +21,15 @@ logger.setLevel(logging.DEBUG)
 
 glue_client = boto3.client("glue")
 s3_client = boto3.client("s3")
+ssm_client = boto3.client("ssm")
+synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
 
 args = getResolvedOptions(
         sys.argv,
         ["WORKFLOW_NAME",
          "WORKFLOW_RUN_ID",
-         "scriptLocation"])
+         "scriptLocation",
+         "ssm_parameter_name"])
 workflow_run_properties = glue_client.get_workflow_run_properties(
         Name=args["WORKFLOW_NAME"],
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
@@ -109,12 +113,34 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
-logger.info(f'Retrieving S3 object for Bucket {workflow_run_properties["source_bucket"]} and Key {workflow_run_properties["source_key"]}')
+logger.info(f"Retrieving dataset mapping at {args['scriptLocation']}")
 dataset_mapping = get_dataset_mapping(
         script_location=args["scriptLocation"])
-s3_obj = s3_client.get_object(
-        Bucket = workflow_run_properties["source_bucket"],
-        Key = workflow_run_properties["source_key"])
+logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
+synapse_auth_token = ssm_client.get_parameter(
+          Name=args["ssm_parameter_name"],
+          WithDecryption=True)
+syn = synapseclient.Synapse()
+syn.login(authToken=synapse_auth_token, silent=True)
+logger.info("Getting messages")
+messages = json.loads(workflow_run_properties["messages"])
+sts_tokens = {}
+for message in messages:
+    synapse_data_folder = message["raw_folder_id"]
+    if synapse_data_folder not in sts_tokens:
+        logger.debug(f"Did not find a cached STS token "
+                     f"for {synapse_data_folder}. Getting and adding.")
+        sts_token = syn.get_sts_storage_token(
+                entity=synapse_data_folder,
+                permission="read_only",
+                output_format="boto")
+        sts_tokens[synapse_data_folder] = sts_token
+    logger.info(f"Retrieving S3 object for Bucket {message['source_bucket']} "
+                f"and Key {message['source_key']}'")
+    bridge_s3_client = boto3.client("s3", **sts_tokens[synapse_data_folder])
+    s3_obj = bridge_s3_client.get_object(
+            Bucket = message["source_bucket"],
+            Key = message["source_key"])
 process_record(
         s3_obj = s3_obj,
         s3_obj_metadata=s3_obj["Metadata"],
