@@ -17,7 +17,7 @@ parameters:
   RoleArn: !stack_output_external glue-job-role::RoleArn
   ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
   DatabaseName: !stack_output_external bridge-downstream-glue-database::DatabaseName
-  SynapseAuthSsmParameterName: synapse-bridgedownstream-auth
+  SynapseAuthSsmParameterName: {{ stack_group_config.synapseAuthSsmParameterName }}
   UniqueId: !rcmd git rev-parse HEAD
 
 stack_tags:

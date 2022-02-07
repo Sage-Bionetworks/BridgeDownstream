@@ -264,4 +264,3 @@ Resources:
       TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/lambda/sns_to_glue/template.yaml
       Parameters:
         WorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
-        SsmParameterName: !Ref SynapseAuthSsmParameterName

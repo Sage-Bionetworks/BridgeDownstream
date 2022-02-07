@@ -13,11 +13,6 @@ Parameters:
     Type: String
     Description: Name of the glue workflow to start when new data arrives
 
-  SsmParameterName:
-    Type: String
-    Description: >-
-      Name of the ssm parameter used by the lambda to authenticate with Synapse
-
 Resources:
 
   SnsToGlueRole:
@@ -33,15 +28,6 @@ Resources:
           Action:
           - sts:AssumeRole
       Policies:
-      - PolicyName: GetSsmParam
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-            - ssm:GetParameter
-            Resource:
-            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${SsmParameterName}
       - PolicyName: StartGlueWorkflow
         PolicyDocument:
           Version: '2012-10-17'
@@ -63,10 +49,6 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref SnsTopic
-      Environment:
-        Variables:
-          SSM_PARAMETER_NAME: !Ref SsmParameterName
-          GLUE_WORKFLOW_NAME: !Ref WorkflowName
       Timeout: 600
     Metadata:
       Dockerfile: Dockerfile

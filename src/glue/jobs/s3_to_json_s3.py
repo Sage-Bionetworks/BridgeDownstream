@@ -29,7 +29,7 @@ args = getResolvedOptions(
         ["WORKFLOW_NAME",
          "WORKFLOW_RUN_ID",
          "scriptLocation",
-         "ssm_parameter_name"])
+         "ssm-parameter-name"])
 workflow_run_properties = glue_client.get_workflow_run_properties(
         Name=args["WORKFLOW_NAME"],
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
