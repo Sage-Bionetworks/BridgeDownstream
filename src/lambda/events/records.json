@@ -2,1382 +2,640 @@
     "Records":
     [
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966556"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025053', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/--9_ovov-Znyg_xXOBmrKBAT-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966560"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025056', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/-_7NKcrD1UR5DLUlbGzKDTNX-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966584"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025087', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/10ORsA437eyLbNcUjwBBBgcl-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966566"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025061', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/11PRZZB92bDrLY9vk7Z73VP6-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966541"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025035', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/2CbH59XKLkS6WW8GZuJwGV_S-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966546"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025040', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/3dO7ezw_zdlPhCKzZXZCrOKB-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966565"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025060', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/3hqACbgMjf0HzJNSVvBl1nAm-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966579"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025084', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/58YwoS085YIL-6F7Cs4Is-eY-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966547"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025041', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/6DBH9fiU2ODfxk1RbAc_9vt0-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966526"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025016', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/6PC_Q7_mxto3Ywd2II_R-9uJ-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966544"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025038', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/6xuQR9X4Zd9Dsj_MmF2y-Q3r-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966531"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025026', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/6ygZniWZdPBvfJiUiPKcYnxV-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966534"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025028', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/76Gr53bGDNoR_SmvFNSC4gc6-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966538"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025032', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/9NLdAOfCJChlANbptyuXpiEL-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966569"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025075', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/9X1ujw1G8uwuuK5-FYCXEqcw-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966561"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025057', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/AoaD_UppGaIBK7tipLquxxR4-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966540"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025034', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/CS6u6P13SD-gZjlAj0fTj7NR-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966558"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025055', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/CkJg2QwveqJvFNRZoZwr-P0Z-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966533"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025027', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/DAl8jeIpbfHh--eI4UEmyzVk-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966548"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025042', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/FAnu7UBvA-DtHoRFYQT3WJ9u-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966528"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025023', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/FSuTnTN_TsnOUqKqlvwBNT-r-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966567"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025062', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/FwCXy6i5fwriB3WWf-ejfLdh-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966572"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025078', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/HPOdw0qm-a6MwRibpLSsjRaH-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966539"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025033', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/Ighh7pz70LF-WVFjoHarXys_-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966530"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025025', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/IzC1Y2nZDhMZlAxBtJLrnnXz-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966542"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025036', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/PHMx6Q31tvMkQQ-FbgrU9ARf-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966578"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025083', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/QRydh02WWz5IBdJhTIGRaQka-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966550"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025048', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/SgpVf9LFZatzYSezbnDqxNIS-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966529"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025024', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/UA3oNeXB2_cX5TNz7kjWB1lZ-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966564"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025059', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/YigyxyGaLz15YLWSRUbCzhOP-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966552"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025050', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/Z8_iWhjv51O6gqlFeJ7nL81K-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966574"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025080', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/ZnoapuuZ0_nr4Gynv8n8yVQ--raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966580"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025085', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/abJ6IlY7sKEHa1P4-g2A65PD-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966571"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025077', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/c5UK8JbX5gafcloJb7yVND-A-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966553"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025051', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/cveL8G9Fv2vO58GEce-1JvB3-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966555"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025052', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/dJwiugqaFo87mjXs6MlLgt1c-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966577"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025082', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/dsh93vw1V1isbzfp35EvE8_v-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966543"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025037', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/eFMaETONGQ_ypY32POYYaUJX-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966562"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025058', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/gqV9vq2GEuqfZW6k6aqLDwB0-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966582"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025086', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/grhwr89628bofn-ARpLHrt-L-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966537"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025031', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/hKj2GtEqGmyClhc9DnCP7tlR-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966535"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025029', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/iHF7tavMHvEka6W0G4SbLihP-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966585"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025088', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/ms6KcxZMoi1sFBrZUaB0b4r3-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966575"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025081', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/qo4WVt7i6W9BOPJvbG6H1SmM-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966527"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025022', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/ruqfaCYpT7gXZsxIt6RY-ant-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966545"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025039', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/sLsESVw3pBVaWXGFy495JIxY-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966551"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025049', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/s_JKG_gS2Pzf45VpeptIS32Y-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966573"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025079', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/se14oZkq75rfUULT_W7HoZOn-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966570"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025076', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/shhpRJsl3pn1wBQd7wZf18I5-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966536"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025030', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/tJVhkPOVQKGfY5R1NtigleCH-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966568"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025066', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/uZF7El1qC1-FmbsadlGtOZas-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966557"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025054', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/uiQWMELQYRtvVaxBq31Nq-Fd-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         },
         {
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-            "EventSource": "aws:sns",
-            "Sns":
-            {
-                "SignatureVersion": "1",
-                "Timestamp": "2019-01-02T12:45:07.000Z",
-                "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-                "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-                "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-                "Message": "Bridge data update",
-                "MessageAttributes":
-                {
-                    "SynapseId":
-                    {
-                        "Type": "String",
-                        "Value": "syn26966549"
-                    }
-                },
-                "Type": "Notification",
-                "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-                "TopicArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda",
-                "Subject": "TestInvoke"
-            }
+            "Type": "Notification",
+            "MessageId": "20530d39-538a-5330-b376-57429074a158",
+            "TopicArn": "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
+            "Subject": "foobar",
+            "Message": "{'appId': 'example-app', 'recordId': '-4I2GOqDSdjaXsbuw8oYXBKK', 'record': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn26861165', 's3Bucket': 'org-sagebridge-rawhealthdata-prod', 's3Key': 'mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory'}, 'studyRecords': {'studyA': {'parentProjectId': 'syn26721259', 'rawFolderId': 'syn27025015', 'fileEntityId': 'syn27025047', 's3Bucket': 'bridge-downstream-dev-source', 's3Key': 'test-data/vFgDPWrjGgh9dRvNKJNVt0eu-raw.zip'}}}",
+            "Timestamp": "2022-02-08T01:05:02.607Z",
+            "SignatureVersion": "1",
+            "Signature": "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
+            "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+            "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
         }
     ]
 }
