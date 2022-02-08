@@ -1,6 +1,9 @@
 '''
-This is a utility script that generates a fake SNS message in json format
+This is a utility script that generates a fake SQS message in json format
 that is used to test the lambda, which in turn will exercise the Glue pipeline.
+
+This contains a JSON message inside an SNS message which is transmitted
+inside the SQS message.
 '''
 import argparse
 import copy
@@ -9,30 +12,8 @@ import synapseclient
 
 SINGLE_RECORD_OUTFILE = 'single-record.json'
 MULTI_RECORD_OUTFILE = 'records.json'
-# record_template = {
-#   "EventVersion": "1.0",
-#   "EventSubscriptionArn": "arn:aws:sns:us-east-2:123456789012:sns-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-#   "EventSource": "aws:sns",
-#   "Sns": {
-#     "SignatureVersion": "1",
-#     "Timestamp": "2019-01-02T12:45:07.000Z",
-#     "Signature": "tcc6faL2yUC6dgZdmrwh1Y4cGa/ebXEkAi6RibDsvpi+tE/1+82j...65r==",
-#     "SigningCertUrl": "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
-#     "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
-#     "Message": "Bridge data update",
-#     "MessageAttributes": {
-#       "SynapseId": {
-#         "Type": "String"
-#       }
-#     },
-#     "Type": "Notification",
-#     "UnsubscribeUrl": "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:123456789012:test-lambda:21be56ed-a058-49f5-8c98-aedd2564c486",
-#     "TopicArn":"arn:aws:sns:us-east-2:123456789012:sns-lambda",
-#     "Subject": "TestInvoke"
-#   }
-# }
 
-record_template = {
+sqs_record_template = {
   "messageId" : "20530d39-538a-5330-b376-57429074a158",
   "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...",
   "attributes": {
@@ -46,8 +27,19 @@ record_template = {
   "md5OfBody": "e4e68fb7bd0e697a0ae8f1bb342846b3",
   "eventSource": "aws:sqs",
   "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:my-queue",
-  "awsRegion": "us-east-1",
-  "TopicArn" : "arn:aws:sns:us-east-1:563295687221:phil_s3_bucket_update"
+  "awsRegion": "us-east-1"
+}
+
+sns_record_template = {
+    "Type": "Notification",
+    "MessageId": "45127357-4996-58e1-af22-2922586ba8f2",
+    "TopicArn": "arn:aws:sns:us-east-1:563295687221:phil_s3_bucket_update",
+    "Message": "",
+    "Timestamp": "2022-02-02T23:11:57.105Z",
+    "SignatureVersion": "1",
+    "Signature": "uJ4zpc5M/dImqUxw2uABcl8V2WeBkXRZolX4wwtVxyqp/OG5IqR0upEH35Pp7WHx2/tpAzMnSImjOFsqfveFce4cDum1CtQtlj7mkZyxq+sV1VKxgJot2N8DzMxTBxVmNELc9fbOGgukSwv76dQJ0tiu0GUITmL/8tHcRacimPkElPL6ZC9jFIiR0MM6f2wZkwbRMbvfo1sOdjYcF9VzD4J0fe6qbHjKFGoTGYQ98hJCgMU8mknTHWoGu2InLPAOZZ+hNl+gt/lCS7oihP1rBMoGg+yi8wF/F2bcoKierEuF5DmAkPkxOHi7j8ikfBmJ2o/zDFknx6XmRL4a9rMUow==",
+    "SigningCertURL": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
+    "UnsubscribeURL": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:563295687221:phil_s3_bucket_update:89b889dd-9e68-41a5-b865-c194f09d024c"
 }
 
 def create_message_template(project_id, folder_id):
@@ -106,19 +98,21 @@ def main():
   print(f'Generating mock sqs event from response...')
   for item in response:
     syn_id = item['id']
-    record = copy.deepcopy(record_template)
+    sqs_record = copy.deepcopy(sqs_record_template)
+    sns_record = copy.deepcopy(sns_record_template)
     message = copy.deepcopy(message_template)
     study_a_record = message['studyRecords']['studyA']
     study_a_record['fileEntityId'] = syn_id
     get_response = syn.get(entity=syn_id, downloadFile=False)
     study_a_record['s3Bucket'] = get_response._file_handle['bucketName']
     study_a_record['s3Key'] = get_response._file_handle['key']
-    record['body'] = json.dumps(message)
-    records.append(record)
+    sns_record['Message'] = json.dumps(message)
+    sqs_record['body'] = json.dumps(sns_record)
+    records.append(sqs_record)
   multi_record_content = {}
   multi_record_content['Records'] = records
   single_record_content = {}
-  single_record_content['Records'] = records[0]
+  single_record_content['Records'] = [records[0]]
 
   with open(MULTI_RECORD_OUTFILE, 'w') as outfile:
     json.dump(multi_record_content, outfile)
