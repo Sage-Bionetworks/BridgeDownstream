@@ -132,6 +132,7 @@ Resources:
         S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
         UniqueId: !Ref UniqueId
         PythonVersion: 3
+        SynapseAuthSsmParameterName: !Ref SynapseAuthSsmParameterName
 
   # Table stacks
   {% for dataset in datasets %}
