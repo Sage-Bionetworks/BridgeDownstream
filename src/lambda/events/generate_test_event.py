@@ -113,8 +113,7 @@ def main():
     get_response = syn.get(entity=syn_id, downloadFile=False)
     study_a_record['s3Bucket'] = get_response._file_handle['bucketName']
     study_a_record['s3Key'] = get_response._file_handle['key']
-    record['body'] = str(message)
-    #record['Sns']['MessageAttributes']['SynapseId']['Value'] = item['id']
+    record['body'] = json.dumps(message)
     records.append(record)
   multi_record_content = {}
   multi_record_content['Records'] = records
