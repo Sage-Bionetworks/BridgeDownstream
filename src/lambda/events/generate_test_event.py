@@ -33,16 +33,21 @@ MULTI_RECORD_OUTFILE = 'records.json'
 # }
 
 record_template = {
-  "Type" : "Notification",
-  "MessageId" : "20530d39-538a-5330-b376-57429074a158",
-  "TopicArn" : "arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P",
-  "Subject" : "foobar",
-  "Message" : "",
-  "Timestamp" : "2022-02-08T01:05:02.607Z",
-  "SignatureVersion" : "1",
-  "Signature" : "eglUUIYTcyTaad77ORCOI/DEkzZfl83J+OLjl4RwhqOY2ZOpI5/A6ItoYHMB+PwuG7w26Pc/uNvKT384NbPourkpAAznOkakKMA99wYAw1sO1v82k/DR/s/pQAAygM9u/WaF6VT9NFEQgf8RtWiS6MclYWpY0lG7TF/1Wux3RYjgS3659BYERUwOBzVDcrrqDJwHMyWe+CAFi6adu7Lx5b+FV3jwE84hZOVKOO1WkE6ZuYu6zXxHyGSOsfcjFr21tegDL00LBL4EkTUbYIKZHlPvsX9Edhi1dg/7Ws9NG+Sh9/SPZotiY5Vd0UkWgUeLaP7JtnJ8QYe1sMMI9HDH0Q==",
-  "SigningCertURL" : "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-7ff5318490ec183fbaddaa2a969abfda.pem",
-  "UnsubscribeURL" : "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:634761300905:example-app-1-study-1-LambdaStack-KBX3NOTR34J9-SnsTopic-1NQI61F85369P:2084d1ed-7a6b-4eb5-bffa-0c2a65f9431b"
+  "messageId" : "20530d39-538a-5330-b376-57429074a158",
+  "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...",
+  "attributes": {
+      "ApproximateReceiveCount": "1",
+      "SentTimestamp": "1545082649183",
+      "SenderId": "AIDAIENQZJOLO23YVJ4VO",
+      "ApproximateFirstReceiveTimestamp": "1545082649185"
+  },
+  "body" : "",
+  "messageAttributes": {},
+  "md5OfBody": "e4e68fb7bd0e697a0ae8f1bb342846b3",
+  "eventSource": "aws:sqs",
+  "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:my-queue",
+  "awsRegion": "us-east-1",
+  "TopicArn" : "arn:aws:sns:us-east-1:563295687221:phil_s3_bucket_update"
 }
 
 def create_message_template(project_id, folder_id):
@@ -108,7 +113,7 @@ def main():
     get_response = syn.get(entity=syn_id, downloadFile=False)
     study_a_record['s3Bucket'] = get_response._file_handle['bucketName']
     study_a_record['s3Key'] = get_response._file_handle['key']
-    record['Message'] = str(message)
+    record['body'] = str(message)
     #record['Sns']['MessageAttributes']['SynapseId']['Value'] = item['id']
     records.append(record)
   multi_record_content = {}
