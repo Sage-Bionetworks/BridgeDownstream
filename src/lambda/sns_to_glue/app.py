@@ -29,7 +29,7 @@ def lambda_handler(event, context):
             workflow_name = f"{app}-{study}-S3ToJsonWorkflow"
             workflow_run = glue_client.start_workflow_run(
                 Name=workflow_name)
-            glue_client.put_workflow_properties(
+            glue_client.put_workflow_run_properties(
                 Name=workflow_name,
                 RunId=workflow_run["RunId"],
                 RunProperties={
