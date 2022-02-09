@@ -4,7 +4,7 @@ import boto3
 
 def lambda_handler(event, context):
     glue_client = boto3.client("glue")
-    messages = {} # indexed by study identifier
+    messages = {} # indexed by app and study
     for record in event["Records"]:
         body = json.loads(record["body"])
         message = json.loads(body["Message"])
@@ -14,18 +14,24 @@ def lambda_handler(event, context):
             "raw_folder_id": message["record"]["rawFolderId"]
         }
         related_studies = message["studyRecords"].keys()
+        app = message["appId"]
         for study in related_studies:
-            if study in messages:
-                messages[study].append(message_parameters)
+            if app in messages:
+                pass
             else:
-                messages[study] = [message_parameters]
-    for study in messages:
-        workflow_name = f"{study}-S3ToJsonWorkflow"
-        workflow_run = glue_client.start_workflow_run(
-            Name=workflow_name)
-        glue_client.put_workflow_properties(
-            Name=workflow_name,
-            RunId=workflow_run["RunId"],
-            RunProperties={
-                "messages": json.dumps(messages[study])
-            })
+                messages[app] = {study: []}
+            if study in messages[app]:
+                messages[app][study].append(message_parameters)
+            else:
+                messages[app][study] = [message_parameters]
+    for app in messages:
+        for study in messages[app]:
+            workflow_name = f"{app}-{study}-S3ToJsonWorkflow"
+            workflow_run = glue_client.start_workflow_run(
+                Name=workflow_name)
+            glue_client.put_workflow_properties(
+                Name=workflow_name,
+                RunId=workflow_run["RunId"],
+                RunProperties={
+                    "messages": json.dumps(messages[app][study])
+                })
