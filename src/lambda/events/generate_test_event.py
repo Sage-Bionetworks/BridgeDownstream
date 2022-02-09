@@ -49,9 +49,9 @@ def create_message_template(project_id, folder_id):
     "record": {
       "parentProjectId": project_id,
       "rawFolderId": folder_id,
-      "fileEntityId": "syn26861165",
-      "s3Bucket": "org-sagebridge-rawhealthdata-prod",
-      "s3Key": "mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory"
+      "fileEntityId": "",
+      "s3Bucket": "",
+      "s3Key": ""
     },
     "studyRecords": {
       "study-1": {
@@ -101,14 +101,24 @@ def main():
     sqs_record = copy.deepcopy(sqs_record_template)
     sns_record = copy.deepcopy(sns_record_template)
     message = copy.deepcopy(message_template)
-    study_record = message['studyRecords']['study-1']
-    study_record['fileEntityId'] = syn_id
     get_response = syn.get(entity=syn_id, downloadFile=False)
-    study_record['s3Bucket'] = get_response._file_handle['bucketName']
-    study_record['s3Key'] = get_response._file_handle['key']
+    bucket = get_response._file_handle['bucketName']
+    key = get_response._file_handle['key']
+
+    outer_record = message['record']
+    outer_record['fileEntityId'] = syn_id
+    outer_record['s3Bucket'] = bucket
+    outer_record['s3Key'] = key
+
+    inner_record = message['studyRecords']['study-1']
+    inner_record['fileEntityId'] = syn_id
+    inner_record['s3Bucket'] = bucket
+    inner_record['s3Key'] = key
+
     sns_record['Message'] = json.dumps(message)
     sqs_record['body'] = json.dumps(sns_record)
     records.append(sqs_record)
+
   multi_record_content = {}
   multi_record_content['Records'] = records
   single_record_content = {}
