@@ -44,7 +44,7 @@ sns_record_template = {
 
 def create_message_template(project_id, folder_id):
   return {
-    "appId": "example-app",
+    "appId": "example-app-1",
     "recordId": "-4I2GOqDSdjaXsbuw8oYXBKK",
     "record": {
       "parentProjectId": project_id,
@@ -54,7 +54,7 @@ def create_message_template(project_id, folder_id):
       "s3Key": "mobile-toolbox/2022-01-20/-4I2GOqDSdjaXsbuw8oYXBKK-MTB_Picture_Sequence_Memory"
     },
     "studyRecords": {
-      "studyA": {
+      "study-1": {
         "parentProjectId": project_id,
         "rawFolderId": folder_id,
         "fileEntityId": "",
@@ -101,11 +101,11 @@ def main():
     sqs_record = copy.deepcopy(sqs_record_template)
     sns_record = copy.deepcopy(sns_record_template)
     message = copy.deepcopy(message_template)
-    study_a_record = message['studyRecords']['studyA']
-    study_a_record['fileEntityId'] = syn_id
+    study_record = message['studyRecords']['study-1']
+    study_record['fileEntityId'] = syn_id
     get_response = syn.get(entity=syn_id, downloadFile=False)
-    study_a_record['s3Bucket'] = get_response._file_handle['bucketName']
-    study_a_record['s3Key'] = get_response._file_handle['key']
+    study_record['s3Bucket'] = get_response._file_handle['bucketName']
+    study_record['s3Key'] = get_response._file_handle['key']
     sns_record['Message'] = json.dumps(message)
     sqs_record['body'] = json.dumps(sns_record)
     records.append(sqs_record)
