@@ -49,15 +49,17 @@ Parameters:
     Type: String
     Description: The name of the S3 bucket where temporary files are written.
 
-  GlueTableName:
-    Type: String
-    Description: Name of the Glue table
-    Default: ''
-
   UniqueId:
     Type: String
     Description: A unique id for producing unique job names
     Default: ''
+
+  SynapseAuthSsmParameterName:
+    Type: String
+    Description: >-
+      The name of an ssm parameter whose value is Synapse service account
+      personal access token
+
 
 Resources:
 
@@ -72,7 +74,8 @@ Resources:
         --TempDir: !Sub s3://${S3BucketName}/tmp
         --enable-continuous-cloudwatch-log: !Ref ContinuousLog
         --enable-metrics: true
-        --table: !Ref GlueTableName
+        --additional-python-modules: 'synapseclient'
+        --ssm-parameter-name: !Ref SynapseAuthSsmParameterName
       Description: !Ref JobDescription
       ExecutionProperty:
         MaxConcurrentRuns: !Ref MaxConcurrentRuns

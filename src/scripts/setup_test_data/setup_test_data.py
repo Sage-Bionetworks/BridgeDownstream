@@ -175,7 +175,7 @@ def main():
 
   # add test data to Synapse
   script_dir = './src/scripts/setup_test_data'
-  remove_test_data(syn, project_id)
+  #remove_test_data(syn, project_id)
   # connect bucket and project if this is a newly made project
   setup_external_storage(syn, project_id)
   add_test_data(syn, script_dir, project_id)

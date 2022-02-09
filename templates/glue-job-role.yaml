@@ -2,11 +2,27 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Description: An IAM Role to run Glue Jobs
 
+Parameters:
+
+  SsmParameterName:
+    Type: String
+    Description: Name of the SSM parameter containing the Synapse auth token
+
 Resources:
 
   JobRole:
     Type: AWS::IAM::Role
     Properties:
+      Policies:
+      - PolicyName: GetSsmParam
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - ssm:GetParameter
+            Resource:
+            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${SsmParameterName}
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
