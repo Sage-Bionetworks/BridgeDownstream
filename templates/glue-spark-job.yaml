@@ -133,6 +133,7 @@ Resources:
         --table: !Ref GlueTableName
         --additional-python-modules: !Ref AdditionalPythonModules
         --ssm-parameter-name: !Ref SynapseAuthSsmParameterName
+        --scriptLocation: !Ref S3ScriptLocation
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:
