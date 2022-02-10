@@ -108,16 +108,31 @@ Resources:
   # Json to Parquet Job Stacks
   {% for dataset in datasets %}
   {{ dataset['stackname_prefix'] }}ParquetJobStack:
-    Type: AWS::CloudFormation::Stack
+    Type: AWS::Glue::Job
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
-      Parameters:
-        JobDescription: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
-        GlueTableName: {{ '{}'.format(dataset['table_name']) }}
-        JobRole: !Ref RoleArn
-        S3BucketName: !Ref JsonBucketName
-        S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
-        UniqueId: !Ref UniqueId
+      Command:
+        Name: glueetl
+        ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+      DefaultArguments:
+        --TempDir: !Sub s3://${JsonBucketName}/tmp
+        --enable-continuous-cloudwatch-log: true
+        --enable-metrics: true
+        --enable-spark-ui: true
+        --spark-event-logs-path: !Sub s3://${JsonBucketName}/spark-logs/${AWS::StackName}/
+        --job-bookmark-option: job-bookmark-enable
+        --job-language: python
+        --table: {{ '{}'.format(dataset['table_name']) }}
+        # --conf spark.sql.adaptive.enabled
+      Description: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
+      ExecutionProperty:
+        MaxConcurrentRuns: 1
+      GlueVersion: '3.0' # Spark 3.1.1, Python 3.7 # parameterize?
+      MaxRetries: 0 # change this when not in development; parameterize?
+      Name: !Sub '${AppName}-${StudyName}-{{dataset['stackname_prefix']}}-Job-${UniqueId}'
+      NumberOfWorkers: 1
+      Role: !Ref RoleArn
+      Timeout: 120
+      WorkerType: Standard
   {% endfor %}
 
   S3ToJsonS3JobStack:
