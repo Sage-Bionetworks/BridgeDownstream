@@ -80,6 +80,10 @@ Parameters:
     Description: A unique id for producing unique job names.
     Default: ''
 
+  S3ToJsonS3JobName:
+    Type: String
+    Description: The name of the S3 To JSON S3 Job
+
 Resources:
   # convert crawler assignments to map for ease of lookup
   {% set crawler_assignments = {} %}
@@ -134,21 +138,6 @@ Resources:
       Timeout: 120
       WorkerType: Standard
   {% endfor %}
-
-  S3ToJsonS3JobStack:
-    Type:  AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
-      Parameters:
-        BookmarkOption: job-bookmark-disable
-        JobDescription: Convert data to JSONS3 data
-        MaxConcurrentRuns: 150
-        JobRole: !Ref RoleArn
-        S3BucketName: !Ref JsonBucketName
-        S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
-        UniqueId: !Ref UniqueId
-        SynapseAuthSsmParameterName: !Ref SynapseAuthSsmParameterName
-        AdditionalPythonModules: 'synapseclient'
 
   # Table stacks
   {% for dataset in datasets %}
@@ -238,7 +227,7 @@ Resources:
     Type: AWS::Glue::Trigger
     Properties:
       Actions:
-        - JobName: !Sub ${S3ToJsonS3JobStack.Outputs.JobName}
+        - JobName: !Ref S3ToJsonS3JobName
       Description: >-
         When new data is received this trigger starts the workflow
         that unpacks the archive and stores JSON files separately
