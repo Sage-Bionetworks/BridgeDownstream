@@ -105,7 +105,7 @@ Parameters:
   AdditionalPythonModules:
     Type: String
     Description: A comma-delimited list of Python modules
-    Default: ''
+    Default: 'noop'
 
   SynapseAuthSsmParameterName:
     Type: String
