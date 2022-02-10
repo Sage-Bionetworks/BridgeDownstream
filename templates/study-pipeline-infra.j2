@@ -123,16 +123,17 @@ Resources:
   S3ToJsonS3JobStack:
     Type:  AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-python-job.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
       Parameters:
+        BookmarkOption: job-bookmark-disable
         JobDescription: Convert data to JSONS3 data
         MaxConcurrentRuns: 150
         JobRole: !Ref RoleArn
         S3BucketName: !Ref JsonBucketName
         S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
         UniqueId: !Ref UniqueId
-        PythonVersion: 3
         SynapseAuthSsmParameterName: !Ref SynapseAuthSsmParameterName
+        AdditionalPythonModules: 'synapseclient'
 
   # Table stacks
   {% for dataset in datasets %}

@@ -100,6 +100,19 @@ Parameters:
   GlueTableName:
     Type: String
     Description: Name of the Glue table associated with this job
+    Default: ''
+
+  AdditionalPythonModules:
+    Type: String
+    Description: A comma-delimited list of Python modules
+    Default: ''
+
+  SynapseAuthSsmParameterName:
+    Type: String
+    Description: >-
+      The name of an ssm parameter whose value is Synapse service account
+      personal access token
+    Default: ''
 
 Resources:
 
@@ -118,6 +131,8 @@ Resources:
         --job-bookmark-option: !Ref BookmarkOption
         --job-language: !Ref JobLanguage
         --table: !Ref GlueTableName
+        --additional-python-modules: !Ref AdditionalPythonModules
+        --ssm-parameter-name: !Ref SynapseAuthSsmParameterName
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:
