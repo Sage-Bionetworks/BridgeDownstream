@@ -11,6 +11,6 @@ parameters:
   UniqueId: !rcmd git rev-parse HEAD
   SynapseAuthSsmParameterName: {{ stack_group_config.synapseAuthSsmParameterName }}
   AdditionalPythonModules: 'synapseclient'
-  GlueTableName: 'noop'
+  DatasetMapping: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ BranchOrTagName }}/glue/resources/dataset_mapping.json
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

@@ -28,16 +28,16 @@ args = getResolvedOptions(
         sys.argv,
         ["WORKFLOW_NAME",
          "WORKFLOW_RUN_ID",
-         "scriptLocation",
-         "ssm-parameter-name"])
+         "ssm-parameter-name",
+         "dataset-mapping"])
 workflow_run_properties = glue_client.get_workflow_run_properties(
         Name=args["WORKFLOW_NAME"],
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 
-def get_dataset_mapping(script_location):
-    script_location = urlparse(script_location)
-    dataset_mapping_bucket = script_location.netloc
-    dataset_mapping_key = "BridgeDownstream/main/glue/resources/dataset_mapping.json"
+def get_dataset_mapping(dataset_mapping_uri):
+    dataset_mapping_location = urlparse(dataset_mapping_uri)
+    dataset_mapping_bucket = dataset_mapping_location.netloc
+    dataset_mapping_key = dataset_mapping_uri.path
     dataset_mapping_fname = os.path.basename(dataset_mapping_key)
     dataset_mapping_file = s3_client.download_file(
             Bucket=dataset_mapping_bucket,
@@ -113,12 +113,12 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
-logger.info(f"Retrieving dataset mapping at {args['scriptLocation']}")
+logger.info(f"Retrieving dataset mapping at {args['dataset-mapping']}")
 dataset_mapping = get_dataset_mapping(
-        script_location=args["scriptLocation"])
-logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
+        dataset_mapping_uri=args["dataset-mapping"])
+logger.info(f"Logging into Synapse using auth token at {args['ssm-parameter-name']}")
 synapse_auth_token = ssm_client.get_parameter(
-          Name=args["ssm_parameter_name"],
+          Name=args["ssm-parameter-name"],
           WithDecryption=True)
 syn = synapseclient.Synapse()
 syn.login(authToken=synapse_auth_token, silent=True)
