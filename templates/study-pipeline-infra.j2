@@ -111,7 +111,7 @@ Resources:
 
   # Json to Parquet Job Stacks
   {% for dataset in datasets %}
-  {{ dataset['stackname_prefix'] }}ParquetJobStack:
+  {{ dataset['stackname_prefix'] }}ParquetJob:
     Type: AWS::Glue::Job
     Properties:
       Command:
@@ -249,7 +249,7 @@ Resources:
     Properties:
       Actions:
         {% for dataset in datasets %}
-        - JobName: !Sub ${ {{dataset.stackname_prefix}}ParquetJobStack.Outputs.JobName }
+        - JobName: !Ref {{dataset.stackname_prefix}}ParquetJob
         {% endfor %}
       Predicate:
         Conditions:

@@ -100,7 +100,6 @@ Parameters:
   GlueTableName:
     Type: String
     Description: Name of the Glue table associated with this job
-    Default: ''
 
   AdditionalPythonModules:
     Type: String
@@ -133,7 +132,6 @@ Resources:
         --table: !Ref GlueTableName
         --additional-python-modules: !Ref AdditionalPythonModules
         --ssm-parameter-name: !Ref SynapseAuthSsmParameterName
-        --scriptLocation: !Ref S3ScriptLocation
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:
