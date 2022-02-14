@@ -80,6 +80,10 @@ Parameters:
     Description: A unique id for producing unique job names.
     Default: ''
 
+  S3ToJsonS3JobName:
+    Type: String
+    Description: The name of the S3 To JSON S3 Job
+
 Resources:
   # convert crawler assignments to map for ease of lookup
   {% set crawler_assignments = {} %}
@@ -107,32 +111,33 @@ Resources:
 
   # Json to Parquet Job Stacks
   {% for dataset in datasets %}
-  {{ dataset['stackname_prefix'] }}ParquetJobStack:
-    Type: AWS::CloudFormation::Stack
+  {{ dataset['stackname_prefix'] }}ParquetJob:
+    Type: AWS::Glue::Job
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-spark-job.yaml
-      Parameters:
-        JobDescription: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
-        GlueTableName: {{ '{}'.format(dataset['table_name']) }}
-        JobRole: !Ref RoleArn
-        S3BucketName: !Ref JsonBucketName
-        S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
-        UniqueId: !Ref UniqueId
+      Command:
+        Name: glueetl
+        ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+      DefaultArguments:
+        --TempDir: !Sub s3://${JsonBucketName}/tmp
+        --enable-continuous-cloudwatch-log: true
+        --enable-metrics: true
+        --enable-spark-ui: true
+        --spark-event-logs-path: !Sub s3://${JsonBucketName}/spark-logs/${AWS::StackName}/
+        --job-bookmark-option: job-bookmark-enable
+        --job-language: python
+        --table: {{ '{}'.format(dataset['table_name']) }}
+        # --conf spark.sql.adaptive.enabled
+      Description: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
+      ExecutionProperty:
+        MaxConcurrentRuns: 1
+      GlueVersion: '3.0' # Spark 3.1.1, Python 3.7 # parameterize?
+      MaxRetries: 0 # change this when not in development; parameterize?
+      Name: !Sub '${AppName}-${StudyName}-{{dataset['stackname_prefix']}}-Job-${UniqueId}'
+      NumberOfWorkers: 1
+      Role: !Ref RoleArn
+      Timeout: 120
+      WorkerType: Standard
   {% endfor %}
-
-  S3ToJsonS3JobStack:
-    Type:  AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-python-job.yaml
-      Parameters:
-        JobDescription: Convert data to JSONS3 data
-        MaxConcurrentRuns: 150
-        JobRole: !Ref RoleArn
-        S3BucketName: !Ref JsonBucketName
-        S3ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/s3_to_json_s3.py
-        UniqueId: !Ref UniqueId
-        PythonVersion: 3
-        SynapseAuthSsmParameterName: !Ref SynapseAuthSsmParameterName
 
   # Table stacks
   {% for dataset in datasets %}
@@ -222,7 +227,7 @@ Resources:
     Type: AWS::Glue::Trigger
     Properties:
       Actions:
-        - JobName: !Sub ${S3ToJsonS3JobStack.Outputs.JobName}
+        - JobName: !Ref S3ToJsonS3JobName
       Description: >-
         When new data is received this trigger starts the workflow
         that unpacks the archive and stores JSON files separately
@@ -244,7 +249,7 @@ Resources:
     Properties:
       Actions:
         {% for dataset in datasets %}
-        - JobName: !Sub ${ {{dataset.stackname_prefix}}ParquetJobStack.Outputs.JobName }
+        - JobName: !Ref {{dataset.stackname_prefix}}ParquetJob
         {% endfor %}
       Predicate:
         Conditions:

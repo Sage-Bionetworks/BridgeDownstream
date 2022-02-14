@@ -28,21 +28,24 @@ args = getResolvedOptions(
         sys.argv,
         ["WORKFLOW_NAME",
          "WORKFLOW_RUN_ID",
-         "scriptLocation",
-         "ssm-parameter-name"])
+         "ssm-parameter-name",
+         "dataset-mapping"])
 workflow_run_properties = glue_client.get_workflow_run_properties(
         Name=args["WORKFLOW_NAME"],
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 
-def get_dataset_mapping(script_location):
-    script_location = urlparse(script_location)
-    dataset_mapping_bucket = script_location.netloc
-    dataset_mapping_key = "BridgeDownstream/main/glue/resources/dataset_mapping.json"
+def get_dataset_mapping(dataset_mapping_uri):
+    dataset_mapping_location = urlparse(dataset_mapping_uri)
+    dataset_mapping_bucket = dataset_mapping_location.netloc
+    dataset_mapping_key = dataset_mapping_location.path[1:]
     dataset_mapping_fname = os.path.basename(dataset_mapping_key)
-    dataset_mapping_file = s3_client.download_file(
-            Bucket=dataset_mapping_bucket,
-            Key=dataset_mapping_key,
-            Filename=dataset_mapping_fname)
+    download_file_args = {
+            "Bucket":dataset_mapping_bucket,
+            "Key":dataset_mapping_key,
+            "Filename":dataset_mapping_fname}
+    logger.debug("Calling s3_client.download_file with args: "
+                 f"{json.dumps(download_file_args)}")
+    dataset_mapping_file = s3_client.download_file(**download_file_args)
     with open(dataset_mapping_fname, "r") as f:
         dataset_mapping = json.load(f)
     logger.debug(f'dataset_mapping: {dataset_mapping}')
@@ -58,8 +61,8 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
         logger.debug(f'contents: {contents}')
         for json_path in z.namelist():
             dataset_key = os.path.splitext(json_path)[0]
-            dataset_version = this_dataset_mapping[dataset_key]
             dataset_name = dataset_key.lower()
+            dataset_version = this_dataset_mapping[dataset_name]
             os.makedirs(dataset_name, exist_ok=True)
             with z.open(json_path, "r") as p:
                 j = json.load(p)
@@ -113,15 +116,16 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
-logger.info(f"Retrieving dataset mapping at {args['scriptLocation']}")
+logger.debug(f"getResolvedOptions: {json.dumps(args)}")
+logger.info(f"Retrieving dataset mapping at {args['dataset_mapping']}")
 dataset_mapping = get_dataset_mapping(
-        script_location=args["scriptLocation"])
+        dataset_mapping_uri=args["dataset_mapping"])
 logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
 synapse_auth_token = ssm_client.get_parameter(
           Name=args["ssm_parameter_name"],
           WithDecryption=True)
 syn = synapseclient.Synapse()
-syn.login(authToken=synapse_auth_token, silent=True)
+syn.login(authToken=synapse_auth_token["Parameter"]["Value"], silent=True)
 logger.info("Getting messages")
 messages = json.loads(workflow_run_properties["messages"])
 sts_tokens = {}

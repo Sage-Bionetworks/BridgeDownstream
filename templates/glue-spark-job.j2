@@ -97,9 +97,21 @@ Parameters:
     Type: String
     Description: The name of the S3 bucket where temporary files and logs are written.
 
-  GlueTableName:
+  AdditionalPythonModules:
     Type: String
-    Description: Name of the Glue table associated with this job
+    Description: A comma-delimited list of Python modules
+    Default: 'noop'
+
+  SynapseAuthSsmParameterName:
+    Type: String
+    Description: >-
+      The name of an ssm parameter whose value is Synapse service account
+      personal access token
+    Default: ''
+
+  DatasetMapping:
+    Type: String
+    Description: S3 URI of dataset mapping file
 
 Resources:
 
@@ -117,7 +129,9 @@ Resources:
         --spark-event-logs-path: !Sub s3://${S3BucketName}/spark-logs/${AWS::StackName}/
         --job-bookmark-option: !Ref BookmarkOption
         --job-language: !Ref JobLanguage
-        --table: !Ref GlueTableName
+        --additional-python-modules: !Ref AdditionalPythonModules
+        --ssm-parameter-name: !Ref SynapseAuthSsmParameterName
+        --dataset-mapping: !Ref DatasetMapping
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:
