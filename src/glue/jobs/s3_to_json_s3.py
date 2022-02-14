@@ -37,12 +37,15 @@ workflow_run_properties = glue_client.get_workflow_run_properties(
 def get_dataset_mapping(dataset_mapping_uri):
     dataset_mapping_location = urlparse(dataset_mapping_uri)
     dataset_mapping_bucket = dataset_mapping_location.netloc
-    dataset_mapping_key = dataset_mapping_uri.path
+    dataset_mapping_key = dataset_mapping_location.path[1:]
     dataset_mapping_fname = os.path.basename(dataset_mapping_key)
-    dataset_mapping_file = s3_client.download_file(
-            Bucket=dataset_mapping_bucket,
-            Key=dataset_mapping_key,
-            Filename=dataset_mapping_fname)
+    download_file_args = {
+            "Bucket":dataset_mapping_bucket,
+            "Key":dataset_mapping_key,
+            "Filename":dataset_mapping_fname}
+    logger.debug("Calling s3_client.download_file with args: "
+                 f"{json.dumps(download_file_args)}")
+    dataset_mapping_file = s3_client.download_file(**download_file_args)
     with open(dataset_mapping_fname, "r") as f:
         dataset_mapping = json.load(f)
     logger.debug(f'dataset_mapping: {dataset_mapping}')
