@@ -61,8 +61,8 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
         logger.debug(f'contents: {contents}')
         for json_path in z.namelist():
             dataset_key = os.path.splitext(json_path)[0]
-            dataset_version = this_dataset_mapping[dataset_key]
             dataset_name = dataset_key.lower()
+            dataset_version = this_dataset_mapping[dataset_name]
             os.makedirs(dataset_name, exist_ok=True)
             with z.open(json_path, "r") as p:
                 j = json.load(p)
