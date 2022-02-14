@@ -125,7 +125,7 @@ synapse_auth_token = ssm_client.get_parameter(
           Name=args["ssm_parameter_name"],
           WithDecryption=True)
 syn = synapseclient.Synapse()
-syn.login(authToken=synapse_auth_token, silent=True)
+syn.login(authToken=synapse_auth_token["Parameter"]["Value"], silent=True)
 logger.info("Getting messages")
 messages = json.loads(workflow_run_properties["messages"])
 sts_tokens = {}
