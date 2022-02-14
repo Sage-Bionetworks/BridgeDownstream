@@ -113,12 +113,13 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
 
-logger.info(f"Retrieving dataset mapping at {args['dataset-mapping']}")
+logger.debug(f"getResolvedOptions: {json.dumps(args)}")
+logger.info(f"Retrieving dataset mapping at {args['dataset_mapping']}")
 dataset_mapping = get_dataset_mapping(
-        dataset_mapping_uri=args["dataset-mapping"])
-logger.info(f"Logging into Synapse using auth token at {args['ssm-parameter-name']}")
+        dataset_mapping_uri=args["dataset_mapping"])
+logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
 synapse_auth_token = ssm_client.get_parameter(
-          Name=args["ssm-parameter-name"],
+          Name=args["ssm_parameter_name"],
           WithDecryption=True)
 syn = synapseclient.Synapse()
 syn.login(authToken=synapse_auth_token, silent=True)
