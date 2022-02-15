@@ -2,6 +2,7 @@
 # so that the schema (specific to the taskIdentifier) can be maintained
 # by a Glue crawler.
 import io
+import re
 import json
 import logging
 import os
@@ -51,11 +52,42 @@ def get_dataset_mapping(dataset_mapping_uri):
     logger.debug(f'dataset_mapping: {dataset_mapping}')
     return(dataset_mapping)
 
+def parse_client_info(client_info_str):
+    app_version_pattern = re.compile(r"appVersion=[^,]+")
+    os_name_pattern = re.compile(r"osName=[^,]+")
+    app_version_search = re.search(app_version_pattern, client_info_str)
+    os_name_search = re.search(os_name_pattern, client_info_str)
+    if app_version_search is None:
+        print(client_info_str)
+    else:
+        app_version = app_version_search.group().split("=")[1]
+    if os_name_search is None:
+        print(client_info_str)
+    else:
+        os_name = os_name_search.group().split("=")[1]
+    client_info = {
+            "appVersion": app_version,
+            "osName": os_name}
+    return client_info
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
     uploaded_on = datetime.strptime(s3_obj_metadata["uploadedon"], '%Y-%m-%dT%H:%M:%S.%fZ')
+    client_info = parse_client_info(s3_obj_metadata["clientinfo"])
+    logger.info(f"Using dataset mapping for osName = {client_info['osName']} "
+                f"and appVersion = {client_info['appVersion']}")
+    if client_info["osName"] not in dataset_mapping["osName"].keys():
+        logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
+                       f"osName = {client_info['osName']} was not found "
+                       "in dataset mapping.")
+    elif (client_info["appVersion"] not in
+          dataset_mapping["osName"][client_info["osName"]]["appVersion"]):
+        logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
+                       f"appVersion = {client_info['appVersion']} was "
+                       "not found in dataset mapping for "
+                       f"osName = {client_info['osName']}.")
     this_dataset_mapping = dataset_mapping[
-            "appVersion"][s3_obj_metadata["appversion"]]["dataset"]
+            "osName"][client_info["osName"]][
+            "appVersion"][client_info["appVersion"]]
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
         contents = z.namelist()
         logger.debug(f'contents: {contents}')
@@ -145,7 +177,7 @@ for message in messages:
     s3_obj = bridge_s3_client.get_object(
             Bucket = message["source_bucket"],
             Key = message["source_key"])
-process_record(
-        s3_obj = s3_obj,
-        s3_obj_metadata=s3_obj["Metadata"],
-        dataset_mapping=dataset_mapping)
+    process_record(
+            s3_obj = s3_obj,
+            s3_obj_metadata=s3_obj["Metadata"],
+            dataset_mapping=dataset_mapping)
