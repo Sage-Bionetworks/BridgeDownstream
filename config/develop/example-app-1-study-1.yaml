@@ -6,7 +6,7 @@ dependencies:
   - develop/s3-parquet-bucket.yaml
   - develop/glue-classifier-array-of-records.yaml
 parameters:
-  BranchOrTagName: main
+  BranchOrTagName: etl-119
   AppName: example-app-1
   StudyName: study-1
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
@@ -23,7 +23,6 @@ stack_tags:
   {{ stack_group_config.default_stack_tags }}
 
 sceptre_user_data:
-  app_version: 'version 1.0.2, build 57'
   dataset_version_mapping: !file src/glue/resources/dataset_mapping.json
   dataset_crawler_assignments: !file src/glue/resources/dataset_crawler_assignments.yaml
   # this needs to be replaced with real versioned schemas

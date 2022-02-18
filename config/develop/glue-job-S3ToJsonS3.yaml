@@ -1,6 +1,6 @@
 template_path: glue-spark-job.j2
 stack_name: glue-job-S3ToJsonS3
-#{% set BranchOrTagName='main' %}
+#{% set BranchOrTagName='etl-119' %}
 parameters:
   JobRole: !stack_output_external glue-job-role::RoleArn
   S3BucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
