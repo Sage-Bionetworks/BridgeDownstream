@@ -1,7 +1,7 @@
 # This script runs as a Glue job and converts a collection of JSON files
 # (whose common schema is defined by a Glue table, created and maintained
 # by a Glue crawler), to a parquet dataset partitioned by
-# measure (taskIdentifier) / year / month / day / recordId
+# measure (assessmentid) / year / month / day / recordid
 # Additionally, if the table has nested data, it will be separated out
 # into its own dataset with a predictable name.
 #
@@ -9,8 +9,8 @@
 # "files" which is an array of objects. We will write out two parquet datasets
 # in this case, an `info` dataset and an `info_files` dataset.
 #
-# Before writing our tables to parquet datasets, we will add the recordId
-# measure (taskIdentifier), and year, month, day to each record in each table.
+# Before writing our tables to parquet datasets, we will add the recordid
+# measure (assessmentid), and year, month, day to each record in each table.
 
 import boto3
 import os
@@ -82,8 +82,8 @@ if has_nested_fields(table_schema) and table.count() > 0:
                 parent_table = table_relationalized[parent_key].toDF()
             parent_index = (parent_table
                     .select(
-                        [original_field_name, "taskIdentifier", "year",
-                         "month", "day", "recordId"])
+                        [original_field_name, "assessmentid", "year",
+                         "month", "day", "recordid"])
                     .distinct())
             this_index = parent_index.withColumnRenamed(original_field_name, "id")
             df_with_index = this_table.join(
@@ -126,7 +126,7 @@ if has_nested_fields(table_schema) and table.count() > 0:
                 connection_options = {
                     "path": s3_write_path,
                     "partitionKeys": [
-                        "taskIdentifier", "year", "month", "day", "recordId"]},
+                        "assessmentid", "year", "month", "day", "recordid"]},
                 format = "parquet",
                 transformation_ctx="write_dynamic_frame")
 elif table.count() > 0:
@@ -142,7 +142,7 @@ elif table.count() > 0:
             connection_options = {
                 "path": s3_write_path,
                 "partitionKeys": [
-                    "taskIdentifier", "year", "month", "day", "recordId"]},
+                    "assessmentid", "year", "month", "day", "recordid"]},
             format = "parquet",
             transformation_ctx="write_dynamic_frame")
 

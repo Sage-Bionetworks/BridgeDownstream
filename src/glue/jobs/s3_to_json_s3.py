@@ -1,5 +1,5 @@
 # Breaks apart the archive files into their own directories
-# so that the schema (specific to the taskIdentifier) can be maintained
+# so that the schema (specific to the assessmentid) can be maintained
 # by a Glue crawler.
 import io
 import re
@@ -104,27 +104,21 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                     j["month"] = int(uploaded_on.month)
                     j["day"] = int(uploaded_on.day)
                     for key in s3_obj_metadata:
-                        # We revert partition fields back to camelCase
-                        if key == "taskidentifier":
-                            j["taskIdentifier"] = s3_obj_metadata[key]
-                        elif key == "recordid":
-                            j["recordId"] = s3_obj_metadata[key]
-                        else:
-                            j[key] = s3_obj_metadata[key]
+                        j[key] = s3_obj_metadata[key]
                 else: # but only the partition fields into other files
                     if type(j) == list:
                         for item in j:
-                            item["taskIdentifier"] = s3_obj_metadata["taskidentifier"]
+                            item["assessmentid"] = s3_obj_metadata["assessmentid"]
                             item["year"] = int(uploaded_on.year)
                             item["month"] = int(uploaded_on.month)
                             item["day"] = int(uploaded_on.day)
-                            item["recordId"] = s3_obj_metadata["recordid"]
+                            item["recordid"] = s3_obj_metadata["recordid"]
                     else:
-                        j["taskIdentifier"] = s3_obj_metadata["taskidentifier"]
+                        j["assessmentid"] = s3_obj_metadata["assessmentid"]
                         j["year"] = int(uploaded_on.year)
                         j["month"] = int(uploaded_on.month)
                         j["day"] = int(uploaded_on.day)
-                        j["recordId"] = s3_obj_metadata["recordid"]
+                        j["recordid"] = s3_obj_metadata["recordid"]
                 output_fname = s3_obj_metadata["recordid"] + ".ndjson"
                 output_path = os.path.join(dataset_name, output_fname)
                 logger.debug(f'output_path: {output_path}')
@@ -135,11 +129,11 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         workflow_run_properties["study_name"],
                         workflow_run_properties["json_prefix"],
                         f"dataset={dataset_name}_{dataset_version}",
-                        f"taskIdentifier={s3_obj_metadata['taskidentifier']}",
+                        f"assessmentid={s3_obj_metadata['assessmentid']}",
                         f"year={str(uploaded_on.year)}",
                         f"month={str(uploaded_on.month)}",
                         f"day={str(uploaded_on.day)}",
-                        f"recordId={s3_obj_metadata['recordid']}",
+                        f"recordid={s3_obj_metadata['recordid']}",
                         output_fname)
                 with open(output_path, "rb") as f_in:
                     response = s3_client.put_object(
