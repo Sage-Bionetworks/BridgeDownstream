@@ -6,7 +6,7 @@ dependencies:
   - develop/s3-parquet-bucket.yaml
   - develop/glue-classifier-array-of-records.yaml
 parameters:
-  BranchOrTagName: etl-119
+  BranchOrTagName: main
   AppName: example-app-1
   StudyName: study-1
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
