@@ -1,0 +1,11 @@
+#{% set ns = stack_group_config.namespace %}
+template_path: s3-bucket.yaml
+stack_name: '{{ ns }}-intermediate-bucket'
+dependencies:
+  - develop/glue-job-role.yaml
+parameters:
+  BucketName: '{{ ns }}-intermediate-data'
+  ReadWriteAccessArns:
+    - !stack_output_external '{{ ns }}-glue-job-role::RoleArn'
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}

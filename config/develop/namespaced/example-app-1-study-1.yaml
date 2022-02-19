@@ -1,12 +1,13 @@
+#{% set ns = stack_group_config.namespace %}
 template_path: study-pipeline-infra.j2
-stack_name: example-app-1-study-1
+stack_name: '{{ ns }}-example-app-1-study-1'
 dependencies:
   - develop/glue-job-role.yaml
   - develop/s3-intermediate-bucket.yaml
   - develop/s3-parquet-bucket.yaml
   - develop/glue-classifier-array-of-records.yaml
 parameters:
-  BranchOrTagName: main
+  Namespace: {{ ns }}
   AppName: example-app-1
   StudyName: study-1
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
@@ -15,9 +16,9 @@ parameters:
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
   RoleArn: !stack_output_external glue-job-role::RoleArn
   ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
-  SynapseAuthSsmParameterName: {{ stack_group_config.synapseAuthSsmParameterName }}
+  SynapseAuthSsmParameterName: '{{ stack_group_config.synapseAuthSsmParameterName }}'
   UniqueId: !rcmd git rev-parse HEAD
-  S3ToJsonS3JobName: !stack_output_external glue-job-S3ToJsonS3::JobName
+  S3ToJsonS3JobName: !stack_output_external '{{ ns }}-glue-job-S3ToJsonS3::JobName'
 
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

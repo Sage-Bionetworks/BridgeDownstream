@@ -1,0 +1,1 @@
+namespace: {{ var.namespace | default('bridge-downstream-prod') }}

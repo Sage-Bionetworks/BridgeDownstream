@@ -4,11 +4,11 @@ Description: The set of Glue jobs created for each study
 
 Parameters:
 
-  BranchOrTagName:
+  Namespace:
     Type: String
     Description: >-
-      Relevant branch or tag from where templates and scripts are sourced;
-      this is used to build up the path to the correct object keys in the bucket
+      The namespace string used to build up the path to the correct object keys
+      in the bucket
     Default: main
 
   CodeRepositoryName:
@@ -112,7 +112,7 @@ Resources:
     Properties:
       Command:
         Name: glueetl
-        ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${BranchOrTagName}/glue/jobs/json_s3_to_parquet.py
+        ScriptLocation: !Sub s3://${TemplateBucketName}/${CodeRepositoryName}/${Namespace}/glue/jobs/json_s3_to_parquet.py
       DefaultArguments:
         --TempDir: !Sub s3://${JsonBucketName}/tmp
         --enable-continuous-cloudwatch-log: true
@@ -217,7 +217,7 @@ Resources:
   WorkflowsStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/glue-workflows.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${Namespace}/templates/glue-workflows.yaml
       Parameters:
         AppName: !Ref AppName
         StudyName: !Ref StudyName
@@ -270,6 +270,6 @@ Resources:
   LambdaStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${BranchOrTagName}/templates/lambda/sns_to_glue/template.yaml
+      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${Namespace}/templates/lambda/sns_to_glue/template.yaml
       Parameters:
         WorkflowName: !Sub ${WorkflowsStack.Outputs.S3ToJsonWorkflowName}
