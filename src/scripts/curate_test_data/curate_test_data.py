@@ -29,6 +29,9 @@ def read_args():
                              "Use {source_table} in the query's FROM clause.")
     parser.add_argument("--data-dir",
                         help="The local path to the test data directory.")
+    parser.add_argument("--metadata-dir",
+                        help=("The local path to write the metadata and "
+                             "data provenance to."))
     parser.add_argument("--overwrite",
                         action="store_true",
                         help=("If omitted, move new data to `--data-dir` "
@@ -38,17 +41,21 @@ def read_args():
     args = parser.parse_args()
     return args
 
-def create_metadata_manifest(table):
+def create_metadata_manifest(table, write_path):
     table = table.drop(NON_METADATA_FIELDS, axis=1)
     metadata = table.set_index("recordId", drop=False)
-    metadata.to_json("metadata.json", orient="index")
+    metadata.to_json(
+            os.path.join(write_path, "metadata.json"),
+            orient="index")
     return metadata
 
-def create_data_provenance(table, query_str):
+def create_data_provenance(table, query_str, write_path):
     data_provenance_table = table[NON_METADATA_FIELDS + ["recordId"]]
     data_provenance_table["matchingQuery"] = query_str
     data_provenance_table.set_index("recordId", drop=False)
-    data_provenance_table.to_json("data_provenance.json", orient="index")
+    data_provenance_table.to_json(
+            os.path.join(write_path, "data_provenance.json"),
+            orient="index")
     return data_provenance_table
 
 def main():
@@ -57,10 +64,13 @@ def main():
     query_str = args.query.format(source_table=args.file_view)
     table = syn.tableQuery(query_str).asDataFrame()
     new_test_data = table["id"].apply(syn.get).values
-    create_metadata_manifest(table=table)
+    create_metadata_manifest(
+            table=table,
+            write_path = args.metadata_dir)
     create_data_provenance(
             table=table,
-            query_str=query_str)
+            query_str=query_str,
+            write_path=args.metadata_dir)
     if args.overwrite:
         for f in os.listdir(args.data_dir):
             os.remove(os.path.join(args.data_dir, f))
