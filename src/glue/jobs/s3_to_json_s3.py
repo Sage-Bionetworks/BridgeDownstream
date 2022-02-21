@@ -52,7 +52,7 @@ def get_dataset_mapping(dataset_mapping_uri):
     logger.debug(f'dataset_mapping: {dataset_mapping}')
     return(dataset_mapping)
 
-def parse_client_info(client_info_str):
+def parse_client_info_metadata(client_info_str):
     app_version_pattern = re.compile(r"appVersion=[^,]+")
     os_name_pattern = re.compile(r"osName=[^,]+")
     app_version_search = re.search(app_version_pattern, client_info_str)
@@ -72,7 +72,7 @@ def parse_client_info(client_info_str):
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
     uploaded_on = datetime.strptime(s3_obj_metadata["uploadedon"], '%Y-%m-%dT%H:%M:%S.%fZ')
-    client_info = parse_client_info(s3_obj_metadata["clientinfo"])
+    client_info = parse_client_info_metadata(s3_obj_metadata["clientinfo"])
     logger.info(f"Using dataset mapping for osName = {client_info['osName']} "
                 f"and appVersion = {client_info['appVersion']}")
     if client_info["osName"] not in dataset_mapping["osName"].keys():
