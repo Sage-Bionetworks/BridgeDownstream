@@ -14,7 +14,7 @@ import synapseclient
 
 # Exclude these Synapse file entity metadata.
 # Anything that is not in this list is assumed to be a file annotation.
-EXCLUDE_FIELDS = [
+NON_METADATA_FIELDS = [
         "id", "name", "createdOn", "createdBy", "etag", "type", "currentVersion",
         "parentId", "benefactorId", "projectId", "modifiedOn", "modifiedBy",
         "dataFileHandleId", "dataFileSizeBytes", "dataFileMD5Hex"]
@@ -39,18 +39,28 @@ def read_args():
     return args
 
 def create_metadata_manifest(table):
-    table = table.drop(EXCLUDE_FIELDS, axis=1)
+    table = table.drop(NON_METADATA_FIELDS, axis=1)
     metadata = table.set_index("recordId", drop=False)
     metadata.to_json("metadata.json", orient="index")
     return metadata
 
+def create_data_provenance(table, query_str):
+    data_provenance_table = table[NON_METADATA_FIELDS + ["recordId"]]
+    data_provenance_table["matchingQuery"] = query_str
+    data_provenance_table.set_index("recordId", drop=False)
+    data_provenance_table.to_json("data_provenance.json", orient="index")
+    return data_provenance_table
+
 def main():
     args = read_args()
     syn = synapseclient.login()
-    table = syn.tableQuery(
-            args.query.format(source_table=args.file_view)).asDataFrame()
-    new_test_data = table.id.apply(syn.get).values
+    query_str = args.query.format(source_table=args.file_view)
+    table = syn.tableQuery(query_str).asDataFrame()
+    new_test_data = table["id"].apply(syn.get).values
     create_metadata_manifest(table=table)
+    create_data_provenance(
+            table=table,
+            query_str=query_str)
     if args.overwrite:
         for f in os.listdir(args.data_dir):
             os.remove(os.path.join(args.data_dir, f))
