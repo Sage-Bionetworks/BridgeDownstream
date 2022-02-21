@@ -1,5 +1,7 @@
 template_path: glue-spark-job.j2
 stack_name: glue-job-S3ToJsonS3
+dependencies:
+  - develop/s3-intermediate-bucket.yaml
 #{% set BranchOrTagName='main' %}
 parameters:
   JobRole: !stack_output_external glue-job-role::RoleArn

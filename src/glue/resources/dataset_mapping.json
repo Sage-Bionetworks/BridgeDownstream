@@ -1,18 +1,38 @@
 {
-  "appVersion":
+  "osName":
     {
-      "version 1.0.2, build 57":
+      "Android":
         {
-          "dataset":
+          "appVersion":
             {
-              "answers": "v1",
-              "info": "v1",
-              "metadata": "v1",
-              "microphone_levels": "v1",
-              "motion": "v1",
-              "taskdata": "v1",
-              "taskresult": "v1",
-              "weather": "v1"
+              "13":
+                {
+                  "answers": "v1",
+                  "info": "v1",
+                  "metadata": "v1",
+                  "microphone_levels": "v1",
+                  "motion": "v1",
+                  "taskdata": "v1",
+                  "taskresult": "v1",
+                  "weather": "v1"
+                }
+            }
+        },
+      "iPhone OS":
+        {
+          "appVersion":
+            {
+              "73":
+                {
+                  "answers": "v1",
+                  "info": "v1",
+                  "metadata": "v1",
+                  "microphone_levels": "v1",
+                  "motion": "v1",
+                  "taskdata": "v1",
+                  "taskresult": "v1",
+                  "weather": "v1"
+                }
             }
         }
     }

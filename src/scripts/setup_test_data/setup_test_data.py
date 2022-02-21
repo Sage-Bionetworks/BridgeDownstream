@@ -107,33 +107,32 @@ def add_test_data(syn, dir_path, project_id):
     obj_key = f'{test_data_folder_name}/{filename}'
     if obj_key not in object_keys:
       file_metadata = {}
-      file_metadata['recordid'] = filename.split('-raw.zip')[0]
-      with ZipFile(file_path) as archive:
-        with archive.open('metadata.json') as metadata_file:
-          metadata = json.load(metadata_file)
-          file_metadata['taskidentifier'] = metadata['taskIdentifier']
-          file_metadata['appversion'] = metadata['appVersion']
-          file_metadata['uploadedon'] = "2022-01-20T21:26:07.641Z" # any datetime will do for the test data
+      record_id = filename.split('-raw.zip')[0]
+      with open(f'{dir_path}/metadata.json') as metadata_file:
+        metadata = json.load(metadata_file)
+        for k, v in metadata[record_id].items():
+            if v is not None:
+                file_metadata[k] = str(v)
 
-        logger.info(f'Adding {obj_key} to S3 bucket {bucket_name}')
-        with open(file_path, 'rb') as f:
-          bucket.put_object(
-            Body=f,
-            Key=obj_key,
-            Metadata=file_metadata
-            )
-        logger.info(f'Storing {filename} as handle in folder {folder_id}')
-        file_handle=syn.create_external_s3_file_handle(
-          bucket_name=bucket_name,
-          s3_file_key=obj_key,
-          file_path=file_path,
-          parent=folder_id)
-        file = File(
-          parentId=folder_id,
-          name=filename,
-          synapseStore=False,
-          dataFileHandleId=file_handle['id'])
-        syn.store(file)
+      logger.info(f'Adding {file_path} to S3 bucket {bucket_name}')
+      with open(file_path, 'rb') as f:
+        bucket.put_object(
+          Body=f,
+          Key=obj_key,
+          Metadata=file_metadata
+          )
+      logger.info(f'Storing {filename} as handle in folder {folder_id}')
+      file_handle=syn.create_external_s3_file_handle(
+        bucket_name=bucket_name,
+        s3_file_key=obj_key,
+        file_path=file_path,
+        parent=folder_id)
+      file = File(
+        parentId=folder_id,
+        name=filename,
+        synapseStore=False,
+        dataFileHandleId=file_handle['id'])
+      syn.store(file)
     else:
       logger.info(f'{filename} was already added to S3 bucket {bucket_name}')
 
