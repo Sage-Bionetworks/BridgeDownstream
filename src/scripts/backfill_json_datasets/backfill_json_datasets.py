@@ -7,6 +7,7 @@ If --synapse-parent is specified, all files in that folder are submitted to
 the workflow. Otherwise, a --file-view must be specified (and optionally,
 a --query, if you do not want to submit every file in the file view).
 """
+import json
 import argparse
 import boto3
 import synapseclient
@@ -20,10 +21,20 @@ def read_args():
     parser.add_argument("--file-view",
                         help=("The Synapse ID of a file view containing "
                               "files to be submitted."))
+    parser.add_argument("--raw-folder-id",
+                        required=True,
+                        help=("The Synapse ID of a folder containing this "
+                              "this data. If querying a --file-view, this is "
+                              "usually the scope of that file view (or the "
+                              "Synapse ID of a folder which contains everything "
+                              "in the scope). If data is instead coming from the "
+                              "folder specified by --synapse-parent, these values "
+                              "are identical.")
     parser.add_argument("--query",
                         help=("An f-string formatted query which filters the "
                               "file view. Use {source_table} in the FROM clause."))
     parser.add_argument("--glue-workflow",
+                        required=True,
                         help="The name of the Glue workflow to submit to.")
     parser.add_argument("--profile",
                         help="The AWS profile to use.")
@@ -66,27 +77,32 @@ def get_synapse_ids(syn, synapse_parent=None, entity_view=None, query=None):
     return synapse_ids
 
 
-def submit_archives_to_workflow(syn, synapse_ids, glue_workflow, aws_session):
+def submit_archives_to_workflow(
+        syn, synapse_ids, raw_folder_id, glue_workflow, aws_session):
     glue_client = aws_session.client("glue")
+    messages = []
     for synapse_id in synapse_ids:
-        s3_loc = get_s3_loc(
+        message = get_message(
                 syn=syn,
-                synapse_id=synapse_id)
-        workflow_run = glue_client.start_workflow_run(Name=glue_workflow)
-        glue_client.put_workflow_run_properties(
-                Name=glue_workflow,
-                RunId=workflow_run["RunId"],
-                RunProperties={
-                    "input_bucket": s3_loc["bucket"],
-                    "input_key": s3_loc["key"]})
+                synapse_id=synapse_id,
+                raw_folder_id=raw_folder_id)
+        messages.append(message)
+    workflow_run = glue_client.start_workflow_run(Name=glue_workflow)
+    glue_client.put_workflow_run_properties(
+            Name=glue_workflow,
+            RunId=workflow_run["RunId"],
+            RunProperties={"messages": json.dumps(messages)})
 
 
-def get_s3_loc(syn, synapse_id):
+def get_message(syn, synapse_id, raw_folder_id):
     f = syn.get(synapse_id, downloadFile=False)
     bucket = f["_file_handle"]["bucketName"]
     key = f["_file_handle"]["key"]
-    s3_loc = {"bucket": bucket, "key": key}
-    return s3_loc
+    message = {
+            "source_bucket": bucket,
+            "source_key": key,
+            "raw_folder_id": raw_folder_id}
+    return message
 
 
 def main():
@@ -103,8 +119,9 @@ def main():
     submit_archives_to_workflow(
             syn=syn,
             synapse_ids=synapse_ids,
+            raw_folder_id=args.raw_folder_id,
             glue_workflow=args.glue_workflow,
-            aws_session=args.aws_session)
+            aws_session=aws_session)
 
 if __name__ == "__main__":
     main()
