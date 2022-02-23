@@ -24,7 +24,7 @@ jobs:
     name: Upload files to S3 bucket
     runs-on: ubuntu-latest
     needs: pre-commit
-    if: startsWith(github.ref, 'refs/pull') != true
+    if: github.event_name == 'push' #startsWith(github.ref, 'refs/pull') != true
     environment: develop
     steps:
 
@@ -66,7 +66,7 @@ jobs:
     needs: [pre-commit, upload-files]
     env:
       namespace: $GITHUB_REF_NAME
-    if: github.ref != 'refs/heads/main'
+    if: github.ref_name != 'main'
     environment: develop
 
     steps:
@@ -88,19 +88,15 @@ jobs:
     name: Deploy trunk using sceptre
     runs-on: ubuntu-latest
     needs: [pre-commit, upload-files]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref_name == 'main'
 
     strategy:
       matrix:
         job-environment:
           - develop
           - prod
-        include:
-          -
-            job-environment: develop
-            sceptre-environment: develop
-            sceptre-namespace: $GITHUB_REF_NAME
 
+        include:
           - job-environment: develop
             sceptre-environment: develop
             sceptre-namespace: bridge-downstream-dev
