@@ -1,16 +1,61 @@
 {
+    "Version": "2008-10-17",
     "Statement": [
         {
-            "Action": [ "s3:ListBucket*", "s3:GetBucketLocation" ],
             "Effect": "Allow",
-            "Resource": "arn:aws:s3:::thisisthenameofmybucket",
-            "Principal": { "AWS": "325565585839" }
+            "Principal": {
+                "AWS": "arn:aws:iam::325565585839:root"
+            },
+            "Action": [
+                "s3:ListBucket*",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::bridge-downstream-dev-parquet"
         },
         {
-            "Action": [ "s3:*Object*", "s3:*MultipartUpload*" ],
             "Effect": "Allow",
-            "Resource": "arn:aws:s3:::thisisthenameofmybucket/*",
-            "Principal": { "AWS": "325565585839" }
+            "Principal": {
+                "AWS": "arn:aws:iam::325565585839:root"
+            },
+            "Action": [
+                "s3:*Object*",
+                "s3:*MultipartUpload*"
+            ],
+            "Resource": "arn:aws:s3:::bridge-downstream-dev-parquet/*"
+        },
+        {
+            "Sid": "AccountRead",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::634761300905:root"
+            },
+            "Action": [
+                "s3:Get*",
+                "s3:List*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bridge-downstream-dev-parquet",
+                "arn:aws:s3:::bridge-downstream-dev-parquet/*"
+            ]
+        },
+        {
+            "Sid": "ReadWriteAccess",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::634761300905:role/glue-job-role-JobRole-17ZDNBAU6YWF3"
+            },
+            "Action": [
+                "s3:*MultipartUpload*",
+                "s3:DeleteObject*",
+                "s3:Get*",
+                "s3:List*",
+                "s3:PutObject",
+                "s3:PutObjectTagging"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bridge-downstream-dev-parquet",
+                "arn:aws:s3:::bridge-downstream-dev-parquet/*"
+            ]
         }
     ]
 }
