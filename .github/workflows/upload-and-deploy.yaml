@@ -40,8 +40,15 @@ jobs:
         with:
           version: 1.37.0
 
-      - name: Copy files to templates bucket
+      - name: Copy files to templates bucket for branch
+        if: github.ref_name != 'main'
         run: python src/scripts/manage_artifacts/artifacts.py --upload --namespace $GITHUB_REF_NAME
+
+      - name: Copy files to templates bucket for main
+        if: github.ref_name == 'main'
+        run: |
+          python src/scripts/manage_artifacts/artifacts.py --upload --namespace bridge-downstream-dev
+          python src/scripts/manage_artifacts/artifacts.py --upload --namespace bridge-downstream-prod
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -57,8 +64,19 @@ jobs:
             --image-repository $ECR_REPOSITORY \
             --no-progressbar
 
+      - name: Copy Lambda template to templates bucket for branch
+        if: github.ref_name != 'main'
+        run: |
           aws s3 cp .aws-sam/build/template.yaml \
             s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/lambda/sns_to_glue/
+
+      - name: Copy Lambda template to templates bucket for main
+        if: github.ref_name == 'main'
+        run: |
+          aws s3 cp .aws-sam/build/template.yaml \
+            s3://$CFN_BUCKET/$REPO_NAME/bridge-downstream-dev/templates/lambda/sns_to_glue/
+          aws s3 cp .aws-sam/build/template.yaml \
+            s3://$CFN_BUCKET/$REPO_NAME/bridge-downstream-prod/templates/lambda/sns_to_glue/
 
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
