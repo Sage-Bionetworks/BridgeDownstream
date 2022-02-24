@@ -40,15 +40,16 @@ jobs:
         with:
           version: 1.37.0
 
-      - name: Copy files to templates bucket for branch
-        if: github.ref_name != 'main'
-        run: python src/scripts/manage_artifacts/artifacts.py --upload --namespace $GITHUB_REF_NAME
-
-      - name: Copy files to templates bucket for main
+      - name: Set namespace for main
         if: github.ref_name == 'main'
-        run: |
-          python src/scripts/manage_artifacts/artifacts.py --upload --namespace bridge-downstream-dev
-          python src/scripts/manage_artifacts/artifacts.py --upload --namespace bridge-downstream-prod
+        run: echo "NAMESPACE=bridge-downstream" >> $GITHUB_ENV
+
+      - name: Set namespace for branch
+        if: github.ref_name != 'main'
+        run: echo "NAMESPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
+
+      - name: Copy files to templates bucket
+        run: python src/scripts/manage_artifacts/artifacts.py --upload --namespace ${{ env.NAMESPACE }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -64,26 +65,15 @@ jobs:
             --image-repository $ECR_REPOSITORY \
             --no-progressbar
 
-      - name: Copy Lambda template to templates bucket for branch
-        if: github.ref_name != 'main'
-        run: |
           aws s3 cp .aws-sam/build/template.yaml \
-            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/lambda/sns_to_glue/
-
-      - name: Copy Lambda template to templates bucket for main
-        if: github.ref_name == 'main'
-        run: |
-          aws s3 cp .aws-sam/build/template.yaml \
-            s3://$CFN_BUCKET/$REPO_NAME/bridge-downstream-dev/templates/lambda/sns_to_glue/
-          aws s3 cp .aws-sam/build/template.yaml \
-            s3://$CFN_BUCKET/$REPO_NAME/bridge-downstream-prod/templates/lambda/sns_to_glue/
+            s3://$CFN_BUCKET/$REPO_NAME/${{ env.NAMESPACE }}/templates/lambda/sns_to_glue/
 
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
     runs-on: ubuntu-latest
     needs: [pre-commit, upload-files]
     env:
-      namespace: $GITHUB_REF_NAME
+      NAMESPACE: $GITHUB_REF_NAME
     if: github.ref_name != 'main'
     environment: develop
 
@@ -99,8 +89,7 @@ jobs:
         run: mkdir -p templates/remote/
 
       - name: Deploy sceptre stacks
-        run: pipenv run sceptre --var "namespace=${{ env.namespace }}" launch develop --yes
-
+        run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch develop --yes
 
   sceptre-deploy-main:
     name: Deploy trunk using sceptre

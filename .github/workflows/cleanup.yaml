@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: develop
     env:
-      namespace: $GITHUB_REF_NAME
+      NAMESPACE: $GITHUB_REF_NAME
     steps:
 
       - name: Setup code, pipenv, aws
@@ -26,7 +26,7 @@ jobs:
           role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
       - name: Remove sceptre stacks
-        run: pipenv run sceptre --var "namespace=${{env.namespace}}" delete develop --yes
+        run: pipenv run sceptre --var "namespace=${{env.NAMESPACE}}" delete develop --yes
 
       - name: Remove artifacts
-        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace ${{env.namespace}}
+        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace ${{env.NAMESPACE}}
