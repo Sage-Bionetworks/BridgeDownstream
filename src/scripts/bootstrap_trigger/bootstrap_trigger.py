@@ -3,12 +3,7 @@ Submit Synapse files stored on an external S3 bucket to a Glue workflow.
 Of course, this assumes that the workflow has read permissions on the S3
 bucket.
 
-If --synapse-parent is specified, all files in that folder are submitted to
-the workflow. Otherwise, a --file-view must be specified (and optionally,
-a --query, if you do not want to submit every file in the file view).
-
-If the --diff-* arguments are specified, --file-view must also be specified.
-These arguments allow a parquet dataset in a Synapse-linked S3 location to
+The --diff-* arguments allow a parquet dataset in a Synapse-linked S3 location to
 be diffed upon before submitting matching --query results to the --glue-workflow.
 In this way, data which has already been processed by the pipeline is not
 processed again.
@@ -23,13 +18,10 @@ from pyarrow import fs, parquet
 def read_args():
     parser = argparse.ArgumentParser(
             description=("Submit files on Synapse to an AWS --glue-workflow"))
-    parser.add_argument("--synapse-parent",
-                        help="The Synapse ID of the parent folder. "
-                             "Include either this argument or --file-view.")
     parser.add_argument("--file-view",
+                        required=True,
                         help=("The Synapse ID of a file view containing "
-                              "files to be submitted. Include either this "
-                              "argument or --synapse-parent"))
+                              "files to be submitted."))
     parser.add_argument("--raw-folder-id",
                         required=True,
                         help=("The Synapse ID of a folder containing this "
@@ -41,7 +33,10 @@ def read_args():
                               "are identical."))
     parser.add_argument("--query",
                         help=("An f-string formatted query which filters the "
-                              "file view. Use {source_table} in the FROM clause."))
+                              "file view. Use {source_table} in the FROM clause. "
+                              "If this argument is not specified, all files in "
+                              "the --file-view will be submitted to the "
+                              "--glue-workflow."))
     parser.add_argument("--glue-workflow",
                         required=True,
                         help="The name of the Glue workflow to submit to.")
@@ -75,21 +70,14 @@ def get_synapse_client(ssm_parameter=None, aws_session=None):
         syn = synapseclient.login()
     return syn
 
-def get_synapse_df(syn, synapse_parent=None, entity_view=None, query=None):
-    if synapse_parent is not None: # Submit all files in a folder
-        children = syn.getChildren(
-                parent=synapse_parent,
-                includeTypes=["file"])
-        synapse_ids = [child["id"] for child in children]
-    elif entity_view is not None:
-        if query is not None:
-            query_string = query.format(source_table=entity_view)
-        else:
-            query_string = f"select * from {entity_view}"
-        synapse_q = syn.tableQuery(query_string)
-        synapse_df = synapse_q.asDataFrame()
+
+def get_synapse_df(syn, entity_view, query=None):
+    if query is not None:
+        query_string = query.format(source_table=entity_view)
     else:
-        raise ValueError("Either synapse_parent or entity_view must be defined.")
+        query_string = f"select * from {entity_view}"
+    synapse_q = syn.tableQuery(query_string)
+    synapse_df = synapse_q.asDataFrame()
     return synapse_df
 
 
@@ -144,13 +132,14 @@ def get_message(syn, synapse_id, raw_folder_id):
 
 def main():
     args = read_args()
-    aws_session = boto3.session.Session(profile_name=args.profile)
+    aws_session = boto3.session.Session(
+            profile_name=args.profile,
+            region_name="us-east-1")
     syn = get_synapse_client(
             ssm_parameter=args.ssm_parameter,
             aws_session=aws_session)
     synapse_df = get_synapse_df(
             syn=syn,
-            synapse_parent=args.synapse_parent,
             entity_view=args.file_view,
             query=args.query)
     if (
@@ -169,13 +158,14 @@ def main():
                 parquet_field=args.diff_parquet_field)
     else:
         synapse_ids = synapse_df.id.values
-    if len(synapse_ids):
+    if len(synapse_ids) > 0:
         submit_archives_to_workflow(
                 syn=syn,
                 synapse_ids=synapse_ids,
                 raw_folder_id=args.raw_folder_id,
                 glue_workflow=args.glue_workflow,
                 aws_session=aws_session)
+
 
 if __name__ == "__main__":
     main()
