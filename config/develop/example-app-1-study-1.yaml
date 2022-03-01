@@ -6,6 +6,7 @@ dependencies:
   - develop/s3-intermediate-bucket.yaml
   - develop/s3-parquet-bucket.yaml
   - develop/glue-classifier-array-of-records.yaml
+  - develop/glue-job-S3ToJsonS3.yaml
 parameters:
   Namespace: {{ ns }}
   AppName: example-app-1
