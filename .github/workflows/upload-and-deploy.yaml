@@ -7,6 +7,7 @@ env:
   LAMBDA_BUCKET: sceptre-lambda-bucket-bucket-iw8km58inb0i
   CFN_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
   ECR_REPOSITORY: 634761300905.dkr.ecr.us-east-1.amazonaws.com/sns_to_glue
+  NAMESPACE: bridge-downstream
 
 jobs:
 
@@ -39,10 +40,6 @@ jobs:
         uses: aws-actions/setup-sam@v1
         with:
           version: 1.37.0
-
-      - name: Set namespace for main
-        if: github.ref_name == 'main'
-        run: echo "NAMESPACE=bridge-downstream" >> $GITHUB_ENV
 
       - name: Set namespace for branch
         if: github.ref_name != 'main'
@@ -106,11 +103,9 @@ jobs:
         include:
           - job-environment: develop
             sceptre-environment: develop
-            sceptre-namespace: bridge-downstream-dev
 
           - job-environment: prod
             sceptre-environment: prod
-            sceptre-namespace: bridge-downstream-prod
 
     environment: ${{ matrix.job-environment }}
 
@@ -126,4 +121,4 @@ jobs:
         run: mkdir -p templates/remote/
 
       - name: Deploy sceptre stacks
-        run: pipenv run sceptre --var "namespace=${{ matrix.sceptre-namespace }}" launch ${{ matrix.sceptre-environment }} --yes
+        run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch ${{ matrix.sceptre-environment }} --yes
