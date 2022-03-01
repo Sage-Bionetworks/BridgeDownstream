@@ -13,7 +13,7 @@ def read_args():
     description='')
   parser.add_argument(
     '--namespace',
-    default='bridge-downstream-dev')
+    default='bridge-downstream')
   group = parser.add_mutually_exclusive_group(required=True)
   group.add_argument('--upload', action='store_true')
   group.add_argument('--remove', action='store_true')
@@ -54,11 +54,11 @@ def list_namespaces():
   execute_command(cmd)
 
 
-def main(namespace):
+def main(args):
   if args.upload:
-    upload(namespace)
+    upload(args.namespace)
   elif args.remove:
-    delete(namespace)
+    delete(args.namespace)
   else:
     list_namespaces()
 
