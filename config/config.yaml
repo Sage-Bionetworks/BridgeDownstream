@@ -1,4 +1,5 @@
 project_code: bridge_downstream
+namespace: {{ var.namespace | default('bridge-downstream') }}
 region: us-east-1
 artifact_bucket_name: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
 synapseAuthSsmParameterName: synapse-bridgedownstream-auth

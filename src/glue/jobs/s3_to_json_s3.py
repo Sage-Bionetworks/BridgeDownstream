@@ -125,6 +125,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                 with open(output_path, "w") as f_out:
                     json.dump(j, f_out, indent=None)
                     s3_output_key = os.path.join(
+                        workflow_run_properties["namespace"],
                         workflow_run_properties["app_name"],
                         workflow_run_properties["study_name"],
                         workflow_run_properties["json_prefix"],

@@ -1,0 +1,26 @@
+name: cleanup
+
+on: delete
+
+jobs:
+
+  sceptre-delete:
+    name: Delete CloudFormation stacks using sceptre
+    runs-on: ubuntu-latest
+    environment: develop
+    env:
+      NAMESPACE: $GITHUB_REF_NAME
+    steps:
+
+      - name: Setup code, pipenv, aws
+        uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
+        with:
+          aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
+          role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+
+      - name: Remove sceptre stacks
+        run: pipenv run sceptre --var "namespace=${{env.NAMESPACE}}" delete develop --yes
+
+      - name: Remove artifacts
+        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace ${{env.NAMESPACE}}
