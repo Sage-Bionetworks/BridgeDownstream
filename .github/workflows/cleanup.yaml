@@ -2,12 +2,6 @@ name: cleanup
 
 on: delete
 
-env:
-  REPO_NAME: ${{ github.event.repository.name }}
-  LAMBDA_BUCKET: sceptre-lambda-bucket-bucket-iw8km58inb0i
-  CFN_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
-  ECR_REPOSITORY: 634761300905.dkr.ecr.us-east-1.amazonaws.com/sns_to_glue
-
 jobs:
 
   sceptre-delete:
