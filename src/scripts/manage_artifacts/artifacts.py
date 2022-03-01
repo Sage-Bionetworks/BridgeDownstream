@@ -34,7 +34,6 @@ def upload(namespace):
   cmd = ['aws', 's3', 'sync', scripts_local_path, scripts_s3_path]
   execute_command(cmd)
 
-
   templates_local_path = 'templates/'
   templates_s3_path = f's3://{cfn_bucket}/{repo_name}/{namespace}/templates/'
   cmd = ['aws', 's3', 'sync', templates_local_path, templates_s3_path]
@@ -56,7 +55,6 @@ def list_namespaces():
 
 
 def main(namespace):
-  namespace = args.namespace
   if args.upload:
     upload(namespace)
   elif args.remove:
