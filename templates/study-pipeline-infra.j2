@@ -9,7 +9,7 @@ Parameters:
     Description: >-
       The namespace string used to build up the path to the correct object keys
       in the bucket
-    Default: main
+    Default: bridge-downstream
 
   CodeRepositoryName:
     Type: String
@@ -287,3 +287,4 @@ Resources:
       TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${Namespace}/templates/lambda/sns_to_glue/template.yaml
       Parameters:
         WorkflowName: !Ref S3ToJsonWorkflow
+        Namespace: !Ref Namespace

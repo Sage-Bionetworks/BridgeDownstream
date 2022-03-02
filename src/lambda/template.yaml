@@ -13,6 +13,10 @@ Parameters:
     Type: String
     Description: Name of the glue workflow to start when new data arrives
 
+  Namespace:
+    Type: String
+    Description: Namespace of the stack so that it may be unique
+
 Resources:
 
   SnsToGlueRole:
@@ -50,6 +54,9 @@ Resources:
           Properties:
             Topic: !Ref SnsTopic
       Timeout: 600
+      Environment:
+        Variables:
+          NAMESPACE: !Ref Namespace
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./sns_to_glue

@@ -1,8 +1,14 @@
-import json
 import boto3
+import json
+import logging
+import os
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
+    namespace = os.environ.get('NAMESPACE')
     glue_client = boto3.client("glue")
     messages = {} # indexed by app and study
     for record in event["Records"]:
@@ -26,7 +32,8 @@ def lambda_handler(event, context):
                 messages[app][study] = [message_parameters]
     for app in messages:
         for study in messages[app]:
-            workflow_name = f"{app}-{study}-S3ToJsonWorkflow"
+            workflow_name = f"{namespace}-{app}-{study}-S3ToJsonWorkflow"
+            logger.info(f'Starting workflow run for workflow {workflow_name}')
             workflow_run = glue_client.start_workflow_run(
                 Name=workflow_name)
             glue_client.put_workflow_run_properties(

@@ -43,5 +43,5 @@ Ensure that `event.json` contains a valid Synapse id, and that `test-env-vars.js
 contains all the environment vars that are expected in `sns_to_glue/app.py`.
 
 ```bash
-lambda$ sam local invoke -e events/event.json --env-vars test-env-vars.json
+lambda$ sam local invoke -e events/single-record.json --env-vars test-env-vars.json
 ```
