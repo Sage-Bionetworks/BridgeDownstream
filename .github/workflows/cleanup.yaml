@@ -8,8 +8,6 @@ jobs:
     name: Delete CloudFormation stacks using sceptre
     runs-on: ubuntu-latest
     environment: develop
-    env:
-      NAMESPACE: $GITHUB_REF_NAME
     steps:
 
       - name: Setup code, pipenv, aws
@@ -20,7 +18,7 @@ jobs:
           role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
       - name: Remove sceptre stacks
-        run: pipenv run sceptre --var "namespace=${{env.NAMESPACE}}" delete develop/namespaced --yes
+        run: pipenv run sceptre --var "namespace=$GITHUB_REF_NAME" delete develop/namespaced --yes
 
       - name: Remove artifacts
-        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace ${{env.NAMESPACE}}
+        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace "$GITHUB_REF_NAME"
