@@ -18,7 +18,7 @@ jobs:
           role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
       - name: Remove sceptre stacks
-        run: pipenv run sceptre --debug --var "namespace=${{ github.ref_name }}" delete develop/namespaced --yes
+        run: pipenv run sceptre --debug --var "namespace=${{ github.event.ref }}" delete develop/namespaced --yes
 
       - name: Remove artifacts
-        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace "${{ github.ref_name }}"
+        run: pipenv run python src/scripts/manage_artifacts/artifacts.py --remove --namespace "${{ github.event.ref }}"
