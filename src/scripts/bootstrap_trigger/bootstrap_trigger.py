@@ -105,18 +105,23 @@ def diff_on_parquet(synapse_df, parquet_df, synapse_field, parquet_field):
 def submit_archives_to_workflow(
         syn, synapse_ids, raw_folder_id, glue_workflow, aws_session):
     glue_client = aws_session.client("glue")
-    messages = []
-    for synapse_id in synapse_ids:
-        message = get_message(
-                syn=syn,
-                synapse_id=synapse_id,
-                raw_folder_id=raw_folder_id)
-        messages.append(message)
-    workflow_run = glue_client.start_workflow_run(Name=glue_workflow)
-    glue_client.put_workflow_run_properties(
-            Name=glue_workflow,
-            RunId=workflow_run["RunId"],
-            RunProperties={"messages": json.dumps(messages)})
+    batch_size = 100
+    synapse_id_groups = [
+            synapse_ids[i:i+batch_size]
+            for i in range(0,len(synapse_ids),batch_size)]
+    for synapse_id_group in synapse_id_groups:
+        messages = []
+        for synapse_id in synapse_id_group:
+            message = get_message(
+                    syn=syn,
+                    synapse_id=synapse_id,
+                    raw_folder_id=raw_folder_id)
+            messages.append(message)
+        workflow_run = glue_client.start_workflow_run(Name=glue_workflow)
+        glue_client.put_workflow_run_properties(
+                Name=glue_workflow,
+                RunId=workflow_run["RunId"],
+                RunProperties={"messages": json.dumps(messages)})
 
 
 def get_message(syn, synapse_id, raw_folder_id):
