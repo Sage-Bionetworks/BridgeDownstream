@@ -18,7 +18,6 @@ parameters:
   RoleArn: !stack_output_external glue-job-role::RoleArn
   ClassifierName: !stack_output_external array-of-records-classifier::ClassifierName
   SynapseAuthSsmParameterName: '{{ stack_group_config.synapseAuthSsmParameterName }}'
-  UniqueId: !rcmd git rev-parse HEAD
   S3ToJsonS3JobName: !stack_output_external '{{ ns }}-glue-job-S3ToJsonS3::JobName'
 
 stack_tags:

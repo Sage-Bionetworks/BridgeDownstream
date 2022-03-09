@@ -10,7 +10,6 @@ parameters:
   JobDescription: Convert data to JSONS3 data
   MaxConcurrentRuns: '150'
   S3ScriptLocation: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.namespace }}/glue/jobs/s3_to_json_s3.py
-  UniqueId: !rcmd git rev-parse HEAD
   SynapseAuthSsmParameterName: {{ stack_group_config.synapseAuthSsmParameterName }}
   AdditionalPythonModules: 'synapseclient'
   DatasetMapping: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.namespace }}/glue/resources/dataset_mapping.json

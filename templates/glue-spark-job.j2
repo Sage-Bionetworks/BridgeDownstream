@@ -61,11 +61,6 @@ Parameters:
     Description: The job timeout in minutes (integer).
     Default: 120
 
-  UniqueId:
-    Type: String
-    Description: A unique id for producing unique job names
-    Default: ''
-
   WorkerType:
     Type: String
     Description: >-
@@ -138,7 +133,7 @@ Resources:
         MaxConcurrentRuns: !Ref MaxConcurrentRuns
       GlueVersion: !Ref GlueVersion
       MaxRetries: !Ref MaxRetries
-      Name: !Sub '${AWS::StackName}-Job-${UniqueId}'
+      Name: !Sub '${AWS::StackName}-Job'
       NumberOfWorkers: !Ref NumberOfWorkers
       Role: !Ref JobRole
       Timeout: !Ref TimeoutInMinutes

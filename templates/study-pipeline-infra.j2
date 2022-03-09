@@ -71,11 +71,6 @@ Parameters:
       The name of an ssm parameter whose value is Synapse service account
       personal access token
 
-  UniqueId:
-    Type: String
-    Description: A unique id for producing unique job names.
-    Default: ''
-
   S3ToJsonS3JobName:
     Type: String
     Description: The name of the S3 To JSON S3 Job
@@ -128,7 +123,7 @@ Resources:
         MaxConcurrentRuns: 1
       GlueVersion: '3.0' # Spark 3.1.1, Python 3.7 # parameterize?
       MaxRetries: 0 # change this when not in development; parameterize?
-      Name: !Sub '${Namespace}-${AppName}-${StudyName}-{{dataset['stackname_prefix']}}-Job-${UniqueId}'
+      Name: !Sub '${Namespace}-${AppName}-${StudyName}-{{dataset['stackname_prefix']}}-Job'
       NumberOfWorkers: 1
       Role: !Ref RoleArn
       Timeout: 120
