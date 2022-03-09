@@ -39,9 +39,16 @@ Test the function by invoking it directly with a test event. Test events are
 included in the `events` folder.
 
 To test the lambda locally, run the following command from the lambda directory.
-Ensure that `event.json` contains a valid Synapse id, and that `test-env-vars.json`
-contains all the environment vars that are expected in `sns_to_glue/app.py`.
+Use `singe-record.json` to test just one assessment or `records.json` to test
+multiple. The file `test-env-vars.json` contains environmental variables that
+are epxected by the lambda script.
 
+To invoke the lambda with one event:
 ```bash
 lambda$ sam local invoke -e events/single-record.json --env-vars test-env-vars.json
+```
+
+To invoke the lambda with multiple events:
+```bash
+lambda$ sam local invoke -e events/records.json --env-vars test-env-vars.json
 ```
