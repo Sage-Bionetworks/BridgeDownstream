@@ -79,12 +79,14 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
         logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
                        f"osName = {client_info['osName']} was not found "
                        "in dataset mapping.")
+        return None
     elif (client_info["appVersion"] not in
           dataset_mapping["osName"][client_info["osName"]]["appVersion"]):
         logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
                        f"appVersion = {client_info['appVersion']} was "
                        "not found in dataset mapping for "
                        f"osName = {client_info['osName']}.")
+        return None
     this_dataset_mapping = dataset_mapping[
             "osName"][client_info["osName"]][
             "appVersion"][client_info["appVersion"]]
