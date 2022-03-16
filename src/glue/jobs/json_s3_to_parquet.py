@@ -119,7 +119,7 @@ if has_nested_fields(table_schema) and table.count() > 0:
                 workflow_run_properties["parquet_bucket"],
                 workflow_run_properties["parquet_prefix"],
                 clean_name)
-        logger.info(f"Writing {table} to {s3_write_path}")
+        #logger.info(f"Writing {table} to {s3_write_path}")
         glueContext.write_dynamic_frame.from_options(
                 frame = dynamic_frame_with_index,
                 connection_type = "s3",
