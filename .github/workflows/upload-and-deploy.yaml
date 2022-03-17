@@ -71,7 +71,7 @@ jobs:
     needs: [pre-commit, upload-files]
     env:
       NAMESPACE: $GITHUB_REF_NAME
-    if: github.ref_name != 'main'
+    if: github.ref_name != 'main' && github.ref_type != 'tag'
     environment: develop
 
     steps:
@@ -92,7 +92,7 @@ jobs:
     name: Deploy trunk using sceptre
     runs-on: ubuntu-latest
     needs: [pre-commit, upload-files]
-    if: github.ref_name == 'main'
+    if: github.ref_name == 'main' && github.ref_type != 'tag'
 
     strategy:
       matrix:
