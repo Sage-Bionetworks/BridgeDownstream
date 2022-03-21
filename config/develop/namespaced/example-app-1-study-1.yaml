@@ -12,7 +12,7 @@ parameters:
   AppName: example-app-1
   StudyName: study-1
   TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
-  ArtifactRef: ETL-91
+  ArtifactRef: v0.1
   SourceBucketName: !stack_output_external bridge-downstream-dev-source-bucket::BucketName
   JsonBucketName: !stack_output_external bridge-downstream-dev-intermediate-bucket::BucketName
   ParquetBucketName: !stack_output_external bridge-downstream-dev-parquet-bucket::BucketName
