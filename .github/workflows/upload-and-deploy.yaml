@@ -40,12 +40,12 @@ jobs:
         with:
           version: 1.37.0
 
-      - name: Set namespace for branch
+      - name: Set namespace for non-default branch or for tag
         if: github.ref_name != 'main'
         run: echo "NAMESPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
 
       - name: Copy files to templates bucket
-        run: python src/scripts/manage_artifacts/artifacts.py --upload --namespace ${{ env.NAMESPACE }}
+        run: python src/scripts/manage_artifacts/artifacts.py --upload --ref $GITHUB_REF_NAME
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -62,7 +62,7 @@ jobs:
             --no-progressbar
 
           aws s3 cp .aws-sam/build/template.yaml \
-            s3://$CFN_BUCKET/$REPO_NAME/${{ env.NAMESPACE }}/templates/lambda/sns_to_glue/
+            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/lambda/sns_to_glue/
 
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
