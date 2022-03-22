@@ -1,5 +1,5 @@
 #{% set ns = stack_group_config.namespace %}
-#{% set glue_script_tag = 'ETL-91' %}
+#{% set glue_script_tag = 'v0.1' %}
 template_path: glue-spark-job.j2
 dependencies:
   - develop/s3-intermediate-bucket.yaml
