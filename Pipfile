@@ -16,3 +16,4 @@ sceptre = ">=2.7.1"
 boto3 = "==1.*"
 pyspark = "==3.*"
 synapseclient = "==2.5.*"
+sceptre-sam-handler = {git = "https://github.com/Sceptre/sceptre-sam-handler.git"}

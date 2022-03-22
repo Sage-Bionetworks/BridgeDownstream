@@ -46,7 +46,7 @@ Resources:
   SnsToGlueFunction:
     Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
+      #PackageType: Image
       Role: !GetAtt SnsToGlueRole.Arn
       Events:
         SnsToGlue:
@@ -57,10 +57,10 @@ Resources:
       Environment:
         Variables:
           NAMESPACE: !Ref Namespace
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./sns_to_glue
-      DockerTag: v0.1
+    # Metadata:
+    #   Dockerfile: Dockerfile
+    #   DockerContext: ./sns_to_glue
+    #   DockerTag: v0.1
 
   SnsTopic:
     Type: AWS::SNS::Topic

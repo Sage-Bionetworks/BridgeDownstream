@@ -280,10 +280,22 @@ Resources:
       Type: CONDITIONAL
       WorkflowName: !Ref JsonToParquetWorkflow
 
-  LambdaStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${ArtifactRef}/templates/lambda/sns_to_glue/template.yaml
-      Parameters:
-        WorkflowName: !Ref S3ToJsonWorkflow
-        Namespace: !Ref Namespace
+  # LambdaStack:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: !Sub https://${TemplateBucketName}.s3.amazonaws.com/${CodeRepositoryName}/${ArtifactRef}/templates/lambda/sns_to_glue/template.yaml
+  #     Parameters:
+  #       WorkflowName: !Ref S3ToJsonWorkflow
+  #       Namespace: !Ref Namespace
+
+Outputs:
+
+  S3ToJsonWorkflowName:
+    Value: !Ref S3ToJsonWorkflow
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-S3ToJsonWorkflowName'
+
+  JsonToParquetWorkflowName:
+    Value: !Ref JsonToParquetWorkflow
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-JsonToParquetWorkflowName'

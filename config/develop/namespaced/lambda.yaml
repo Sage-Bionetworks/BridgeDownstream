@@ -1,0 +1,31 @@
+#{% set ns = stack_group_config.namespace %}
+
+# By using the SAM handler, you let SAM build and package the template
+# and upload artifacts to S3 and Sceptre will use the packaged template
+# to create the CloudFormation stack, using the stack config.
+template:
+  type: sam
+  path: src/lambda/template.yaml
+  artifact_bucket_name: {{ stack_group_config.lambda_bucket_name }}
+  artifact_prefix: 'sns_to_glue/{{ ns }}'
+
+stack_name: '{{ ns }}-example-app-1-study-1'
+
+dependencies:
+  - develop/namespaced/example-app-1-study-1.yaml
+
+build_args:
+  use-container: True
+
+# You can use resolvers to pass parameters, just like any other Sceptre stack!
+parameters:
+  WorkflowName: !stack_output_external '{{ ns }}-example-app-1-study-1::JsonToParquetWorkflowName'
+  Namespace: {{ ns }}
+
+# The SAM Handler will work with all the other stack parameters you might want to use too!
+# profile: my_profile
+# iam_role: arn:aws:iam::1111111111:role/My-Deployment-Role
+# region: us-east-1
+
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}
