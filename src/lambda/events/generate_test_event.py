@@ -1,9 +1,9 @@
 '''
-This is a utility script that generates a fake SQS message in json format
-that is used to test the lambda, which in turn will exercise the Glue pipeline.
+This is a utility script that generates a fake SNS message in json format
+that is used to test the SQS queue, which will be polled by a Lambda,
+triggering the first Glue workflow.
 
-This contains a JSON message inside an SNS message which is transmitted
-inside the SQS message.
+This contains a JSON message inside an SNS message.
 '''
 import argparse
 import copy
@@ -12,23 +12,6 @@ import synapseclient
 
 SINGLE_RECORD_OUTFILE = 'single-record.json'
 MULTI_RECORD_OUTFILE = 'records.json'
-
-sqs_record_template = {
-  "messageId" : "20530d39-538a-5330-b376-57429074a158",
-  "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...",
-  "attributes": {
-      "ApproximateReceiveCount": "1",
-      "SentTimestamp": "1545082649183",
-      "SenderId": "AIDAIENQZJOLO23YVJ4VO",
-      "ApproximateFirstReceiveTimestamp": "1545082649185"
-  },
-  "body" : "",
-  "messageAttributes": {},
-  "md5OfBody": "e4e68fb7bd0e697a0ae8f1bb342846b3",
-  "eventSource": "aws:sqs",
-  "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:my-queue",
-  "awsRegion": "us-east-1"
-}
 
 sns_record_template = {
     "Type": "Notification",
@@ -95,10 +78,9 @@ def main():
   print(f'Fetching children of synapse id {folder_id}...')
   response = list(syn.getChildren(folder_id, includeTypes=['file']))
   records = []
-  print(f'Generating mock sqs event from response...')
+  print(f'Generating mock sns event from response...')
   for item in response:
     syn_id = item['id']
-    sqs_record = copy.deepcopy(sqs_record_template)
     sns_record = copy.deepcopy(sns_record_template)
     message = copy.deepcopy(message_template)
     get_response = syn.get(entity=syn_id, downloadFile=False)
@@ -116,8 +98,7 @@ def main():
     inner_record['s3Key'] = key
 
     sns_record['Message'] = json.dumps(message)
-    sqs_record['body'] = json.dumps(sns_record)
-    records.append(sqs_record)
+    records.append(sns_record)
 
   multi_record_content = {}
   multi_record_content['Records'] = records
