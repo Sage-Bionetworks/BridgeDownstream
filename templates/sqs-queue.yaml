@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >
+  Creates an SQS queue and corresponding dead-letter queue and
+  subscribes that queue to an SNS topic
+
+Parameters:
+
+  PrimaryQueueName:
+    Type: String
+    Description: Name of the SQS queue
+
+  DeadLetterQueueName:
+    Type: String
+    Description: Name of the corresponding dead-letter SQS queue
+
+Resources:
+
+  PrimaryQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: 0
+      MessageRetentionPeriod: 86400
+      QueueName: !Ref PrimaryQueueName
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+        maxReceiveCount: 3
+      VisibilityTimeout: 120
+
+  PrimaryQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: Admin
+          Effect: Allow
+          Principal:
+            AWS: !Sub '${AWS::AccountId}'
+          Action:
+          - SQS:*
+          Resource: !Ref PrimaryQueue
+      Queues:
+      - !Ref PrimaryQueue
+
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: 0
+      MessageRetentionPeriod: 1209600
+      QueueName: !Ref DeadLetterQueueName
+      ReceiveMessageWaitTimeSeconds: 10
+      RedriveAllowPolicy:
+        redrivePermission: 'allowAll'
+      VisibilityTimeout: 30
+
+  DeadLetterQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: Admin
+          Effect: Allow
+          Principal:
+            AWS: !Sub '${AWS::AccountId}'
+          Action:
+          - SQS:*
+          Resource: !Ref DeadLetterQueue
+      Queues:
+      - !Ref DeadLetterQueue
