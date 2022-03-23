@@ -87,6 +87,56 @@ jobs:
       - name: Deploy sceptre stacks
         run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch develop --yes
 
+  integration-test:
+    name: Test the pipeline
+    runs-on: ubuntu-latest
+    needs: [pre-commit, upload-files, sceptre-deploy-branch]
+    env:
+      NAMESPACE: $GITHUB_REF_NAME
+      LAMBDA_ENV_VARS_FILE: namespace_vars.json
+    if: github.ref_name != 'main' && github.ref_type != 'tag'
+    environment: develop
+    steps:
+
+      - name: Setup code, pipenv, aws
+        uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
+        with:
+          aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
+          role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+
+      - name: Setup sam
+        uses: aws-actions/setup-sam@v1
+        with:
+          version: 1.37.0
+
+      - name: Create env vars file for lambda
+        run: |
+          cat > "$LAMBDA_ENV_VARS_FILE" << EOM
+          {
+            "SnsToGlueFunction": {
+              "SSM_PARAMETER_NAME": "synapse-bridgedownstream-auth",
+              "GLUE_WORKFLOW_NAME": "${{ env.NAMESPACE }}-example-app-1-study-1-S3ToJsonWorkflow",
+              "NAMESPACE": "${{ env.NAMESPACE }}"
+            }
+          }
+          EOM
+          chmod +x "$LAMBDA_ENV_VARS_FILE"
+
+      - name: Test whether env vars were written to file
+        run: cat "$LAMBDA_ENV_VARS_FILE"
+
+      - name: Trigger lambda
+        run: |
+          if [ -f "$LAMBDA_ENV_VARS_FILE" ]; then
+            sam build -s src/lambda/ -t src/lambda/template.yaml
+            sam local invoke -e src/lambda/events/single-record.json \
+              --env-vars "$LAMBDA_ENV_VARS_FILE" \
+              -t src/lambda/template.yaml
+          else
+            echo "$LAMBDA_ENV_VARS_FILE is missing."
+          fi
+
   sceptre-deploy-main:
     name: Deploy trunk using sceptre
     runs-on: ubuntu-latest
