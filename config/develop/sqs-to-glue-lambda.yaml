@@ -1,6 +1,6 @@
 template:
   type: s3
-  path: '{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.latest_version }}/templates/lambda/sns_to_glue/template.yaml'
+  path: '{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.namespace }}/templates/lambda/sns_to_glue/template.yaml'
 stack_name: lambda
 stack_tags: {{ stack_group_config.default_stack_tags }}
 parameters:
