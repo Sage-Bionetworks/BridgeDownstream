@@ -62,7 +62,7 @@ jobs:
             --no-progressbar
 
           aws s3 cp .aws-sam/build/template.yaml \
-            s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/lambda/sns_to_glue/
+            s3://$CFN_BUCKET/$REPO_NAME/$NAMESPACE/templates/lambda/sns_to_glue/
 
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
