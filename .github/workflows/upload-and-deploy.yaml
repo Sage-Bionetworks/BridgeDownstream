@@ -47,22 +47,22 @@ jobs:
       - name: Copy files to templates bucket
         run: python src/scripts/manage_artifacts/artifacts.py --upload --ref $GITHUB_REF_NAME
 
-      # - name: Login to Amazon ECR
-      #   id: login-ecr
-      #   uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-      # - name: Sam build and package
-      #   run: |
-      #     sam build -s src/lambda/ -t src/lambda/template.yaml
+      - name: Sam build and package
+        run: |
+          sam build -s src/lambda/ -t src/lambda/template.yaml
 
-      #     sam package --template-file .aws-sam/build/template.yaml \
-      #       --s3-bucket $LAMBDA_BUCKET \
-      #       --output-template-file .aws-sam/build/template.yaml \
-      #       --image-repository $ECR_REPOSITORY \
-      #       --no-progressbar
+          sam package --template-file .aws-sam/build/template.yaml \
+            --s3-bucket $LAMBDA_BUCKET \
+            --output-template-file .aws-sam/build/template.yaml \
+            --image-repository $ECR_REPOSITORY \
+            --no-progressbar
 
-      #     aws s3 cp .aws-sam/build/template.yaml \
-      #       s3://$CFN_BUCKET/$REPO_NAME/$GITHUB_REF_NAME/templates/lambda/sns_to_glue/
+          aws s3 cp .aws-sam/build/template.yaml \
+            s3://$CFN_BUCKET/$REPO_NAME/$NAMESPACE/templates/lambda/sns_to_glue/
 
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
