@@ -1,5 +1,6 @@
 project_code: bridge_downstream
 namespace: {{ var.namespace | default('bridge-downstream') }}
+latest_version: v0.1
 region: us-east-1
 artifact_bucket_name: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
 lambda_bucket_name: sceptre-lambda-bucket-bucket-iw8km58inb0i
@@ -10,6 +11,6 @@ default_stack_tags:
   Project: mobile-toolbox
   OwnerEmail: aws-mobilehealth-dataengineering-dev@sagebase.org
 j2_environment:
-   extensions:
-      - jinja2.ext.do
-      - jinja2.ext.debug
+  extensions:
+    - jinja2.ext.do
+    - jinja2.ext.debug
