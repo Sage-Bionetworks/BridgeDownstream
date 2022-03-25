@@ -4,16 +4,6 @@ Description: >
   Creates an SQS queue and corresponding dead-letter queue and
   subscribes that queue to an SNS topic
 
-Parameters:
-
-  PrimaryQueueName:
-    Type: String
-    Description: Name of the SQS queue
-
-  DeadLetterQueueName:
-    Type: String
-    Description: Name of the corresponding dead-letter SQS queue
-
 Resources:
 
   PrimaryQueue:
@@ -21,7 +11,7 @@ Resources:
     Properties:
       DelaySeconds: 0
       MessageRetentionPeriod: 86400
-      QueueName: !Ref PrimaryQueueName
+      QueueName: !Sub '${AWS::StackName}-Queue'
       ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
@@ -41,6 +31,17 @@ Resources:
           Action:
           - SQS:*
           Resource: !Ref PrimaryQueue
+        - Sid: SNS
+          Effect: Allow
+          Principal:
+            AWS: '*'
+          Action:
+          - SQS:SendMessage
+          Resource: !Ref PrimaryQueue
+          Condition:
+            ArnEquals:
+              'aws:SourceArn': !Ref SnsTopic
+
       Queues:
       - !Ref PrimaryQueue
 
@@ -49,7 +50,7 @@ Resources:
     Properties:
       DelaySeconds: 0
       MessageRetentionPeriod: 1209600
-      QueueName: !Ref DeadLetterQueueName
+      QueueName: !Sub '${AWS::StackName}-DeadLetterQueue'
       ReceiveMessageWaitTimeSeconds: 10
       RedriveAllowPolicy:
         redrivePermission: 'allowAll'
@@ -70,3 +71,13 @@ Resources:
           Resource: !Ref DeadLetterQueue
       Queues:
       - !Ref DeadLetterQueue
+
+  SnsTopic:
+    Type: AWS::SNS::Topic
+
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn: !Ref SnsTopic
+      Endpoint: !GetAtt PrimaryQueue.Arn

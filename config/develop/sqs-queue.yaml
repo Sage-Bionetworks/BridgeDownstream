@@ -1,7 +1,0 @@
-template_path: sqs-queue.yaml
-stack_name: sqsqueue
-parameters:
-  PrimaryQueueName: my_queue
-  DeadLetterQueueName: my_dead_letter_queue
-stack_tags:
-  {{ stack_group_config.default_stack_tags }}
