@@ -81,3 +81,10 @@ Resources:
       Protocol: sqs
       TopicArn: !Ref SnsTopic
       Endpoint: !GetAtt PrimaryQueue.Arn
+
+Outputs:
+
+  PrimaryQueueArn:
+    Value: !GetAtt PrimaryQueue.Arn
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-PrimaryQueueArn'

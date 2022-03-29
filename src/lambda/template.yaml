@@ -13,9 +13,13 @@ Parameters:
     Type: String
     Description: Namespace of the stack so that it may be unique
 
+  SQSQueueArn:
+    Type: String
+    Description: ARN of SQS queue to poll for messages
+
 Resources:
 
-  SnsToGlueRole:
+  SqsToGlueRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -39,16 +43,12 @@ Resources:
             Resource:
             - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:workflow/*
 
-  SnsToGlueFunction:
+  SqsToGlueFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      Role: !GetAtt SnsToGlueRole.Arn
-      Events:
-        SnsToGlue:
-          Type: SNS
-          Properties:
-            Topic: !Ref SnsTopic
+      Role: !GetAtt SqsToGlueRole.Arn
+      Events: !Ref SqsEventSource
       Timeout: 600
       Environment:
         Variables:
@@ -58,20 +58,18 @@ Resources:
       DockerContext: ./sns_to_glue
       DockerTag: v0.1
 
-  SnsTopic:
-    Type: AWS::SNS::Topic
-
-  SnsSubscription:
-    Type: AWS::SNS::Subscription
+  SqsEventSource:
+    Type: AWS::Lambda::EventSourceMapping
     Properties:
-      Protocol: lambda
-      TopicArn: !Ref SnsTopic
-      Endpoint: !GetAtt SnsToGlueFunction.Arn
+      BatchSize: 20
+      EventSourceArn: !Ref SQSQueueArn
+      FunctionName: !GetAtt SqsToGlueFunction.Arn
+      MaximumBatchingWindowInSeconds: 20
 
   LambdaInvocationPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt SnsToGlueFunction.Arn
+      FunctionName: !GetAtt SqsToGlueFunction.Arn
       Action: lambda:InvokeFunction
-      SourceArn: !Ref SnsTopic
-      Principal: sns.amazonaws.com
+      SourceArn: !Ref SQSQueueArn
+      Principal: sqs.amazonaws.com
