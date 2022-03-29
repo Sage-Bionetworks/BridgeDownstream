@@ -48,7 +48,13 @@ Resources:
     Properties:
       PackageType: Image
       Role: !GetAtt SqsToGlueRole.Arn
-      Events: !Ref SqsEventSource
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            BatchSize: 20
+            MaximumBatchingWindowInSeconds: 20
+            Queue: !Ref SQSQueueArn
       Timeout: 600
       Environment:
         Variables:
@@ -57,14 +63,6 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./sns_to_glue
       DockerTag: v0.1
-
-  SqsEventSource:
-    Type: AWS::Lambda::EventSourceMapping
-    Properties:
-      BatchSize: 20
-      EventSourceArn: !Ref SQSQueueArn
-      FunctionName: !GetAtt SqsToGlueFunction.Arn
-      MaximumBatchingWindowInSeconds: 20
 
   LambdaInvocationPermission:
     Type: AWS::Lambda::Permission
