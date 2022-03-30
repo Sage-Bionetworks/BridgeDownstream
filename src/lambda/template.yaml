@@ -66,7 +66,7 @@ Resources:
             BatchSize: 20
             MaximumBatchingWindowInSeconds: 20
             Queue: !Ref SQSQueueArn
-      Timeout: 600
+      Timeout: 30
       Environment:
         Variables:
           NAMESPACE: !Ref Namespace
