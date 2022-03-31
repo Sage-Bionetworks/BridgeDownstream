@@ -2,24 +2,24 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Transform: AWS::Serverless-2016-10-31
 
-Description:  >
+Description: >
   python3.8
 
   SAM Template for sns-to-glue
 
 Parameters:
 
-  WorkflowName:
-    Type: String
-    Description: Name of the glue workflow to start when new data arrives
-
   Namespace:
     Type: String
     Description: Namespace of the stack so that it may be unique
 
+  SQSQueueArn:
+    Type: String
+    Description: ARN of SQS queue to poll for messages
+
 Resources:
 
-  SnsToGlueRole:
+  SqsToGlueRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -41,19 +41,32 @@ Resources:
             - glue:StartWorkflowRun
             - glue:PutWorkflowRunProperties
             Resource:
-            - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:workflow/${WorkflowName}
+            - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:workflow/*
+      - PolicyName: PollSQSQueue
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - sqs:DeleteMessage
+            - sqs:GetQueueAttributes
+            - sqs:ReceiveMessage
+            Resource:
+            - !Ref SQSQueueArn
 
-  SnsToGlueFunction:
+  SqsToGlueFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      Role: !GetAtt SnsToGlueRole.Arn
+      Role: !GetAtt SqsToGlueRole.Arn
       Events:
-        SnsToGlue:
-          Type: SNS
+        SQSEvent:
+          Type: SQS
           Properties:
-            Topic: !Ref SnsTopic
-      Timeout: 600
+            BatchSize: 20
+            MaximumBatchingWindowInSeconds: 20
+            Queue: !Ref SQSQueueArn
+      Timeout: 30
       Environment:
         Variables:
           NAMESPACE: !Ref Namespace
@@ -62,20 +75,10 @@ Resources:
       DockerContext: ./sns_to_glue
       DockerTag: v0.1
 
-  SnsTopic:
-    Type: AWS::SNS::Topic
-
-  SnsSubscription:
-    Type: AWS::SNS::Subscription
-    Properties:
-      Protocol: lambda
-      TopicArn: !Ref SnsTopic
-      Endpoint: !GetAtt SnsToGlueFunction.Arn
-
   LambdaInvocationPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt SnsToGlueFunction.Arn
+      FunctionName: !GetAtt SqsToGlueFunction.Arn
       Action: lambda:InvokeFunction
-      SourceArn: !Ref SnsTopic
-      Principal: sns.amazonaws.com
+      SourceArn: !Ref SQSQueueArn
+      Principal: sqs.amazonaws.com

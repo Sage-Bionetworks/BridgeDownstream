@@ -1,7 +1,5 @@
 {
-  "SnsToGlueFunction": {
-    "SSM_PARAMETER_NAME": "synapse-bridgedownstream-auth",
-    "GLUE_WORKFLOW_NAME": "example-app-1-study-1-S3ToJsonWorkflow",
+  "SqsToGlueFunction": {
     "NAMESPACE": "bridge-downstream"
   }
 }

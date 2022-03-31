@@ -30,18 +30,17 @@ Resources:
             AWS: !Sub '${AWS::AccountId}'
           Action:
           - SQS:*
-          Resource: !Ref PrimaryQueue
-        - Sid: SNS
+          Resource: !GetAtt PrimaryQueue.Arn
+        - Sid: SNSSend
           Effect: Allow
           Principal:
             AWS: '*'
           Action:
           - SQS:SendMessage
-          Resource: !Ref PrimaryQueue
+          Resource: !GetAtt PrimaryQueue.Arn
           Condition:
-            ArnEquals:
-              'aws:SourceArn': !Ref SnsTopic
-
+            ArnLike:
+              "aws:SourceArn": !Ref SnsTopic
       Queues:
       - !Ref PrimaryQueue
 
@@ -68,7 +67,7 @@ Resources:
             AWS: !Sub '${AWS::AccountId}'
           Action:
           - SQS:*
-          Resource: !Ref DeadLetterQueue
+          Resource: !GetAtt DeadLetterQueue.Arn
       Queues:
       - !Ref DeadLetterQueue
 
@@ -81,3 +80,10 @@ Resources:
       Protocol: sqs
       TopicArn: !Ref SnsTopic
       Endpoint: !GetAtt PrimaryQueue.Arn
+
+Outputs:
+
+  PrimaryQueueArn:
+    Value: !GetAtt PrimaryQueue.Arn
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-PrimaryQueueArn'
