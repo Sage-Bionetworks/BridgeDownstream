@@ -136,7 +136,6 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         f"year={str(uploaded_on.year)}",
                         f"month={str(uploaded_on.month)}",
                         f"day={str(uploaded_on.day)}",
-                        f"recordid={s3_obj_metadata['recordid']}",
                         output_fname)
                 with open(output_path, "rb") as f_in:
                     response = s3_client.put_object(

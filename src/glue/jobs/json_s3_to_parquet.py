@@ -1,7 +1,7 @@
 # This script runs as a Glue job and converts a collection of JSON files
 # (whose common schema is defined by a Glue table, created and maintained
 # by a Glue crawler), to a parquet dataset partitioned by
-# measure (assessmentid) / year / month / day / recordid
+# measure (assessmentid) / year / month / day
 # Additionally, if the table has nested data, it will be separated out
 # into its own dataset with a predictable name.
 #
@@ -9,7 +9,7 @@
 # "files" which is an array of objects. We will write out two parquet datasets
 # in this case, an `info` dataset and an `info_files` dataset.
 #
-# Before writing our tables to parquet datasets, we will add the recordid
+# Before writing our tables to parquet datasets, we will add the recordid,
 # measure (assessmentid), and year, month, day to each record in each table.
 
 import boto3
@@ -59,10 +59,8 @@ if has_nested_fields(table_schema) and table.count() > 0:
         root_table_name = table_name,
         staging_path = f"s3://{workflow_run_properties['parquet_bucket']}/tmp/",
         transformation_ctx="relationalize")
-    # Inject partition fields into child tables
+    # Inject partition fields (plus recordid) into child tables
     for k in sorted(table_relationalized.keys()):
-        #logger.info(f"Injecting partition fields into relationalized "
-        #            f"table {k} of {table}")
         this_table = table_relationalized[k].toDF()
         if k == table_name: # top-level fields
             for c in list(this_table.columns):
@@ -126,7 +124,7 @@ if has_nested_fields(table_schema) and table.count() > 0:
                 connection_options = {
                     "path": s3_write_path,
                     "partitionKeys": [
-                        "assessmentid", "year", "month", "day", "recordid"]},
+                        "assessmentid", "year", "month", "day"]},
                 format = "parquet",
                 transformation_ctx="write_dynamic_frame")
 elif table.count() > 0:
@@ -142,7 +140,7 @@ elif table.count() > 0:
             connection_options = {
                 "path": s3_write_path,
                 "partitionKeys": [
-                    "assessmentid", "year", "month", "day", "recordid"]},
+                    "assessmentid", "year", "month", "day"]},
             format = "parquet",
             transformation_ctx="write_dynamic_frame")
 
