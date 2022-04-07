@@ -1,26 +1,56 @@
 '''
-This script creates a Synapse project, connects to an existing S3 bucket,
-and syncs test data files to the project.
+This script creates a Synapse project, executes a query over a raw data
+folder, adds all items from that query to a namespaced dataset (if the items
+are not already present), and creates a stable version (snapshot) of the
+dataset (if any new items were added, otherwise no snapshot is created).
 '''
+import argparse
 import json
 import logging
 import sys
-from pathlib import Path
-from zipfile import ZipFile
+import uuid
 
 import boto3
 import synapseclient
-from synapseclient import File, Folder
-from synapseclient.core.exceptions import SynapseHTTPError
 from synapseformation import client as synapseformation_client
 
-project_name = 'BridgeDownstreamTest'
-test_data_folder_name = 'test-data'
-bucket_name = 'bridge-downstream-dev-source'
+PROJECT_NAME = 'BridgeDownstreamTest'
+DEFAULT_QUERY = (
+        "SELECT * FROM {source_table} WHERE "
+        "assessmentId IS NOT NULL AND "
+        "assessmentRevision IS NOT NULL "
+        "GROUP BY assessmentId, assessmentRevision "
+        "ORDER BY exportedOn")
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
+
+def read_args():
+  parser = argparse.ArgumentParser(
+      description="Create a new test project or test dataset on Synapse")
+  parser.add_argument(
+      "--raw-data-folder",
+      help=(
+        "Synapse ID of the Bridge Raw Data folder "
+        "to query for test data."))
+  parser.add_argument(
+      "--raw-data-query",
+      help=(
+        "Optional. A formatted string query to run against the "
+        "--raw-data-folder to select test data. Use {source_table} in the "
+        "FROM clause. Defaults to sorting by exportedOn and selecting the "
+        "first instance of each assessment revision."),
+      default=DEFAULT_QUERY)
+  parser.add_argument(
+      "--namespace",
+      help=(
+        "Optional. A testing stack identifier. "
+        "Default bridge-downstream"),
+      default="bridge-downstream")
+  args = parser.parse_args()
+  return args
 
 
 def get_synapse_client(ssm_parameter):
@@ -37,11 +67,11 @@ def get_synapse_client(ssm_parameter):
 
 def get_project_id(syn, principal_id):
   '''Get the id of the synapse project if it exists'''
-  logger.info(f'Getting Synapse project id for {project_name}')
+  logger.info(f'Getting Synapse project id for {PROJECT_NAME}')
   projects = syn.restGET(f'/projects/user/{principal_id}')
   BridgeDownstreamTest = next(
     filter(
-      lambda x: x['name'] == project_name,
+      lambda x: x['name'] == PROJECT_NAME,
       projects.get('results')
       ),
     None)
@@ -50,112 +80,133 @@ def get_project_id(syn, principal_id):
 
 def create_project(syn, template_path):
   '''Create a synapse project from a template'''
-  logger.info(f'Creating Synapse project {project_name}, ' +
-    f'with template_path {template_path}')
+  logger.info(f'Creating Synapse project {PROJECT_NAME}, ' +
+      f'with template_path {template_path}')
   try:
     response = synapseformation_client.create_synapse_resources(syn, template_path)
     logger.debug(f'Project response: {response}')
     if response is not None:
       return response.get('id')
   except Exception as e:
-      logger.error(e)
-      sys.exit(1)
+    logger.error(e)
+    sys.exit(1)
 
 
-def setup_external_storage(syn, project_id):
-  '''Connect bucket as external storage for the Synapse project'''
-  try:
-    folder_id = get_folder_id(syn, project_id)
-    syn.get_sts_storage_token(entity=folder_id, permission='read_only')
-    logger.info(f'External storage already configured for Synapse folder {folder_id}')
-  except SynapseHTTPError as err:
-    logger.info(f'Setting s3 bucket {bucket_name} as storage for {project_name}, ' +
-      f'with Synapse folder {folder_id}.')
-    storage_location = syn.create_s3_storage_location(
-            parent = project_id,
-            folder = folder_id,
-            bucket_name = bucket_name,
-            sts_enabled=True)
-    storage_location_info = {
-           k: v for k, v in
-           zip(['synapse_folder', 'storage_location', 'synapse_project'],
-               storage_location)}
+class TempFileView():
+  '''A class to be used in a "with" statement
+
+  Handles creation and deletion of a file view over a Synapse Folder.'''
+  def __init__(self, syn, parent, scope):
+    self.syn = syn
+    self.parent = parent
+    self.scope = scope
+
+  def __enter__(self):
+    # create file view
+    view = synapseclient.EntityViewSchema(
+        name=str(uuid.uuid4()),
+        parent=self.parent,
+        scopes=[self.scope],
+        includeEntityTypes=[synapseclient.EntityViewType.FILE],
+        addDefaultViewColumns=True)
+    self.view = self.syn.store(view)
+    return self
+
+  def __exit__(self, type, value, traceback):
+    self.syn.delete(self.view["id"])
+
+  def get_dataset_items(self, query_str):
+    q = self.syn.tableQuery(query_str.format(source_table = self.view["id"]))
+    df = q.asDataFrame()
+    dataset_items = [
+        {"entityId": i, "versionNumber": v}
+        for i, v in zip(df["id"], df["currentVersion"])]
+    return dataset_items
 
 
-def get_folder_id(syn, project_id):
-  logger.info(f'Getting synapse id for {test_data_folder_name} folder, ' +
-    f'child of project {project_id}')
-  response = list(syn.getChildren(project_id, includeTypes=['folder']))
-  folder = next(item for item in response if item['name'] == test_data_folder_name)
-  folder_id = '' if folder is None else folder.get('id')
-  logger.debug(f'folder_id: {folder_id}')
-  return folder_id
+def snapshot_stable_dataset_version(syn, dataset, query_info):
+  '''Create a snapshot of a dataset and write query info to the version comments'''
+  syn.restPOST(
+      f"/entity/{dataset['id']}/table/transaction/async/start",
+      body=json.dumps({
+        "concreteType": "org.sagebionetworks.repo.model.table.TableUpdateTransactionRequest",
+        "entityId": dataset["id"],
+        "createSnapshot": True,
+        "changes": [],
+        "snapshotOptions": {
+          "snapshotComment": query_info
+          }
+        })
+      )
 
 
-def add_test_data(syn, dir_path, project_id):
-  '''Upload files to S3 then create handles in Synapse'''
-  folder_id = get_folder_id(syn, project_id)
-  data_dir = f'{dir_path}/data'
-  files = (item for item in Path(data_dir).iterdir() if item.is_file())
+def create_or_update_dataset(
+    syn, parent_project, dataset_name, column_ids, dataset_items, query_info):
+  '''Create or update a Synapse dataset
 
-  s3 = boto3.resource('s3')
-  bucket = s3.Bucket(bucket_name)
-  objects = bucket.objects.filter(Prefix=f'{test_data_folder_name}/')
-  object_keys = [o.key for o in objects if o.key.endswith('.zip')]
-  for file_path in files:
-    filename = file_path.parts[-1]
-    obj_key = f'{test_data_folder_name}/{filename}'
-    if obj_key not in object_keys:
-      file_metadata = {}
-      record_id = filename.split('-raw.zip')[0]
-      with open(f'{dir_path}/metadata.json') as metadata_file:
-        metadata = json.load(metadata_file)
-        for k, v in metadata[record_id].items():
-            if v is not None:
-                file_metadata[k] = str(v)
-
-      logger.info(f'Adding {file_path} to S3 bucket {bucket_name}')
-      with open(file_path, 'rb') as f:
-        bucket.put_object(
-          Body=f,
-          Key=obj_key,
-          Metadata=file_metadata
+  If the dataset does not yet exist, it is created.
+  If the dataset exists but already contains the dataset items, does nothing.
+  If the dataset exists and there are new dataset items, those items are added
+  to the dataset's items and a stable version (snapshot) is published.'''
+  datasets = syn.getChildren(
+      parent=parent_project,
+      includeTypes=["dataset"])
+  for dataset in datasets:
+    if dataset["name"] == dataset_name:
+      dataset = syn.restGET(f"/entity/{dataset['id']}")
+      existing_items = dataset.pop("items")
+      existing_items_id = [ei["entityId"] for ei in existing_items]
+      all_items = existing_items + [
+          di for di in dataset_items if di["entityId"] not in existing_items_id]
+      if len(all_items) == len(existing_items):
+        # No new items to add to dataset
+        return dataset
+      dataset = syn.restPUT(
+          f"/entity/{dataset['id']}",
+          body=json.dumps({
+            "items": all_items,
+            **dataset})
           )
-      logger.info(f'Storing {filename} as handle in folder {folder_id}')
-      file_handle=syn.create_external_s3_file_handle(
-        bucket_name=bucket_name,
-        s3_file_key=obj_key,
-        file_path=file_path,
-        parent=folder_id)
-      file = File(
-        parentId=folder_id,
-        name=filename,
-        synapseStore=False,
-        dataFileHandleId=file_handle['id'])
-      syn.store(file)
-    else:
-      logger.info(f'{filename} was already added to S3 bucket {bucket_name}')
+      snapshot_stable_dataset_version(
+          syn=syn,
+          dataset=dataset,
+          query_info=query_info)
+      return dataset
+  # Did not find pre-existing dataset
+  dataset = syn.restPOST(
+          "/entity",
+          body=json.dumps({
+            "name": dataset_name,
+            "parentId": parent_project,
+            "concreteType": "org.sagebionetworks.repo.model.table.Dataset",
+            "columnIds": column_ids,
+            "items": dataset_items})
+          )
+  snapshot_stable_dataset_version(
+      syn=syn,
+      dataset=dataset,
+      query_info=query_info)
+  return dataset
 
 
-def remove_test_data(syn, project_id):
-  '''Remove all test objects from S3 and Synapse.'''
-
-  # remove objects from S3
-  s3 = boto3.resource('s3')
-  bucket = s3.Bucket(bucket_name)
-  bucket.objects.filter(Prefix=f'{test_data_folder_name}/').delete()
-
-  # recreate Synapse project test folder, wiping old data
-  folder_id = get_folder_id(syn, project_id)
-  syn.delete(folder_id)
-  new_folder = Folder(test_data_folder_name, parent=project_id)
-  syn.store(new_folder)
-  setup_external_storage(syn, project_id)
+def curate_test_dataset(syn, parent_project, raw_data_folder, query_str, namespace):
+  '''Curates a test dataset by querying for dataset items over a raw data folder'''
+  with TempFileView(syn, parent_project, raw_data_folder) as v:
+    dataset_items = v.get_dataset_items(query_str)
+    query_info = {"query": query_str.format(source_table = raw_data_folder)}
+    dataset = create_or_update_dataset(
+        syn=syn,
+        parent_project=parent_project,
+        dataset_name=f"{namespace}-test-dataset",
+        column_ids=v.view.columnIds,
+        dataset_items=dataset_items,
+        query_info=query_info)
+    return dataset
 
 
 def main():
-
-  logger.info(f'Begin setting up test data.')
+  logger.info('Begin setting up test data.')
+  args = read_args()
 
   # get synapse client
   ssm_parameter = 'synapse-bridgedownstream-auth'
@@ -172,12 +223,13 @@ def main():
     create_project(syn, template_path)
     project_id = get_project_id(syn, principal_id)
 
-  # add test data to Synapse
-  script_dir = './src/scripts/setup_test_data'
-  #remove_test_data(syn, project_id)
-  # connect bucket and project if this is a newly made project
-  setup_external_storage(syn, project_id)
-  add_test_data(syn, script_dir, project_id)
+  # Create test data Dataset from query
+  curate_test_dataset(
+      syn=syn,
+      parent_project=project_id,
+      raw_data_folder=args.raw_data_folder,
+      query_str=args.raw_data_query,
+      namespace=args.namespace)
   logger.info('Test data setup complete.')
 
 
