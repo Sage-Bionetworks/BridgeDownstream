@@ -95,6 +95,7 @@ def get_synapse_client(ssm_parameter):
 
 
 def get_dataset_id_by_name(syn, parent_id, dataset_name):
+  '''Returns the Synapse ID of the dataset with the given name'''
   response = list(syn.getChildren(parent_id, includeTypes=['dataset']))
   dataset = next(item for item in response if item['name'] == dataset_name)
   dataset_id = '' if dataset is None else dataset.get('id')
@@ -102,7 +103,6 @@ def get_dataset_id_by_name(syn, parent_id, dataset_name):
     print(f'No dataset {dataset_name} exists')
     sys.exit(1)
   return dataset_id
-  return dataset
 
 
 def get_latest_stable_dataset(syn, dataset_metadata):
@@ -128,6 +128,7 @@ def main():
           syn=syn,
           parent_id=args.synapse_project_id,
           dataset_name=args.dataset_name)
+  # The client doesn't yet support syn.get for Dataset entities
   test_dataset_metadata = syn.restGET(f"/entity/{test_dataset_id}")
   test_dataset = get_latest_stable_dataset(
       syn=syn,
@@ -138,7 +139,7 @@ def main():
       in zip(test_dataset.id, test_dataset.currentVersion)]
   sns_messages = [create_message_template(d) for d in test_data]
   records = []
-  print(f'Generating mock sqs event from response...')
+  print('Generating mock sqs event from response...')
   for message in sns_messages:
     sqs_record = copy.deepcopy(sqs_record_template)
     sns_record = copy.deepcopy(sns_record_template)
@@ -169,4 +170,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+  main()
