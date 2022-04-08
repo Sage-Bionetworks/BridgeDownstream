@@ -11,6 +11,3 @@
         - CHANGE_SETTINGS
         - MODERATE
         - CHANGE_PERMISSIONS
-  children:
-    - name: test-data
-      type: Folder
