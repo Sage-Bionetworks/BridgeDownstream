@@ -63,12 +63,6 @@ Parameters:
     Description: Prefix of the object keys for parquet data
     Default: parquet
 
-  # TODO: review use of SourceBucketName
-  # temporary: this will be replaced with the sns lambda that pulls data from a bridge bucket
-  SourceBucketName:
-    Type: String
-    Description: Name of the S3 bucket containing source data
-
   SynapseAuthSsmParameterName:
     Type: String
     Description: >-
@@ -220,7 +214,6 @@ Resources:
         namespace: !Ref Namespace
         app_name: !Ref AppName
         study_name: !Ref StudyName
-        source_bucket: !Ref SourceBucketName
         json_bucket: !Ref JsonBucketName
         json_prefix: !Ref JsonPrefix
       Description: >-
