@@ -84,7 +84,7 @@ Resources:
 
   # combine all configuration data into a "datasets" collection
   {% set datasets = [] %}
-  {% for k,v in sceptre_user_data.dataset_version_mapping['osName']['Android']['appVersion']['13'].items() %}
+  {% for k,v in sceptre_user_data.dataset_version_mapping['osName']['Android']['appVersion']['14'].items() %}
   {% set dataset_name = '{}_{}'.format(k,v) %}
   {% set dataset = {} %}
   {% do dataset.update({'dataset_name': dataset_name}) %}
