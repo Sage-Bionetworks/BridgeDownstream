@@ -197,6 +197,41 @@ tables:
         Type: string
       - Name: day
         Type: string
+  microphone_v1:
+    columns:
+      - Name: uptime
+        Type: double
+      - Name: unit
+        Type: string
+      - Name: peak
+        Type: double
+      - Name: average
+        Type: double
+      - Name: steppath
+        Type: string
+      - Name: timeinterval
+        Type: int
+      - Name: timestamp
+        Type: double
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: int
+      - Name: month
+        Type: int
+      - Name: day
+        Type: int
+      - Name: recordid
+        Type: string
+    partition_keys:
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: string
+      - Name: month
+        Type: string
+      - Name: day
+        Type: string
   motion_v1:
     columns:
       - Name: uptime

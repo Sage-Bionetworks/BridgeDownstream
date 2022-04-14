@@ -7,4 +7,5 @@ standard:
   - weather_v1
 array_of_records:
   - microphone_levels_v1
+  - microphone_v1
   - motion_v1
