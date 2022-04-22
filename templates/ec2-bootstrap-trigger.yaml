@@ -20,6 +20,10 @@ Parameters:
     Type: String
     Description: S3 URI of crontab file to install on this EC2 instance
 
+  VPCId:
+    Type: String
+    Description: ID of the VPC to put this EC2 in
+
 Resources:
 
   EC2Instance:
@@ -49,6 +53,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub "The security group for ${AWS::StackName}"
+      VpcId: !Ref VPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22

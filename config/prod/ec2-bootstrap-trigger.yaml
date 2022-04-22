@@ -1,0 +1,7 @@
+template_path: ec2-bootstrap-trigger.yaml
+stack_name: ec2-bootstrap-trigger
+parameters:
+  SsmParameterName: synapse-bridgedownstream-auth
+  PrivateKey: ec2-bootstrap-trigger
+  CrontabURI: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.latest_version }}/ec2/resources/crontab
+  VPCId: vpc-d6c2a9ab
