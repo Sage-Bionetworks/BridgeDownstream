@@ -57,7 +57,10 @@ Resources:
   SqsToGlueFunction:
     Type: AWS::Serverless::Function
     Properties:
-      PackageType: Image
+      PackageType: Zip
+      CodeUri: ./sns_to_glue
+      Handler: app.lambda_handler
+      Runtime: python3.8
       Role: !GetAtt SqsToGlueRole.Arn
       Events:
         SQSEvent:
@@ -70,10 +73,6 @@ Resources:
       Environment:
         Variables:
           NAMESPACE: !Ref Namespace
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./sns_to_glue
-      DockerTag: v0.1
 
   LambdaInvocationPermission:
     Type: AWS::Lambda::Permission
