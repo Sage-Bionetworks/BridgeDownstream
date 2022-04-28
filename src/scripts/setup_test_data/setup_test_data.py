@@ -1,8 +1,20 @@
 '''
-This script creates a Synapse project, executes a query over a raw data
-folder, adds all items from that query to a namespaced dataset (if the items
-are not already present), and creates a stable version (snapshot) of the
-dataset (if any new items were added, otherwise no snapshot is created).
+This script creates a Synapse project if that project does not yet exist,
+executes a query over a raw data folder, adds all items from that query
+to a (potentially preexisting) namespaced dataset if the items are not
+already present, and creates a stable version (snapshot) of the dataset
+if any new items were added, otherwise no snapshot is created.
+
+This script will write the "psuedo" query which curated the dataset to the
+dataset's snapshot comment. This "psuedo" query replaces what would
+normally be a file view's Synapse ID in the FROM clause with the Synapse ID
+of the bridge raw data folder, which contains production data from Bridge.
+The default behavior of this script is to
+take the first instance of each assessment revision for each assessment
+from `syn26253352`, which contains all MTB data from across all studies.
+Hence, the default behavior of this script is to curate a dataset that
+is representative of every collection of data which we might encounter
+from the MTB app.
 '''
 import argparse
 import json
@@ -33,8 +45,10 @@ def read_args():
   parser.add_argument(
       "--raw-data-folder",
       help=(
-        "Synapse ID of the Bridge Raw Data folder "
-        "to query for test data."))
+        "Optional. Synapse ID of the Bridge Raw Data folder "
+        "to query for test data. Defaults to syn26253352, which "
+        "contains MTB data from across all studies."),
+        default="syn26253352")
   parser.add_argument(
       "--raw-data-query",
       help=(
