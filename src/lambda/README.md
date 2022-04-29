@@ -22,7 +22,8 @@ You may need the following for local testing.
 Build your application with the `sam build` command.
 
 ```bash
-lambda$ sam build
+cd src/lambda
+sam build
 ```
 
 Test the function by invoking it directly with a test event.
@@ -62,10 +63,12 @@ First, configure your AWS credentials, if you have not already done so.
 
 To invoke the lambda with one event:
 ```bash
-lambda$ sam local invoke -e events/single-record.json --env-vars test-env-vars.json
+cd src/lambda
+sam local invoke -e events/single-record.json --env-vars test-env-vars.json
 ```
 
 To invoke the lambda with multiple events:
 ```bash
-lambda$ sam local invoke -e events/records.json --env-vars test-env-vars.json
+cd src/lambda
+sam local invoke -e events/records.json --env-vars test-env-vars.json
 ```
