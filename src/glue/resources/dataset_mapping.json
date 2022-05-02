@@ -27,18 +27,6 @@
                   "taskdata": "v1",
                   "taskresult": "v1",
                   "weather": "v1"
-                },
-              "14":
-                {
-                  "answers": "v1",
-                  "info": "v1",
-                  "metadata": "v1",
-                  "microphone_levels": "v1",
-                  "microphone": "v1",
-                  "motion": "v1",
-                  "taskdata": "v1",
-                  "taskresult": "v1",
-                  "weather": "v1"
                 }
             }
         },
@@ -52,18 +40,6 @@
                   "info": "v1",
                   "metadata": "v1",
                   "microphone_levels": "v1",
-                  "motion": "v1",
-                  "taskdata": "v1",
-                  "taskresult": "v1",
-                  "weather": "v1"
-                },
-              "74":
-                {
-                  "answers": "v1",
-                  "info": "v1",
-                  "metadata": "v1",
-                  "microphone_levels": "v1",
-                  "microphone": "v1",
                   "motion": "v1",
                   "taskdata": "v1",
                   "taskresult": "v1",
