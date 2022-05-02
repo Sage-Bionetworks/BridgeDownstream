@@ -1,9 +1,9 @@
 template_path: remote/vpc-mini.yaml
-stack_name: jumpcloud-vpn
+stack_name: vpc-mini
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
 parameters:
-  VpcName: jumpcloud-vpn
+  VpcName: vpc-mini
   VpcSubnetPrefix: "10.255.25"
 hooks:
   before_launch:
