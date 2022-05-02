@@ -33,11 +33,17 @@ def upload(ref):
   cmd = ['aws', 's3', 'sync', scripts_local_path, scripts_s3_path]
   execute_command(cmd)
 
+  # Copy regular templates
   templates_local_path = 'templates/'
   templates_s3_path = f's3://{cfn_bucket}/{repo_name}/{ref}/templates/'
   cmd = ['aws', 's3', 'sync', templates_local_path, templates_s3_path]
   execute_command(cmd)
 
+  # Copy lambda templates
+  lambda_template_local_path = 'src/lambda/template.yaml'
+  lambda_template_s3_path = f's3://{cfn_bucket}/{repo_name}/{ref}/templates/lambda/sns_to_glue/template.yaml'
+  cmd = ['aws', 's3', 'sync', lambda_template_local_path, lambda_template_s3_path]
+  execute_command(cmd)
 
 def delete(ref):
   '''Removes all files recursively for ref'''
