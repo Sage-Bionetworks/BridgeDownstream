@@ -12,15 +12,11 @@ Parameters:
     Description: Name of the SSM parameter containing the Synapse auth token
     Default: synapse-bridgedownstream-auth
 
-  PrivateKey:
-    Type: String
-    Description: Name of the private key to access this instance via ssh
-
   CrontabURI:
     Type: String
     Description: S3 URI of crontab file to install on this EC2 instance
 
-  VPCId:
+  SubnetId:
     Type: String
     Description: ID of the VPC to put this EC2 in
 
@@ -32,13 +28,10 @@ Resources:
       InstanceType: t3.medium
       ImageId: ami-03ededff12e34e59e
       IamInstanceProfile: !Ref IAMInstanceProfile
-      KeyName: !Ref PrivateKey
-      SecurityGroupIds:
-        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetId
       UserData:
-        Fn::Base64:
-          !Sub >-
-          #! /bin/sh
+        Fn::Base64: !Sub |
+          #!/bin/sh -xe
           yum update -y
           amazon-linux-extras install docker
           service docker start
@@ -48,17 +41,6 @@ Resources:
           docker pull 634761300905.dkr.ecr.us-east-1.amazonaws.com/bootstrap_trigger
           aws s3 cp ${CrontabURI} /tmp/crontab
           crontab -u ec2-user /tmp/crontab
-
-  SecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: !Sub "The security group for ${AWS::StackName}"
-      VpcId: !Ref VPCId
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
 
   IAMInstanceProfile:
     Type: AWS::IAM::InstanceProfile
