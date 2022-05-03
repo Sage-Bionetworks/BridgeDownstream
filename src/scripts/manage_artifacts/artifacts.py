@@ -42,7 +42,7 @@ def upload(ref):
   # Copy lambda templates
   lambda_template_local_path = 'src/lambda/template.yaml'
   lambda_template_s3_path = f's3://{cfn_bucket}/{repo_name}/{ref}/templates/lambda/sns_to_glue/template.yaml'
-  cmd = ['aws', 's3', 'sync', lambda_template_local_path, lambda_template_s3_path]
+  cmd = ['aws', 's3', 'cp', lambda_template_local_path, lambda_template_s3_path]
   execute_command(cmd)
 
 def delete(ref):
