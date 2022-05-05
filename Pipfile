@@ -11,6 +11,7 @@ pre-commit = "==2.*"
 pandas = "*"
 synapseformation = {editable = true, ref = "2d5edf8c673b4adb26df54f222b0e7ea99ab6e78", git = "https://github.com/Sage-Bionetworks/synapseformation.git"}
 sceptre = ">=2.7.1"
+sceptre-sam-handler = "*"
 
 [packages]
 boto3 = "==1.*"

@@ -1,6 +1,8 @@
 template:
-  type: s3
-  path: '{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.namespace }}/templates/lambda/sns_to_glue/template.yaml'
+  type: sam
+  path: src/lambda/template.yaml
+  artifact_bucket_name: {{ stack_group_config.artifact_bucket_name }}
+  artifact_prefix: 'BridgeDownstream/{{ stack_group_config.namespace }}/lambda/'
 stack_name: '{{ stack_group_config.namespace }}-lambda-SQSToGlue'
 dependencies:
   - develop/namespaced/sqs-queue.yaml
