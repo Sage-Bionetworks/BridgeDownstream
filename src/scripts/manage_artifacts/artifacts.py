@@ -33,7 +33,13 @@ def upload(ref):
   cmd = ['aws', 's3', 'sync', scripts_local_path, scripts_s3_path]
   execute_command(cmd)
 
-  # Copy regular templates
+  '''Copies Lambda code and template to the artifacts bucket'''
+  lambda_local_path = 'src/lambda/'
+  lambda_s3_path = f's3://{cfn_bucket}/{repo_name}/{ref}/lambda/'
+  cmd = ['aws', 's3', 'sync', lambda_local_path, lambda_s3_path]
+  execute_command(cmd)
+
+  '''Copies other templates to the artifacts bucket'''
   templates_local_path = 'templates/'
   templates_s3_path = f's3://{cfn_bucket}/{repo_name}/{ref}/templates/'
   cmd = ['aws', 's3', 'sync', templates_local_path, templates_s3_path]
