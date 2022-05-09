@@ -4,7 +4,6 @@ on: [push]
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}
-  LAMBDA_BUCKET: sceptre-lambda-bucket-bucket-iw8km58inb0i
   CFN_BUCKET: sceptre-cloudformation-bucket-bucket-65ci2qog5w6l
   NAMESPACE: bridge-downstream
 
@@ -45,22 +44,6 @@ jobs:
 
       - name: Copy files to templates bucket
         run: python src/scripts/manage_artifacts/artifacts.py --upload --ref $GITHUB_REF_NAME
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Sam build and package
-        run: |
-          sam build -s src/lambda/ -t src/lambda/template.yaml
-
-          sam package --template-file .aws-sam/build/template.yaml \
-            --s3-bucket $LAMBDA_BUCKET \
-            --output-template-file .aws-sam/build/template.yaml \
-            --no-progressbar
-
-          aws s3 cp .aws-sam/build/template.yaml \
-            s3://$CFN_BUCKET/$REPO_NAME/$NAMESPACE/templates/lambda/sns_to_glue/
 
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
