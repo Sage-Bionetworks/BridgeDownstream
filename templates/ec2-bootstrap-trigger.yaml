@@ -22,7 +22,11 @@ Parameters:
 
   SubnetId:
     Type: String
-    Description: ID of the VPC to put this EC2 in
+    Description: ID of the subnet to place this EC2 within
+
+  SecurityGroupId:
+    Type: String
+    Description: ID of the security group to place this EC2 within
 
 Resources:
 
@@ -33,6 +37,8 @@ Resources:
       ImageId: ami-03ededff12e34e59e
       IamInstanceProfile: !Ref IAMInstanceProfile
       SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
       UserData:
         Fn::Base64: !Sub |
           #!/bin/sh -xe
