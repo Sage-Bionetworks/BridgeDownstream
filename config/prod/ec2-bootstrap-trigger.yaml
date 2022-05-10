@@ -1,0 +1,8 @@
+template_path: ec2-bootstrap-trigger.yaml
+stack_name: ec2-bootstrap-trigger
+parameters:
+  SsmParameterName: synapse-bridgedownstream-auth
+  CrontabURI: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.latest_version }}/ec2/resources/crontab
+  DockerImage: 611413694531.dkr.ecr.us-east-1.amazonaws.com/bootstrap_trigger
+  SubnetId: !stack_output_external vpc-mini::PrivateSubnet
+  SecurityGroupId: !stack_output_external vpc-mini::VpnSecurityGroup

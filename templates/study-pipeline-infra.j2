@@ -40,6 +40,13 @@ Parameters:
     Type: String
     Description: Name of the Glue classifier
 
+  JsonToParquetTriggerSchedule:
+    Type: String
+    Description: >-
+      A cron expression for the JSONToParquet Workflow.
+      Default is to instead create an on-demand trigger.
+    Default: ON_DEMAND
+
 # buckets
   TemplateBucketName:
     Type: String
@@ -73,6 +80,10 @@ Parameters:
     Type: String
     Description: The name of the S3 To JSON S3 Job
 
+Conditions:
+  JsonToParquetTriggerIsNotScheduled: !Equals [!Ref JsonToParquetTriggerSchedule, ON_DEMAND]
+  JsonToParquetTriggerIsScheduled: !Not [!Condition JsonToParquetTriggerIsNotScheduled]
+
 Resources:
   # convert crawler assignments to map for ease of lookup
   {% set crawler_assignments = {} %}
@@ -84,7 +95,7 @@ Resources:
 
   # combine all configuration data into a "datasets" collection
   {% set datasets = [] %}
-  {% for k,v in sceptre_user_data.dataset_version_mapping['osName']['Android']['appVersion']['13'].items() %}
+  {% for k,v in sceptre_user_data.dataset_version_mapping['osName']['Android']['appVersion']['14'].items() %}
   {% set dataset_name = '{}_{}'.format(k,v) %}
   {% set dataset = {} %}
   {% do dataset.update({'dataset_name': dataset_name}) %}
@@ -243,7 +254,8 @@ Resources:
       Type: ON_DEMAND
       WorkflowName: !Ref S3ToJsonWorkflow
 
-  JsonToParquetTrigger:
+  JsonToParquetTriggerOnDemand:
+    Condition: JsonToParquetTriggerIsNotScheduled
     Type: AWS::Glue::Trigger
     Properties:
       Actions:
@@ -251,6 +263,18 @@ Resources:
         - CrawlerName: !Ref ArrayOfRecordsCrawler
       Description: Starts crawlers for the JSON to Parquet workflow
       Type: ON_DEMAND
+      WorkflowName: !Ref JsonToParquetWorkflow
+
+  JsonToParquetTriggerScheduled:
+    Condition: JsonToParquetTriggerIsScheduled
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        - CrawlerName: !Ref StandardCrawler
+        - CrawlerName: !Ref ArrayOfRecordsCrawler
+      Description: Starts crawlers for the JSON to Parquet workflow
+      Type: SCHEDULED
+      Schedule: !Ref JsonToParquetTriggerSchedule
       WorkflowName: !Ref JsonToParquetWorkflow
 
   JsonCrawlersDoneTrigger:

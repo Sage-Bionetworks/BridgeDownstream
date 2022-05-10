@@ -1,0 +1,7 @@
+#{% set classifier_name= stack_group_config.namespace + '-array-of-records-classifier' %}
+template_path: glue-json-classifier.yaml
+stack_name: {{classifier_name}}
+parameters:
+  ClassifierName: {{classifier_name}}
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}

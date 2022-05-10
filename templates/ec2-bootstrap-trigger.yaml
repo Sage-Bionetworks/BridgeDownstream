@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >-
+  An EC2 for running the bootstrap-trigger script and triggering the
+  JSON to Parquet workflow on a recurring basis
+
+
+Parameters:
+
+  SsmParameterName:
+    Type: String
+    Description: Name of the SSM parameter containing the Synapse auth token
+    Default: synapse-bridgedownstream-auth
+
+  CrontabURI:
+    Type: String
+    Description: S3 URI of crontab file to install on this EC2 instance
+
+  DockerImage:
+    Type: String
+    Description: ECR repository containing bootstrap trigger docker image
+
+  SubnetId:
+    Type: String
+    Description: ID of the subnet to place this EC2 within
+
+  SecurityGroupId:
+    Type: String
+    Description: ID of the security group to place this EC2 within
+
+Resources:
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.medium
+      ImageId: ami-03ededff12e34e59e
+      IamInstanceProfile: !Ref IAMInstanceProfile
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/sh -xe
+          yum update -y
+          amazon-linux-extras install docker
+          service docker start
+          usermod -a -G docker ec2-user
+          chkconfig docker on
+          aws ecr --region us-east-1 get-login-password | docker login --username AWS --password-stdin ${DockerImage}
+          docker pull ${DockerImage}
+          aws s3 cp ${CrontabURI} /etc/cron.d/bootstrap-trigger
+
+  IAMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+      - !Ref IAMRole
+
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Policies:
+      - PolicyName: GetSsmParam
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - ssm:GetParameter
+            Resource:
+            - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${SsmParameterName}
+      - PolicyName: ECRRead
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - ecr:BatchGetImage
+              - ecr:GetDownloadUrlForLayer
+              - ecr:GetAuthorizationToken
+              Resource: "*"
+      - PolicyName: S3Read
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - s3:Get*
+              - s3:List*
+              Resource: "*"
+      - PolicyName: GlueWorkflowAccess
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - glue:StartWorkflowRun
+              - glue:PutWorkflowRunProperties
+              Resource: "*"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
