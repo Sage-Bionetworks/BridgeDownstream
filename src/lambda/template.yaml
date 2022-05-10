@@ -54,6 +54,7 @@ Resources:
           Properties:
             Topic: !Ref SnsTopic
       Timeout: 600
+      ImageUri: snstogluefunction:latest
       Environment:
         Variables:
           NAMESPACE: !Ref Namespace
