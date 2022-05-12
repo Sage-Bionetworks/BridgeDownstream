@@ -1,0 +1,9 @@
+{
+    "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/TaskMetadata.json": "TaskMetadata_v1",
+    "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/TaskResultObject.json": "TaskResultObject_v1",
+    "sharedSchema": "sharedSchema_v1",
+    "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/MotionRecord.json": "MotionRecord_v1",
+    "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/TappingResultObject.json": "TappingResultObject_v1",
+    "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/WeatherResult.json": "WeatherResult_v1",
+    "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/AudioLevelRecord.json": "AudioLevelRecord_v1"
+}
