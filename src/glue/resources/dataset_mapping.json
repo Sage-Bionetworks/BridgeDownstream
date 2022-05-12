@@ -7,26 +7,26 @@
             {
               "13":
                 {
-                  "answers": "v1",
-                  "info": "v1",
-                  "metadata": "v1",
-                  "microphone_levels": "v1",
-                  "motion": "v1",
-                  "taskdata": "v1",
-                  "taskresult": "v1",
-                  "weather": "v1"
+                  "answers": "answers_v1",
+                  "info": "info_v1",
+                  "metadata": "TaskMetadata_v1",
+                  "microphone_levels": "AudioLevelRecord_v1",
+                  "motion": "MotionRecord_v1",
+                  "taskdata": "sharedSchema_v1",
+                  "taskresult": "TaskResultObject_v1",
+                  "weather": "WeatherResult_v1"
                 },
               "14":
                 {
-                  "answers": "v1",
-                  "info": "v1",
-                  "metadata": "v1",
-                  "microphone_levels": "v1",
-                  "microphone": "v1",
-                  "motion": "v1",
-                  "taskdata": "v1",
-                  "taskresult": "v1",
-                  "weather": "v1"
+                  "answers": "answers_v1",
+                  "info": "info_v1",
+                  "metadata": "TaskMetadata_v1",
+                  "microphone_levels": "AudioLevelRecord_v1",
+                  "microphone": "AudioLevelRecord_v1",
+                  "motion": "MotionRecord_v1",
+                  "taskdata": "sharedSchema_v1",
+                  "taskresult": "TaskResultObject_v1",
+                  "weather": "WeatherResult_v1"
                 }
             }
         },
@@ -36,26 +36,26 @@
             {
               "73":
                 {
-                  "answers": "v1",
-                  "info": "v1",
-                  "metadata": "v1",
-                  "microphone_levels": "v1",
-                  "motion": "v1",
-                  "taskdata": "v1",
-                  "taskresult": "v1",
-                  "weather": "v1"
+                  "answers": "answers_v1",
+                  "info": "info_v1",
+                  "metadata": "TaskMetadata_v1",
+                  "microphone_levels": "AudioLevelRecord_v1",
+                  "motion": "MotionRecord_v1",
+                  "taskdata": "sharedSchema_v1",
+                  "taskresult": "TaskResultObject_v1",
+                  "weather": "WeatherResult_v1"
                 },
               "74":
                 {
-                  "answers": "v1",
-                  "info": "v1",
-                  "metadata": "v1",
-                  "microphone_levels": "v1",
-                  "microphone": "v1",
-                  "motion": "v1",
-                  "taskdata": "v1",
-                  "taskresult": "v1",
-                  "weather": "v1"
+                  "answers": "answers_v1",
+                  "info": "info_v1",
+                  "metadata": "TaskMetadata_v1",
+                  "microphone_levels": "AudioLevelRecord_v1",
+                  "microphone": "AudioLevelRecord_v1",
+                  "motion": "MotionRecord_v1",
+                  "taskdata": "sharedSchema_v1",
+                  "taskresult": "TaskResultObject_v1",
+                  "weather": "WeatherResult_v1"
                 }
             }
         }
