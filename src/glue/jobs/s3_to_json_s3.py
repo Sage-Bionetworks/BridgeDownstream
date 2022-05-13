@@ -62,10 +62,12 @@ def parse_client_info_metadata(client_info_str):
         app_version_search = re.search(app_version_pattern, client_info_str)
         os_name_search = re.search(os_name_pattern, client_info_str)
         if app_version_search is None:
+            app_version = None
             print(client_info_str)
         else:
             app_version = app_version_search.group().split("=")[1]
         if os_name_search is None:
+            os_name = None
             print(client_info_str)
         else:
             os_name = os_name_search.group().split("=")[1]
