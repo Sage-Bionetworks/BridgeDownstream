@@ -53,21 +53,27 @@ def get_dataset_mapping(dataset_mapping_uri):
     return(dataset_mapping)
 
 def parse_client_info_metadata(client_info_str):
-    app_version_pattern = re.compile(r"appVersion=[^,]+")
-    os_name_pattern = re.compile(r"osName=[^,]+")
-    app_version_search = re.search(app_version_pattern, client_info_str)
-    os_name_search = re.search(os_name_pattern, client_info_str)
-    if app_version_search is None:
-        print(client_info_str)
-    else:
-        app_version = app_version_search.group().split("=")[1]
-    if os_name_search is None:
-        print(client_info_str)
-    else:
-        os_name = os_name_search.group().split("=")[1]
-    client_info = {
-            "appVersion": app_version,
-            "osName": os_name}
+    try:
+        client_info = json.loads(client_info_str)
+        client_info["appVersion"] = str(client_info["appVersion"])
+    except json.JSONDecodeError:
+        app_version_pattern = re.compile(r"appVersion=[^,]+")
+        os_name_pattern = re.compile(r"osName=[^,]+")
+        app_version_search = re.search(app_version_pattern, client_info_str)
+        os_name_search = re.search(os_name_pattern, client_info_str)
+        if app_version_search is None:
+            app_version = None
+            print(client_info_str)
+        else:
+            app_version = app_version_search.group().split("=")[1]
+        if os_name_search is None:
+            os_name = None
+            print(client_info_str)
+        else:
+            os_name = os_name_search.group().split("=")[1]
+        client_info = {
+                "appVersion": app_version,
+                "osName": os_name}
     return client_info
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
