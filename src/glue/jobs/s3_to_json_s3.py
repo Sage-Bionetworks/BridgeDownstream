@@ -55,6 +55,7 @@ def get_dataset_mapping(dataset_mapping_uri):
 def parse_client_info_metadata(client_info_str):
     try:
         client_info = json.loads(client_info_str)
+        client_info["appVersion"] = str(client_info["appVersion"])
     except json.JSONDecodeError:
         app_version_pattern = re.compile(r"appVersion=[^,]+")
         os_name_pattern = re.compile(r"osName=[^,]+")
@@ -83,7 +84,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                        f"osName = {client_info['osName']} was not found "
                        "in dataset mapping.")
         return None
-    elif (str(client_info["appVersion"]) not in
+    elif (client_info["appVersion"] not in
           dataset_mapping["osName"][client_info["osName"]]["appVersion"]):
         logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
                        f"appVersion = {client_info['appVersion']} was "
