@@ -18,6 +18,9 @@ from pyarrow import fs, parquet
 def read_args():
     parser = argparse.ArgumentParser(
             description=("Submit files on Synapse to an AWS --glue-workflow"))
+    parser.add_argument("--glue-workflow",
+                        required=True,
+                        help="The name of the Glue workflow to submit to.")
     parser.add_argument("--file-view",
                         required=True,
                         help=("The Synapse ID of a file view containing "
@@ -28,30 +31,29 @@ def read_args():
                               "this data. If querying a --file-view, this is "
                               "usually the scope of that file view (or the "
                               "Synapse ID of a folder which contains everything "
-                              "in the scope). If data is instead coming from the "
-                              "folder specified by --synapse-parent, these values "
-                              "are identical."))
+                              "in the scope)."))
     parser.add_argument("--query",
-                        help=("An f-string formatted query which filters the "
+                        help=("Optional. An f-string formatted query which filters the "
                               "file view. Use {source_table} in the FROM clause. "
                               "If this argument is not specified, all files in "
                               "the --file-view will be submitted to the "
                               "--glue-workflow."))
-    parser.add_argument("--glue-workflow",
-                        required=True,
-                        help="The name of the Glue workflow to submit to.")
     parser.add_argument("--diff-s3-uri",
-                        help=("The S3 URI of a parquet dataset to diff with "
+                        help=("Optional. The S3 URI of a parquet dataset to diff with "
                               "before submitting to the --glue-workflow."))
     parser.add_argument("--diff-parquet-field",
-                        help=("The field name in the parquet dataset to diff "
-                              "upon."))
+                        help=("Optional. The field name in the parquet dataset to diff "
+                              "upon. Defaults to 'recordid'."),
+                        default="recordid")
     parser.add_argument("--diff-file-view-field",
-                        help=("The field name in the --file-view to diff upon."))
+                        help=("Optional. The field name in the --file-view to diff "
+                              "upon. Defaults to 'recordId'."),
+                        default="recordId")
     parser.add_argument("--profile",
-                        help="The AWS profile to use.")
+                        help=("Optional. The AWS profile to use. Uses the default "
+                              "profile if not specified."))
     parser.add_argument("--ssm-parameter",
-                        help=("The name of the SSM parameter containing "
+                        help=("Optional. The name of the SSM parameter containing "
                               "the Synapse personal access token. "
                               "If not provided, cached credentials are used"))
     args = parser.parse_args()
@@ -71,17 +73,18 @@ def get_synapse_client(ssm_parameter=None, aws_session=None):
     return syn
 
 
-def get_synapse_df(syn, entity_view, query=None):
+def get_synapse_df(syn, entity_view, index_field, query=None):
     if query is not None:
         query_string = query.format(source_table=entity_view)
     else:
         query_string = f"select * from {entity_view}"
     synapse_q = syn.tableQuery(query_string)
     synapse_df = synapse_q.asDataFrame()
-    return synapse_df
+    synapse_df_with_index = synapse_df.set_index(index_field)
+    return synapse_df_with_index
 
 
-def get_parquet_dataset(dataset_uri, aws_session):
+def get_parquet_dataset(dataset_uri, aws_session, columns):
     session_credentials = aws_session.get_credentials()
     table_source = dataset_uri.split("s3://")[-1]
     s3_fs = fs.S3FileSystem(
@@ -90,16 +93,9 @@ def get_parquet_dataset(dataset_uri, aws_session):
             session_token=session_credentials.token)
     parquet_dataset = parquet.read_table(
             source=table_source,
-            filesystem=s3_fs)
-    return parquet_dataset
-
-
-def diff_on_parquet(synapse_df, parquet_df, synapse_field, parquet_field):
-    synapse_df = (
-            synapse_df
-            .set_index(synapse_field)
-            .drop(parquet_df[parquet_field].values))
-    return synapse_df.id.values
+            filesystem=s3_fs,
+            columns=columns)
+    return parquet_dataset.to_pandas()
 
 
 def submit_archives_to_workflow(
@@ -146,6 +142,7 @@ def main():
     synapse_df = get_synapse_df(
             syn=syn,
             entity_view=args.file_view,
+            index_field=args.diff_file_view_field,
             query=args.query)
     if (
             args.diff_s3_uri is not None
@@ -154,19 +151,14 @@ def main():
        ):
         parquet_dataset = get_parquet_dataset(
                 dataset_uri=args.diff_s3_uri,
-                aws_session=aws_session)
-        parquet_index = parquet_dataset.select([args.diff_parquet_field])
-        synapse_ids = diff_on_parquet(
-                synapse_df=synapse_df,
-                parquet_df=parquet_index.to_pandas(),
-                synapse_field=args.diff_file_view_field,
-                parquet_field=args.diff_parquet_field)
-    else:
-        synapse_ids = synapse_df.id.values
-    if len(synapse_ids) > 0:
+                aws_session=aws_session,
+                columns=[args.diff_parquet_field])
+        synapse_df = synapse_df.drop(
+                parquet_dataset[args.diff_parquet_field].values)
+    if len(synapse_df) > 0:
         submit_archives_to_workflow(
                 syn=syn,
-                synapse_ids=synapse_ids,
+                synapse_ids=synapse_df.id.values,
                 raw_folder_id=args.raw_folder_id,
                 glue_workflow=args.glue_workflow,
                 aws_session=aws_session)
