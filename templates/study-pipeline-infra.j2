@@ -275,6 +275,7 @@ Resources:
       Description: Starts crawlers for the JSON to Parquet workflow
       Type: SCHEDULED
       Schedule: !Ref JsonToParquetTriggerSchedule
+      StartOnCreation: true
       WorkflowName: !Ref JsonToParquetWorkflow
 
   JsonCrawlersDoneTrigger:
