@@ -104,7 +104,7 @@ Resources:
   {% set schema = sceptre_user_data.dataset_schemas.tables[v] %}
   {% do dataset.update({'columns': schema['columns']}) %}
   {% do dataset.update({'partition_keys': schema['partition_keys']}) %}
-  {% do dataset.update({'stackname_prefix': '{}'.format(v.replace('_','-'))}) %}
+  {% do dataset.update({'stackname_prefix': '{}'.format(v.replace('_',''))}) %}
   {% do datasets.append(dataset) %}
   {% endfor %}
 
