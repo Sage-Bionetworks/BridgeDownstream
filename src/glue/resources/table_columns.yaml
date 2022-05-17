@@ -59,7 +59,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  metadata_v1:
+  TaskMetadata_v1:
     columns:
       - Name: deviceinfo
         Type: string
@@ -162,7 +162,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  microphone_levels_v1:
+  AudioLevelRecord_v1:
     columns:
       - Name: uptime
         Type: double
@@ -197,42 +197,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  microphone_v1:
-    columns:
-      - Name: uptime
-        Type: double
-      - Name: unit
-        Type: string
-      - Name: peak
-        Type: double
-      - Name: average
-        Type: double
-      - Name: steppath
-        Type: string
-      - Name: timeinterval
-        Type: int
-      - Name: timestamp
-        Type: double
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: int
-      - Name: month
-        Type: int
-      - Name: day
-        Type: int
-      - Name: recordid
-        Type: string
-    partition_keys:
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: string
-      - Name: month
-        Type: string
-      - Name: day
-        Type: string
-  motion_v1:
+  MotionRecord_v1:
     columns:
       - Name: uptime
         Type: double
@@ -269,7 +234,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  taskdata_v1:
+  sharedSchema_v1:
     columns:
       - Name: taskrunuuid
         Type: string
@@ -320,7 +285,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  taskresult_v1:
+  TaskResultObject_v1:
     columns:
       - Name: stephistory
         Type: >-
@@ -365,7 +330,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  weather_v1:
+  WeatherResult_v1:
     columns:
       - Name: weather
         Type: struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int>,seaLevelPressure:int,temperature:double,identifier:string,type:string>

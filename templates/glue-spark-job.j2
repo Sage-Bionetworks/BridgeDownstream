@@ -108,6 +108,14 @@ Parameters:
     Type: String
     Description: S3 URI of dataset mapping file
 
+  SchemaMapping:
+    Type: String
+    Description: S3 URI of schema mapping file
+
+  ArchiveMapVersion:
+    Type: String
+    Description: GitHub version tag of archive-map.json to use
+
 Resources:
 
   SparkJob:
@@ -127,6 +135,8 @@ Resources:
         --additional-python-modules: !Ref AdditionalPythonModules
         --ssm-parameter-name: !Ref SynapseAuthSsmParameterName
         --dataset-mapping: !Ref DatasetMapping
+        --schema-mapping: !Ref SchemaMapping
+        --archive-map-version: !Ref ArchiveMapVersion
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:

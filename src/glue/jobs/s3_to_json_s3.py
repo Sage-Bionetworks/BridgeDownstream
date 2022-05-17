@@ -6,6 +6,7 @@ import re
 import json
 import logging
 import os
+import requests
 import sys
 import zipfile
 import synapseclient
@@ -24,33 +25,67 @@ glue_client = boto3.client("glue")
 s3_client = boto3.client("s3")
 ssm_client = boto3.client("ssm")
 synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
+ARCHIVE_MAP_URI = "https://raw.githubusercontent.com/Sage-Bionetworks/mobile-client-json/{version}/archive-map.json"
 
 args = getResolvedOptions(
         sys.argv,
         ["WORKFLOW_NAME",
          "WORKFLOW_RUN_ID",
          "ssm-parameter-name",
-         "dataset-mapping"])
+         "dataset-mapping",
+         "schema-mapping",
+         "archive-map-version"])
 workflow_run_properties = glue_client.get_workflow_run_properties(
         Name=args["WORKFLOW_NAME"],
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 
-def get_dataset_mapping(dataset_mapping_uri):
-    dataset_mapping_location = urlparse(dataset_mapping_uri)
-    dataset_mapping_bucket = dataset_mapping_location.netloc
-    dataset_mapping_key = dataset_mapping_location.path[1:]
-    dataset_mapping_fname = os.path.basename(dataset_mapping_key)
+def get_data_mapping(data_mapping_uri):
+    data_mapping_location = urlparse(data_mapping_uri)
+    data_mapping_bucket = data_mapping_location.netloc
+    data_mapping_key = data_mapping_location.path[1:]
+    data_mapping_fname = os.path.basename(data_mapping_key)
     download_file_args = {
-            "Bucket":dataset_mapping_bucket,
-            "Key":dataset_mapping_key,
-            "Filename":dataset_mapping_fname}
+            "Bucket":data_mapping_bucket,
+            "Key":data_mapping_key,
+            "Filename":data_mapping_fname}
     logger.debug("Calling s3_client.download_file with args: "
                  f"{json.dumps(download_file_args)}")
-    dataset_mapping_file = s3_client.download_file(**download_file_args)
-    with open(dataset_mapping_fname, "r") as f:
-        dataset_mapping = json.load(f)
-    logger.debug(f'dataset_mapping: {dataset_mapping}')
-    return(dataset_mapping)
+    s3_client.download_file(**download_file_args)
+    with open(data_mapping_fname, "r") as f:
+        data_mapping = json.load(f)
+    logger.debug(f'data_mapping: {data_mapping}')
+    return data_mapping
+
+def get_archive_map(archive_map_version):
+    archive_map_uri = ARCHIVE_MAP_URI.format(version=archive_map_version)
+    archive_map = requests.get(archive_map_uri)
+    archive_map_json = archive_map.json()
+    return archive_map_json
+
+def get_json_schema(archive_map, assessment_id, assessment_revision, file_name):
+    # First check universally used files
+    for file in archive_map["allOf"]:
+        if file["filename"] == file_name:
+            if "deprecated" in file and file["deprecated"] is True:
+                continue
+            json_schema = requests.get(file["jsonSchema"])
+            return json_schema.json()
+    # Next check app-specific files
+    for app in archive_map["apps"]:
+        if app["appId"] == workflow_run_properties["app_name"]:
+            for file in app["allOf"]:
+                if file["filename"] == file_name:
+                    json_schema = requests.get(file["jsonSchema"])
+                    return json_schema.json()
+    # Finally, check assessment-specific files
+    for assessment in archive_map["assessments"]:
+        if assessment["assessmentIdentifier"] == assessment_id and \
+           assessment["assessmentRevision"] == assessment_revision:
+            for file in assessment["files"]:
+                if file["filename"] == file_name:
+                    json_schema = requests.get(file["jsonSchema"])
+                    return json_schema.json()
+    return None
 
 def parse_client_info_metadata(client_info_str):
     try:
@@ -76,45 +111,75 @@ def parse_client_info_metadata(client_info_str):
                 "osName": os_name}
     return client_info
 
-def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
-    uploaded_on = datetime.strptime(s3_obj_metadata["uploadedon"], '%Y-%m-%dT%H:%M:%S.%fZ')
-    client_info = parse_client_info_metadata(s3_obj_metadata["clientinfo"])
-    logger.info(f"Using dataset mapping for osName = {client_info['osName']} "
-                f"and appVersion = {client_info['appVersion']}")
-    if client_info["osName"] not in dataset_mapping["osName"].keys():
-        logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
-                       f"osName = {client_info['osName']} was not found "
+
+def get_os_and_app_version_mapping(os_name, app_version, dataset_mapping, record_id):
+    if os_name not in dataset_mapping["osName"]:
+        logger.warning(f"Skipping {record_id} because "
+                       f"osName = {os_name} was not found "
                        "in dataset mapping.")
         return None
-    elif (client_info["appVersion"] not in
-          dataset_mapping["osName"][client_info["osName"]]["appVersion"]):
-        logger.warning(f"Skipping {s3_obj_metadata['recordid']} because "
-                       f"appVersion = {client_info['appVersion']} was "
+    if (app_version not in
+          dataset_mapping["osName"][os_name]["appVersion"]):
+        logger.warning(f"Skipping {record_id} because "
+                       f"appVersion = {app_version} was "
                        "not found in dataset mapping for "
-                       f"osName = {client_info['osName']}.")
+                       f"osName = {os_name}.")
         return None
-    this_dataset_mapping = dataset_mapping[
-            "osName"][client_info["osName"]][
-            "appVersion"][client_info["appVersion"]]
+    data_mapping = dataset_mapping["osName"][os_name]["appVersion"][app_version]
+    return data_mapping
+
+
+def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
+        archive_map, schema_mapping):
+    uploaded_on = datetime.strptime(s3_obj_metadata["uploadedon"], '%Y-%m-%dT%H:%M:%S.%fZ')
+    client_info = parse_client_info_metadata(s3_obj_metadata["clientinfo"])
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
         contents = z.namelist()
         logger.debug(f'contents: {contents}')
         for json_path in z.namelist():
-            dataset_key = os.path.splitext(json_path)[0]
-            dataset_name = dataset_key.lower()
-            dataset_version = this_dataset_mapping[dataset_name]
-            os.makedirs(dataset_name, exist_ok=True)
+            json_schema = get_json_schema(
+                    archive_map=archive_map,
+                    assessment_id=s3_obj_metadata["assessmentid"],
+                    assessment_revision=s3_obj_metadata["assessmentrevision"],
+                    file_name=json_path)
+            if json_schema is None:
+                logger.info("Did not find a JSON schema in archive-map.json. "
+                            f"Found osName = {client_info['osName']} "
+                            f"and appVersion = {client_info['appVersion']}")
+                data_mapping = get_os_and_app_version_mapping(
+                        os_name=client_info["osName"],
+                        app_version=client_info["appVersion"],
+                        dataset_mapping=dataset_mapping,
+                        record_id=s3_obj_metadata["recordid"])
+                if data_mapping is None:
+                    return
+                file_name = os.path.splitext(json_path)[0]
+                file_key = file_name.lower()
+                if file_key in data_mapping:
+                    data_identifier = data_mapping[file_key]
+                else:
+                    logger.warning(
+                            f"Skipping {json_path} in {s3_obj_metadata['recordid']} "
+                            f"because {file_key} was not found in the dataset mapping "
+                            f"for osName={client_info['osName']} and "
+                            f"appVersion={client_info['appVersion']}.")
+                    continue
+            else:
+                logger.info("Using schema mapping.")
+                data_identifier = schema_mapping[json_schema["$id"]]
+            data_type = data_identifier.split("_")[0]
+            os.makedirs(data_identifier, exist_ok=True)
             with z.open(json_path, "r") as p:
                 j = json.load(p)
                 # We inject all S3 metadata into the metadata file
-                if dataset_name == "metadata":
+                if data_type == "TaskMetadata":
                     j["year"] = int(uploaded_on.year)
                     j["month"] = int(uploaded_on.month)
                     j["day"] = int(uploaded_on.day)
                     for key in s3_obj_metadata:
                         j[key] = s3_obj_metadata[key]
                 else: # but only the partition fields into other files
-                    if type(j) == list:
+                    if isinstance(j, list):
                         for item in j:
                             item["assessmentid"] = s3_obj_metadata["assessmentid"]
                             item["year"] = int(uploaded_on.year)
@@ -128,7 +193,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         j["day"] = int(uploaded_on.day)
                         j["recordid"] = s3_obj_metadata["recordid"]
                 output_fname = s3_obj_metadata["recordid"] + ".ndjson"
-                output_path = os.path.join(dataset_name, output_fname)
+                output_path = os.path.join(data_identifier, output_fname)
                 logger.debug(f'output_path: {output_path}')
                 with open(output_path, "w") as f_out:
                     json.dump(j, f_out, indent=None)
@@ -137,7 +202,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                         workflow_run_properties["app_name"],
                         workflow_run_properties["study_name"],
                         workflow_run_properties["json_prefix"],
-                        f"dataset={dataset_name}_{dataset_version}",
+                        f"dataset={data_identifier}",
                         f"assessmentid={s3_obj_metadata['assessmentid']}",
                         f"year={str(uploaded_on.year)}",
                         f"month={str(uploaded_on.month)}",
@@ -149,11 +214,15 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping):
                             Bucket = workflow_run_properties["json_bucket"],
                             Key = s3_output_key,
                             Metadata = s3_obj_metadata)
+                    logger.debug(f"put object response: {json.dumps(response)}")
 
 logger.debug(f"getResolvedOptions: {json.dumps(args)}")
 logger.info(f"Retrieving dataset mapping at {args['dataset_mapping']}")
-dataset_mapping = get_dataset_mapping(
-        dataset_mapping_uri=args["dataset_mapping"])
+dataset_mapping = get_data_mapping(
+        data_mapping_uri=args["dataset_mapping"])
+schema_mapping = get_data_mapping(
+        data_mapping_uri=args["schema_mapping"])
+archive_map = get_archive_map(archive_map_version=args["archive_map_version"])
 logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
 synapse_auth_token = ssm_client.get_parameter(
           Name=args["ssm_parameter_name"],
@@ -182,4 +251,6 @@ for message in messages:
     process_record(
             s3_obj = s3_obj,
             s3_obj_metadata=s3_obj["Metadata"],
-            dataset_mapping=dataset_mapping)
+            dataset_mapping=dataset_mapping,
+            archive_map=archive_map,
+            schema_mapping=schema_mapping)

@@ -95,17 +95,16 @@ Resources:
 
   # combine all configuration data into a "datasets" collection
   {% set datasets = [] %}
-  {% for k,v in sceptre_user_data.dataset_version_mapping['osName']['Android']['appVersion']['14'].items() %}
-  {% set dataset_name = '{}_{}'.format(k,v) %}
+  {% for v in sceptre_user_data.dataset_schemas.tables.keys() %}
   {% set dataset = {} %}
-  {% do dataset.update({'dataset_name': dataset_name}) %}
-  {% do dataset.update({'table_name': 'dataset_' + dataset_name})%}
-  {% do dataset.update({'s3_partition': 'dataset=' + dataset_name})%}
-  {% do dataset.update({'crawler': crawler_assignments[dataset_name]}) %}
-  {% set schema = sceptre_user_data.dataset_schemas.tables[dataset_name] %}
+  {% do dataset.update({'dataset_name': v}) %}
+  {% do dataset.update({'table_name': 'dataset_' + v.lower()})%}
+  {% do dataset.update({'s3_partition': 'dataset=' + v})%}
+  {% do dataset.update({'crawler': crawler_assignments[v]}) %}
+  {% set schema = sceptre_user_data.dataset_schemas.tables[v] %}
   {% do dataset.update({'columns': schema['columns']}) %}
   {% do dataset.update({'partition_keys': schema['partition_keys']}) %}
-  {% do dataset.update({'stackname_prefix': '{}{}'.format(k.replace('_','').capitalize(), v.capitalize())}) %}
+  {% do dataset.update({'stackname_prefix': '{}'.format(v.replace('_','-'))}) %}
   {% do datasets.append(dataset) %}
   {% endfor %}
 
