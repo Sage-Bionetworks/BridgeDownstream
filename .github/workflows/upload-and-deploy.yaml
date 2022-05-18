@@ -72,7 +72,7 @@ jobs:
         ECR_REPOSITORY: bootstrap_trigger
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG src/scripts/bootstrap_trigger/Dockerfile
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG src/scripts/bootstrap_trigger/
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Create directory for remote sceptre templates
