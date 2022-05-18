@@ -55,6 +55,13 @@ jobs:
     environment: develop
 
     steps:
+    - name: Setup code, pipenv, aws
+      uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
+      with:
+        aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
+        role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
@@ -67,13 +74,6 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG src/scripts/bootstrap_trigger/Dockerfile
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Setup code, pipenv, aws
-      uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
-      with:
-        aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
-        role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
     - name: Create directory for remote sceptre templates
       run: mkdir -p templates/remote/
