@@ -55,18 +55,18 @@ jobs:
     environment: develop
 
     steps:
-    - name: Setup code, pipenv, aws
-      uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
-      with:
-        aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
-        role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+      - name: Setup code, pipenv, aws
+        uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
+        with:
+          aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
+          role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
-    - name: Create directory for remote sceptre templates
-      run: mkdir -p templates/remote/
+      - name: Create directory for remote sceptre templates
+        run: mkdir -p templates/remote/
 
-    - name: Deploy sceptre stacks
-      run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch develop --yes
+      - name: Deploy sceptre stacks
+        run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch develop --yes
 
   sceptre-deploy-main:
     name: Deploy trunk using sceptre
