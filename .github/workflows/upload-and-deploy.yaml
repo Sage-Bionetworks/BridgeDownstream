@@ -97,6 +97,19 @@ jobs:
           aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
           role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: bootstrap_trigger
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG src/scripts/bootstrap_trigger/
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
       - name: Create directory for remote sceptre templates
         run: mkdir -p templates/remote/
 
