@@ -95,7 +95,7 @@ jobs:
         run: sam build -s src/lambda/ -t src/lambda/template.yaml
 
       - name: Invoke Lambda
-        run:  sam local invoke -e events/single-record.json --env-vars src/lambda/test-env-vars.yaml
+        run:  sam local invoke -e events/single-record.json --env-vars src/lambda/test-env-vars.json
 
   sceptre-deploy-main:
     name: Deploy trunk using sceptre
