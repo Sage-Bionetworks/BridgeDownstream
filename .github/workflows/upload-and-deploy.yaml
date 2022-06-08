@@ -67,7 +67,7 @@ jobs:
 
       - name: Deploy sceptre stacks
         run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch develop --yes
-  
+
   integration-test:
     name: Deploys test events from the workflow
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
     if: github.ref_name != 'main' && github.ref_type != 'tag'
     environment: develop
     steps:
-      
+
       - name: Setup code, pipenv, aws
         uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
         with:
@@ -90,10 +90,10 @@ jobs:
         uses: aws-actions/setup-sam@v1
         with:
           version: 1.37.0
-      
+
       - name: sam build lambda
         run: sam build --use-container
-      
+
       - name: Invoke Lambda
         run:  sam local invoke -e events/single-record.json --env-vars test-env-vars.json
 
