@@ -92,7 +92,7 @@ jobs:
           version: 1.37.0
 
       - name: sam build lambda
-        run: sam build --use-container
+        run: sam build
 
       - name: Invoke Lambda
         run:  sam local invoke -e events/single-record.json --env-vars test-env-vars.json
