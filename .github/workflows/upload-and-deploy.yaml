@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pre-commit, upload-files, sceptre-deploy-branch]
     env:
-      NAMESPACE: bridge-downstream #$GITHUB_REF_NAME after testing hard-coded
+      NAMESPACE: $GITHUB_REF_NAME after
       LEMBDA_ENV_VARS_FILE: namespace_vars.json
     if: github.ref_name != 'main' && github.ref_type != 'tag'
     environment: develop
