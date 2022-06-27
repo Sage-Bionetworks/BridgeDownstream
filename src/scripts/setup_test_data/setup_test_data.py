@@ -31,6 +31,7 @@ DEFAULT_QUERY = (
         "SELECT * FROM {source_table} WHERE "
         "assessmentId IS NOT NULL AND "
         "assessmentRevision IS NOT NULL "
+        "and clientInfo not like '%Linux%' "
         "GROUP BY assessmentId, assessmentRevision "
         "ORDER BY exportedOn")
 
