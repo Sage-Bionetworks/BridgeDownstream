@@ -2,10 +2,12 @@ import io
 import json
 import logging
 import os
+import re
 import requests
 import zipfile
 import boto3
 import jsonschema
+import synapseclient
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -16,7 +18,31 @@ def get_archive_map(version):
     return r.json()
 
 
-def validate_data(syn, message_parameters, archive_map, aws_session, sts_tokens):
+def parse_client_info_metadata(client_info_str):
+    try:
+        client_info = json.loads(client_info_str)
+    except json.JSONDecodeError:
+        app_version_pattern = re.compile(r"appVersion=[^,]+")
+        os_name_pattern = re.compile(r"osName=[^,]+")
+        app_version_search = re.search(app_version_pattern, client_info_str)
+        os_name_search = re.search(os_name_pattern, client_info_str)
+        if app_version_search is None:
+            app_version = None
+            print(client_info_str)
+        else:
+            app_version = app_version_search.group().split("=")[1]
+        if os_name_search is None:
+            os_name = None
+            print(client_info_str)
+        else:
+            os_name = os_name_search.group().split("=")[1]
+        client_info = {
+                "appVersion": int(app_version),
+                "osName": os_name,
+                "appName": "mobile-toolbox"}
+    return client_info
+
+def validate_data(syn, message_parameters, archive_map, sts_tokens):
     """
     Check that each piece of JSON data in this record conforms
     to the JSON Schema it claims to conform to. If a JSON does not
@@ -39,8 +65,9 @@ def validate_data(syn, message_parameters, archive_map, aws_session, sts_tokens)
             Bucket = message_parameters["source_bucket"],
             Key = message_parameters["source_key"])
     assessment_id = s3_obj["Metadata"]["assessmentid"]
-    assessment_revision = s3_obj["Metadata"]["assessmentrevision"]
-    app_id = json.loads(s3_obj["Metadata"]["clientinfo"])["appName"]
+    assessment_revision = int(s3_obj["Metadata"]["assessmentrevision"])
+    client_info = parse_client_info_metadata(s3_obj["Metadata"]["clientinfo"])
+    app_id = client_info["appName"]
     validation_result = {
             "assessmendId": assessment_id,
             "assessmentRevision": assessment_revision,
@@ -53,63 +80,72 @@ def validate_data(syn, message_parameters, archive_map, aws_session, sts_tokens)
         logger.debug(f"zipped contents: {contents}")
         for json_path in contents:
             file_name = os.path.basename(json_path)
-            json_schema_url = get_json_schema_url(
+            json_schema_obj = get_json_schema(
                     archive_map=archive_map,
                     file_name=file_name,
                     app_id=app_id,
                     assessment_id=assessment_id,
                     assessment_revision=assessment_revision)
-            if json_schema_url is None:
-                validation_result["errors"][file_name] = (
-                        "Did not find JSON Schema in archive-map.json "
-                        f"({os.environ.get('archive_map_version')})."
-                )
+            if json_schema_obj["url"] is None:
+                logger.warning(
+                        f"Did not find qualifying JSON Schema for {json_path}: "
+                        f"{json.dumps(json_schema_obj)}")
                 continue
-            r = requests.get(json_schema_url)
+            r = requests.get(json_schema_obj["url"])
             json_schema = r.json()
-            base_uri = os.path.dirname(json_schema_url)
+            base_uri = os.path.dirname(json_schema_obj["url"])
             with z.open(json_path, "r") as p:
                 j = json.load(p)
+                if json_path == "taskData.json":
+                    continue
                 all_errors = validate_against_schema(
                         data=j,
                         schema=json_schema,
                         base_uri=base_uri
                 )
                 if len(all_errors) > 0:
-                    validation_result["errors"][file_name] = all_errors
+                    json_schema_obj["error"] = all_errors
+                    validation_result["errors"][file_name] = json_schema_obj
     return validation_result
 
 
-def get_json_schema_url(archive_map, file_name, app_id, assessment_id, assessment_revision):
-    json_schema_url = None
+def get_json_schema(archive_map, file_name, app_id, assessment_id, assessment_revision):
+    result = {
+            "url": None,
+            "allowed_app_specific_files": None,
+            "error": None,
+            "archive_map_version": os.environ.get("archive_map_version")
+    }
     for assessment in archive_map["assessments"]:
         if (assessment["assessmentIdentifier"] == assessment_id
                 and assessment["assessmentRevision"] == assessment_revision):
             for file in assessment["files"]:
                 if file["filename"] == file_name:
-                    return json_schema_url
+                    result["url"] = file["jsonSchema"]
+                    return result
     for app in archive_map["apps"]:
         if app["appId"] == app_id:
-            is_valid_assessment = any([
+            allowed_app_specific_files = any([
                     a["assessmentIdentifier"] == assessment_id
                     and a["assessmentRevision"] == assessment_revision
                     for a in app["assessments"]])
-            if is_valid_assessment:
+            result["allowed_app_specific_files"] = allowed_app_specific_files
+            if allowed_app_specific_files:
                 for default_file in app["default"]["files"]:
                     if default_file["filename"] == file_name:
-                        json_schema_url = default_file["jsonSchema"]
+                        result["url"] = default_file["jsonSchema"]
                         break
                 for file in app["anyOf"]:
                     if file["filename"] == file_name:
-                        json_schema_url = file["jsonSchema"]
+                        result["url"] = file["jsonSchema"]
                         break
-    if json_schema_url is not None:
-        return json_schema_url
+    if result["url"] is not None:
+        return result
     for file in archive_map["anyOf"]:
-        if file["filename"] == file_name and file["deprecated"] == False:
-            json_schema_url = file["jsonSchema"]
+        if file["filename"] == file_name and "jsonSchema" in file:
+            result["url"] = file["jsonSchema"]
             break
-    return json_schema_url
+    return result
 
 
 def validate_against_schema(data, schema, base_uri):
@@ -139,6 +175,12 @@ def lambda_handler(event, context):
     namespace = os.environ.get('NAMESPACE')
     primary_aws_session = boto3.Session()
     glue_client = primary_aws_session.client("glue")
+    ssm_client = primary_aws_session.client("ssm")
+    synapse_auth_token = ssm_client.get_parameter(
+              Name=os.environ.get("ssm_parameter_name"),
+              WithDecryption=True)
+    syn = synapseclient.Synapse()
+    syn.login(authToken=synapse_auth_token["Parameter"]["Value"], silent=True)
     messages = {} # indexed by app and study
     sts_tokens = {}
     archive_map = get_archive_map(version=os.environ.get("archive_map_version"))
@@ -158,7 +200,6 @@ def lambda_handler(event, context):
                 syn=syn,
                 message_parameters=message_parameters,
                 archive_map=archive_map,
-                aws_session=aws_session,
                 sts_tokens=sts_tokens)
         if len(validation_result["errors"]) > 0:
             mark_as_invalid(
