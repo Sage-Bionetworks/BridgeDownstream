@@ -16,4 +16,5 @@ sceptre-sam-handler = "*"
 [packages]
 boto3 = "==1.*"
 pyspark = "==3.*"
+jsonschema="==4.*"
 synapseclient = "==2.5.*"
