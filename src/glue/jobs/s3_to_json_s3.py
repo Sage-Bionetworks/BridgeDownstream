@@ -87,31 +87,6 @@ def get_json_schema(archive_map, assessment_id, assessment_revision, file_name):
                     return json_schema.json()
     return None
 
-def parse_client_info_metadata(client_info_str):
-    try:
-        client_info = json.loads(client_info_str)
-        client_info["appVersion"] = str(client_info["appVersion"])
-    except json.JSONDecodeError:
-        app_version_pattern = re.compile(r"appVersion=[^,]+")
-        os_name_pattern = re.compile(r"osName=[^,]+")
-        app_version_search = re.search(app_version_pattern, client_info_str)
-        os_name_search = re.search(os_name_pattern, client_info_str)
-        if app_version_search is None:
-            app_version = None
-            print(client_info_str)
-        else:
-            app_version = app_version_search.group().split("=")[1]
-        if os_name_search is None:
-            os_name = None
-            print(client_info_str)
-        else:
-            os_name = os_name_search.group().split("=")[1]
-        client_info = {
-                "appVersion": app_version,
-                "osName": os_name}
-    return client_info
-
-
 def get_dataset_identifier_mapping(assessment_id, assessment_revision, dataset_mapping, record_id):
     if assessment_id not in dataset_mapping["assessmentIdentifier"]:
         logger.warning(f"Skipping {record_id} because "
@@ -133,7 +108,6 @@ def get_dataset_identifier_mapping(assessment_id, assessment_revision, dataset_m
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
         archive_map, schema_mapping):
     uploaded_on = datetime.strptime(s3_obj_metadata["uploadedon"], '%Y-%m-%dT%H:%M:%S.%fZ')
-    client_info = parse_client_info_metadata(s3_obj_metadata["clientinfo"])
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"].read())) as z:
         contents = z.namelist()
         logger.debug(f'contents: {contents}')
@@ -144,9 +118,10 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
                     assessment_revision=s3_obj_metadata["assessmentrevision"],
                     file_name=json_path)
             if json_schema is None:
-                logger.info("Did not find a JSON schema in archive-map.json. "
-                            f"Found osName = {client_info['osName']} "
-                            f"and appVersion = {client_info['appVersion']}")
+                logger.info("Did not find a JSON schema in archive-map.json for "
+                            f"assessmentId = {s3_obj_metadata['assessmentid']}, "
+                            f"assessmentRevision = {s3_obj_metadata['assessmentrevision']}, "
+                            f"file = {json_path}")
                 dataset_identifier_mapping = get_dataset_identifier_mapping(
                         assessment_id=s3_obj_metadata["assessmentid"],
                         assessment_revision=s3_obj_metadata["assessmentrevision"],
