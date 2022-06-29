@@ -64,7 +64,7 @@ def get_archive_map(archive_map_version):
 
 def get_json_schema(archive_map, assessment_id, assessment_revision, file_name):
     # First check universally used files
-    for file in archive_map["allOf"]:
+    for file in archive_map["anyOf"]:
         if file["filename"] == file_name:
             if "deprecated" in file and file["deprecated"] is True:
                 continue
@@ -73,7 +73,7 @@ def get_json_schema(archive_map, assessment_id, assessment_revision, file_name):
     # Next check app-specific files
     for app in archive_map["apps"]:
         if app["appId"] == workflow_run_properties["app_name"]:
-            for file in app["allOf"]:
+            for file in app["anyOf"]:
                 if file["filename"] == file_name:
                     json_schema = requests.get(file["jsonSchema"])
                     return json_schema.json()
