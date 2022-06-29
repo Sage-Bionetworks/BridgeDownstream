@@ -112,21 +112,22 @@ def parse_client_info_metadata(client_info_str):
     return client_info
 
 
-def get_os_and_app_version_mapping(os_name, app_version, dataset_mapping, record_id):
-    if os_name not in dataset_mapping["osName"]:
+def get_dataset_identifier_mapping(assessment_id, assessment_revision, dataset_mapping, record_id):
+    if assessment_id not in dataset_mapping["assessmentIdentifier"]:
         logger.warning(f"Skipping {record_id} because "
-                       f"osName = {os_name} was not found "
+                       f"assessmentIdentifier = {assessment_id} was not found "
                        "in dataset mapping.")
         return None
-    if (app_version not in
-          dataset_mapping["osName"][os_name]["appVersion"]):
+    if (assessment_revision not in
+          dataset_mapping["assessmentIdentifier"][assessment_id]["assessmentRevision"]):
         logger.warning(f"Skipping {record_id} because "
-                       f"appVersion = {app_version} was "
+                       f"assessmentRevision = {assessment_revision} was "
                        "not found in dataset mapping for "
-                       f"osName = {os_name}.")
+                       f"assessmentIdentifier = {assessment_id}.")
         return None
-    data_mapping = dataset_mapping["osName"][os_name]["appVersion"][app_version]
-    return data_mapping
+    data_identifier_mapping = dataset_mapping["assessmentIdentifier"][assessment_id][
+            "assessmentRevision"][assessment_revision]
+    return data_identifier_mapping
 
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
@@ -146,39 +147,38 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
                 logger.info("Did not find a JSON schema in archive-map.json. "
                             f"Found osName = {client_info['osName']} "
                             f"and appVersion = {client_info['appVersion']}")
-                data_mapping = get_os_and_app_version_mapping(
-                        os_name=client_info["osName"],
-                        app_version=client_info["appVersion"],
+                dataset_identifier_mapping = get_dataset_identifier_mapping(
+                        assessment_id=s3_obj_metadata["assessmentid"],
+                        assessment_revision=s3_obj_metadata["assessmentrevision"],
                         dataset_mapping=dataset_mapping,
                         record_id=s3_obj_metadata["recordid"])
-                if data_mapping is None:
+                if dataset_identifier_mapping is None:
                     return
-                file_name = os.path.splitext(json_path)[0]
-                file_key = file_name.lower()
-                if file_key in data_mapping:
-                    data_identifier = data_mapping[file_key]
+                file_name = os.path.basename(json_path)
+                if file_name in dataset_identifier_mapping:
+                    dataset_identifier = dataset_identifier_mapping[file_name]
                 else:
                     logger.warning(
                             f"Skipping {json_path} in {s3_obj_metadata['recordid']} "
-                            f"because {file_key} was not found in the dataset mapping "
-                            f"for osName={client_info['osName']} and "
-                            f"appVersion={client_info['appVersion']}.")
+                            f"because {file_name} was not found in the dataset mapping "
+                            f"for assessmentRevision = {s3_obj_metadata['assessmentrevision']} "
+                            f"and assessmentIdentifier = {s3_obj_metadata['assessmentIdentifier']}.")
                     continue
             else:
                 logger.info("Using schema mapping.")
-                data_identifier = schema_mapping[json_schema["$id"]]
-            data_type = data_identifier.split("_")[0]
-            os.makedirs(data_identifier, exist_ok=True)
+                dataset_identifier = schema_mapping[json_schema["$id"]]
+            data_type = dataset_identifier.split("_")[0]
+            os.makedirs(dataset_identifier, exist_ok=True)
             with z.open(json_path, "r") as p:
                 j = json.load(p)
                 # We inject all S3 metadata into the metadata file
-                if data_type == "TaskMetadata":
+                if data_type == "ArchiveMetadata":
                     j["year"] = int(uploaded_on.year)
                     j["month"] = int(uploaded_on.month)
                     j["day"] = int(uploaded_on.day)
                     for key in s3_obj_metadata:
                         j[key] = s3_obj_metadata[key]
-                else: # but only the partition fields into other files
+                else: # but only the partition fields and record ID into other files
                     if isinstance(j, list):
                         for item in j:
                             item["assessmentid"] = s3_obj_metadata["assessmentid"]
@@ -193,7 +193,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
                         j["day"] = int(uploaded_on.day)
                         j["recordid"] = s3_obj_metadata["recordid"]
                 output_fname = s3_obj_metadata["recordid"] + ".ndjson"
-                output_path = os.path.join(data_identifier, output_fname)
+                output_path = os.path.join(dataset_identifier, output_fname)
                 logger.debug(f'output_path: {output_path}')
                 with open(output_path, "w") as f_out:
                     json.dump(j, f_out, indent=None)
@@ -202,7 +202,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
                         workflow_run_properties["app_name"],
                         workflow_run_properties["study_name"],
                         workflow_run_properties["json_prefix"],
-                        f"dataset={data_identifier}",
+                        f"dataset={dataset_identifier}",
                         f"assessmentid={s3_obj_metadata['assessmentid']}",
                         f"year={str(uploaded_on.year)}",
                         f"month={str(uploaded_on.month)}",

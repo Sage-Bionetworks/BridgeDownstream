@@ -1,61 +1,105 @@
 {
-  "osName":
+  "assessmentIdentifier":
     {
-      "Android":
+      "dccs":
         {
-          "appVersion":
+          "assessmentRevision":
             {
-              "13":
+              "5":
                 {
-                  "answers": "answers_v1",
-                  "info": "info_v1",
-                  "metadata": "TaskMetadata_v1",
-                  "microphone_levels": "AudioLevelRecord_v1",
-                  "motion": "MotionRecord_v1",
-                  "taskdata": "sharedSchema_v1",
-                  "taskresult": "TaskResultObject_v1",
-                  "weather": "WeatherResult_v1"
-                },
-              "14":
-                {
-                  "answers": "answers_v1",
-                  "info": "info_v1",
-                  "metadata": "TaskMetadata_v1",
-                  "microphone_levels": "AudioLevelRecord_v1",
-                  "microphone": "AudioLevelRecord_v1",
-                  "motion": "MotionRecord_v1",
-                  "taskdata": "sharedSchema_v1",
-                  "taskresult": "TaskResultObject_v1",
-                  "weather": "WeatherResult_v1"
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "microphone_levels.json": "AudioLevelRecord_v1",
+                  "motion.json": "MotionRecord_v1",
+                  "taskData.json": "sharedSchema_v1",
+                  "taskResult.json": "TaskResultObject_v1",
+                  "weather.json": "WeatherResult_v1"
                 }
             }
         },
-      "iPhone OS":
+      "flanker":
         {
-          "appVersion":
+          "assessmentRevision":
             {
-              "73":
+              "4":
                 {
-                  "answers": "answers_v1",
-                  "info": "info_v1",
-                  "metadata": "TaskMetadata_v1",
-                  "microphone_levels": "AudioLevelRecord_v1",
-                  "motion": "MotionRecord_v1",
-                  "taskdata": "sharedSchema_v1",
-                  "taskresult": "TaskResultObject_v1",
-                  "weather": "WeatherResult_v1"
-                },
-              "74":
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "microphone_levels.json": "AudioLevelRecord_v1",
+                  "motion.json": "MotionRecord_v1",
+                  "taskData.json": "sharedSchema_v1",
+                  "taskResult.json": "TaskResultObject_v1",
+                  "weather.json": "WeatherResult_v1"
+                }
+            }
+        },
+      "memory-for-sequences":
+        {
+          "assessmentRevision":
+            {
+              "6":
                 {
-                  "answers": "answers_v1",
-                  "info": "info_v1",
-                  "metadata": "TaskMetadata_v1",
-                  "microphone_levels": "AudioLevelRecord_v1",
-                  "microphone": "AudioLevelRecord_v1",
-                  "motion": "MotionRecord_v1",
-                  "taskdata": "sharedSchema_v1",
-                  "taskresult": "TaskResultObject_v1",
-                  "weather": "WeatherResult_v1"
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "taskData.json": "sharedSchema_v1"
+                }
+            }
+        },
+      "number-match":
+        {
+          "assessmentRevision":
+            {
+              "3":
+                {
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "microphone_levels.json": "AudioLevelRecord_v1",
+                  "motion.json": "MotionRecord_v1",
+                  "taskData.json": "sharedSchema_v1",
+                  "taskResult.json": "TaskResultObject_v1",
+                  "weather.json": "WeatherResult_v1"
+                }
+            }
+        },
+      "psm":
+        {
+          "assessmentRevision":
+            {
+              "5":
+                {
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "motion.json": "MotionRecord_v1",
+                  "taskData.json": "sharedSchema_v1",
+                  "taskResult.json": "TaskResultObject_v1",
+                  "weather.json": "WeatherResult_v1"
+                }
+            }
+        },
+      "spelling":
+        {
+          "assessmentRevision":
+            {
+              "4":
+                {
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "motion.json": "MotionRecord_v1",
+                  "taskData.json": "sharedSchema_v1",
+                  "taskResult.json": "TaskResultObject_v1",
+                  "weather.json": "WeatherResult_v1"
+                }
+            }
+        },
+      "vocabulary":
+        {
+          "assessmentRevision":
+            {
+              "4":
+                {
+                  "info.json": "info_v1",
+                  "metadata.json": "TaskMetadata_v1",
+                  "taskData.json": "sharedSchema_v1"
                 }
             }
         }
