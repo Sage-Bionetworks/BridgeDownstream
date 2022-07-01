@@ -1,9 +1,6 @@
 standard:
-  - answers_v1
-  - info_v1
-  - TaskMetadata_v1
+  - ArchiveMetadata_v1
   - sharedSchema_v1
-  - TaskResultObject_v1
   - WeatherResult_v1
 array_of_records:
   - AudioLevelRecord_v1

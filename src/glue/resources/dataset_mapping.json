@@ -7,12 +7,10 @@
             {
               "5":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
-                  "taskResult.json": "TaskResultObject_v1",
                   "weather.json": "WeatherResult_v1"
                 }
             }
@@ -23,12 +21,10 @@
             {
               "4":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
-                  "taskResult.json": "TaskResultObject_v1",
                   "weather.json": "WeatherResult_v1"
                 }
             }
@@ -39,7 +35,6 @@
             {
               "6":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "taskData.json": "sharedSchema_v1"
                 }
@@ -51,12 +46,10 @@
             {
               "3":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
-                  "taskResult.json": "TaskResultObject_v1",
                   "weather.json": "WeatherResult_v1"
                 }
             }
@@ -67,11 +60,9 @@
             {
               "5":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
-                  "taskResult.json": "TaskResultObject_v1",
                   "weather.json": "WeatherResult_v1"
                 }
             }
@@ -82,11 +73,9 @@
             {
               "4":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
-                  "taskResult.json": "TaskResultObject_v1",
                   "weather.json": "WeatherResult_v1"
                 }
             }
@@ -97,7 +86,6 @@
             {
               "4":
                 {
-                  "info.json": "info_v1",
                   "metadata.json": "TaskMetadata_v1",
                   "taskData.json": "sharedSchema_v1"
                 }
