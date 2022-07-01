@@ -66,44 +66,62 @@ def get_json_schema(archive_map, assessment_id, assessment_revision, file_name):
     # First check universally used files
     for file in archive_map["anyOf"]:
         if file["filename"] == file_name:
-            if "deprecated" in file and file["deprecated"] is True:
+            if "deprecated" in file \
+                    and file["deprecated"] is True \
+                    and "jsonSchema" not in file:
                 continue
             json_schema = requests.get(file["jsonSchema"])
             return json_schema.json()
     # Next check app-specific files
     for app in archive_map["apps"]:
-        if app["appId"] == workflow_run_properties["app_name"]:
-            for file in app["anyOf"]:
-                if file["filename"] == file_name:
-                    json_schema = requests.get(file["jsonSchema"])
-                    return json_schema.json()
+        if app["appId"] == "mobile-toolbox":
+            is_valid_assessment = any([
+                    a["assessmentIdentifier"] == assessment_id
+                    and a["assessmentRevision"] == assessment_revision
+                    for a in app["assessments"]])
+            if is_valid_assessment:
+                for default_file in app["default"]["files"]:
+                    if default_file["filename"] == file_name:
+                        json_schema = requests.get(default_file["jsonSchema"])
+                        return json_schema.json()
+                for file in app["anyOf"]:
+                    if file["filename"] == file_name:
+                        json_schema = requests.get(file["jsonSchema"])
+                        return json_schema.json()
     # Finally, check assessment-specific files
     for assessment in archive_map["assessments"]:
-        if assessment["assessmentIdentifier"] == assessment_id and \
-           assessment["assessmentRevision"] == assessment_revision:
+        if (assessment["assessmentIdentifier"] == assessment_id
+                and assessment["assessmentRevision"] == assessment_revision):
             for file in assessment["files"]:
                 if file["filename"] == file_name:
                     json_schema = requests.get(file["jsonSchema"])
                     return json_schema.json()
     return None
 
-def get_dataset_identifier_mapping(assessment_id, assessment_revision, dataset_mapping, record_id):
+def get_dataset_identifier(assessment_id, assessment_revision, file_name, dataset_mapping, record_id):
     if assessment_id not in dataset_mapping["assessmentIdentifier"]:
-        logger.warning(f"Skipping {record_id} because "
+        logger.warning(f"Skipping {file_name} in recordId = {record_id} because "
                        f"assessmentIdentifier = {assessment_id} was not found "
                        "in dataset mapping.")
         return None
     if (assessment_revision not in
           dataset_mapping["assessmentIdentifier"][assessment_id]["assessmentRevision"]):
-        logger.warning(f"Skipping {record_id} because "
+        logger.warning(f"Skipping {file_name} in recordId = {record_id} because "
                        f"assessmentRevision = {assessment_revision} was "
                        "not found in dataset mapping for "
                        f"assessmentIdentifier = {assessment_id}.")
         return None
-    data_identifier_mapping = dataset_mapping["assessmentIdentifier"][assessment_id][
+    dataset_identifier_mapping = dataset_mapping["assessmentIdentifier"][assessment_id][
             "assessmentRevision"][assessment_revision]
-    return data_identifier_mapping
-
+    if file_name not in dataset_identifier_mapping:
+        logger.warning(
+                f"Skipping {file_name} in recordId = {record_id} "
+                f"because {file_name} was not found in the dataset mapping "
+                f"for assessmentRevision = {assessment_revision} "
+                f"and assessmentIdentifier = {assessment_id}.")
+        return None
+    dataset_identifier = dataset_identifier_mapping[file_name]
+    return dataset_identifier
 
 def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
         archive_map, schema_mapping):
@@ -112,36 +130,28 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
         contents = z.namelist()
         logger.debug(f'contents: {contents}')
         for json_path in z.namelist():
+            file_name = os.path.basename(json_path)
             json_schema = get_json_schema(
                     archive_map=archive_map,
                     assessment_id=s3_obj_metadata["assessmentid"],
                     assessment_revision=s3_obj_metadata["assessmentrevision"],
-                    file_name=json_path)
+                    file_name=file_name)
             if json_schema is None:
                 logger.info("Did not find a JSON schema in archive-map.json for "
                             f"assessmentId = {s3_obj_metadata['assessmentid']}, "
                             f"assessmentRevision = {s3_obj_metadata['assessmentrevision']}, "
                             f"file = {json_path}")
-                dataset_identifier_mapping = get_dataset_identifier_mapping(
+                dataset_identifier = get_dataset_identifier(
                         assessment_id=s3_obj_metadata["assessmentid"],
                         assessment_revision=s3_obj_metadata["assessmentrevision"],
+                        file_name=file_name,
                         dataset_mapping=dataset_mapping,
                         record_id=s3_obj_metadata["recordid"])
-                if dataset_identifier_mapping is None:
-                    return
-                file_name = os.path.basename(json_path)
-                if file_name in dataset_identifier_mapping:
-                    dataset_identifier = dataset_identifier_mapping[file_name]
-                else:
-                    logger.warning(
-                            f"Skipping {json_path} in {s3_obj_metadata['recordid']} "
-                            f"because {file_name} was not found in the dataset mapping "
-                            f"for assessmentRevision = {s3_obj_metadata['assessmentrevision']} "
-                            f"and assessmentIdentifier = {s3_obj_metadata['assessmentIdentifier']}.")
+                if dataset_identifier is None:
                     continue
             else:
-                logger.info("Using schema mapping.")
                 dataset_identifier = schema_mapping[json_schema["$id"]]
+            logger.info(f"Writing {file_name} to dataset {dataset_identifier}")
             data_type = dataset_identifier.split("_")[0]
             os.makedirs(dataset_identifier, exist_ok=True)
             with z.open(json_path, "r") as p:
