@@ -1,6 +1,7 @@
 '''
 This script creates a Synapse project if that project does not yet exist,
-executes a query over a raw data folder, adds all items from that query
+executes a query over a raw data folder, samples one of each assessment
+revision for both iOS and Android platforms from that query, adds those records
 to a (potentially preexisting) namespaced dataset if the items are not
 already present, and creates a stable version (snapshot) of the dataset
 if any new items were added, otherwise no snapshot is created.
@@ -11,28 +12,32 @@ normally be a file view's Synapse ID in the FROM clause with the Synapse ID
 of the bridge raw data folder, which contains production data from Bridge.
 The default behavior of this script is to
 take the first instance of each assessment revision for each assessment
-from `syn26253352`, which contains all MTB data from across all studies.
-Hence, the default behavior of this script is to curate a dataset that
-is representative of every collection of data which we might encounter
-from the MTB app.
+(for each osName/appVersion, i.e., each build on each platform iPhone OS
+or Android) from `syn26253352`, which contains all MTB data from across
+all studies. Hence, the default behavior of this script is to curate a
+dataset that is representative of any data which we might
+encounter from the MTB app.
 '''
 import argparse
 import json
 import logging
+import re
 import sys
 import uuid
 
 import boto3
+import pandas
 import synapseclient
 from synapseformation import client as synapseformation_client
 
 PROJECT_NAME = 'BridgeDownstreamTest'
 DEFAULT_QUERY = (
-        "SELECT * FROM {source_table} WHERE "
-        "assessmentId IS NOT NULL AND "
-        "assessmentRevision IS NOT NULL "
-        "GROUP BY assessmentId, assessmentRevision "
-        "ORDER BY exportedOn")
+    "SELECT * FROM {source_table} WHERE "
+    "assessmentId IS NOT NULL AND "
+    "assessmentRevision IS NOT NULL AND "
+    "clientInfo IS NOT NULL "
+    "ORDER BY exportedOn"
+    )
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -48,7 +53,7 @@ def read_args():
         "Optional. Synapse ID of the Bridge Raw Data folder "
         "to query for test data. Defaults to syn26253352, which "
         "contains MTB data from across all studies."),
-        default="syn26253352")
+      default="syn26253352")
   parser.add_argument(
       "--raw-data-query",
       help=(
@@ -71,8 +76,8 @@ def get_synapse_client(ssm_parameter):
   '''Get an instance of the synapse client'''
   ssm_client = boto3.client('ssm')
   token = ssm_client.get_parameter(
-    Name=ssm_parameter,
-    WithDecryption=True)
+      Name=ssm_parameter,
+      WithDecryption=True)
   syn = synapseclient.Synapse()
   synapse_auth_token = token['Parameter']['Value']
   syn.login(authToken=synapse_auth_token, silent=True)
@@ -84,11 +89,11 @@ def get_project_id(syn, principal_id):
   logger.info(f'Getting Synapse project id for {PROJECT_NAME}')
   projects = syn.restGET(f'/projects/user/{principal_id}')
   BridgeDownstreamTest = next(
-    filter(
-      lambda x: x['name'] == PROJECT_NAME,
-      projects.get('results')
-      ),
-    None)
+      filter(
+        lambda x: x['name'] == PROJECT_NAME,
+        projects.get('results')
+        ),
+      None)
   return '' if BridgeDownstreamTest is None else BridgeDownstreamTest.get('id')
 
 
@@ -114,6 +119,7 @@ class TempFileView():
     self.syn = syn
     self.parent = parent
     self.scope = scope
+    self.view = None
 
   def __enter__(self):
     # create file view
@@ -129,13 +135,15 @@ class TempFileView():
   def __exit__(self, type, value, traceback):
     self.syn.delete(self.view["id"])
 
-  def get_dataset_items(self, query_str):
+  def as_data_frame(self, query_str, as_dataset_items=False):
     q = self.syn.tableQuery(query_str.format(source_table = self.view["id"]))
     df = q.asDataFrame()
-    dataset_items = [
-        {"entityId": i, "versionNumber": v}
-        for i, v in zip(df["id"], df["currentVersion"])]
-    return dataset_items
+    if as_dataset_items:
+      dataset_items = [
+          {"entityId": i, "versionNumber": v}
+          for i, v in zip(df["id"], df["currentVersion"])]
+      return dataset_items
+    return df
 
 
 def snapshot_stable_dataset_version(syn, dataset, query_info):
@@ -188,25 +196,83 @@ def create_or_update_dataset(
       return dataset
   # Did not find pre-existing dataset
   dataset = syn.restPOST(
-          "/entity",
-          body=json.dumps({
-            "name": dataset_name,
-            "parentId": parent_project,
-            "concreteType": "org.sagebionetworks.repo.model.table.Dataset",
-            "columnIds": column_ids,
-            "items": dataset_items})
-          )
+      "/entity",
+      body=json.dumps({
+        "name": dataset_name,
+        "parentId": parent_project,
+        "concreteType": "org.sagebionetworks.repo.model.table.Dataset",
+        "columnIds": column_ids,
+        "items": dataset_items})
+      )
   snapshot_stable_dataset_version(
       syn=syn,
       dataset=dataset,
       query_info=query_info)
   return dataset
 
+def parse_client_info_metadata(client_info_str):
+  '''Return a dict with appVersion and osName whether clientInfo uses the old
+  or new (JSON) format.'''
+  try:
+    client_info = json.loads(client_info_str)
+    if not ("appVersion" in client_info and "osName" in client_info):
+      client_info = {
+          "appVersion": None,
+          "osName": None
+          }
+  except json.JSONDecodeError:
+    app_version_pattern = re.compile(r"appVersion=[^,]+")
+    os_name_pattern = re.compile(r"osName=[^,]+")
+    app_version_search = re.search(app_version_pattern, client_info_str)
+    os_name_search = re.search(os_name_pattern, client_info_str)
+    if app_version_search is None:
+      app_version = None
+      print(client_info_str)
+    else:
+      try:
+        app_version = int(app_version_search.group().split("=")[1])
+      except ValueError:
+        app_version = None
+    if os_name_search is None:
+      os_name = None
+      print(client_info_str)
+    else:
+      os_name = os_name_search.group().split("=")[1]
+    client_info = {
+        "appVersion": app_version,
+        "osName": os_name}
+    return client_info
+
+def sample_assessment_revisions(df):
+  '''Sample first instance of iPhone OS and Android for each assessment revision'''
+  parsed_client_info = df.clientInfo.apply(parse_client_info_metadata)
+  client_info_df = pandas.DataFrame({
+    "appVersion": parsed_client_info.apply(lambda c : c["appVersion"] if c is not None else c),
+    "osName": parsed_client_info.apply(lambda c : c["osName"] if c is not None else c)
+    })
+  df = (
+      df
+      .join(client_info_df)
+      .dropna(subset=["appVersion", "osName"])
+      )
+  df.loc[:,"appVersion"] = df.loc[:,"appVersion"].astype(int)
+  df = (
+      df
+      .sort_values("exportedOn")
+      .drop_duplicates(
+        subset=["assessmentId", "assessmentRevision", "osName", "appVersion"])
+      .query("osName == 'Android' | osName == 'iPhone OS'")
+      )
+  dataset_items = [
+      {"entityId": i, "versionNumber": v}
+      for i, v in zip(df["id"], df["currentVersion"])]
+  return dataset_items
 
 def curate_test_dataset(syn, parent_project, raw_data_folder, query_str, namespace):
   '''Curates a test dataset by querying for dataset items over a raw data folder'''
   with TempFileView(syn, parent_project, raw_data_folder) as v:
-    dataset_items = v.get_dataset_items(query_str)
+    df = v.as_data_frame(query_str)
+    dataset_items = sample_assessment_revisions(df=df)
     query_info = {"query": query_str.format(source_table = raw_data_folder)}
     dataset = create_or_update_dataset(
         syn=syn,
@@ -216,7 +282,6 @@ def curate_test_dataset(syn, parent_project, raw_data_folder, query_str, namespa
         dataset_items=dataset_items,
         query_info=query_info)
     return dataset
-
 
 def main():
   logger.info('Begin setting up test data.')
