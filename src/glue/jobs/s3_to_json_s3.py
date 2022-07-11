@@ -134,7 +134,7 @@ def process_record(s3_obj, s3_obj_metadata, dataset_mapping,
             json_schema = get_json_schema(
                     archive_map=archive_map,
                     assessment_id=s3_obj_metadata["assessmentid"],
-                    assessment_revision=s3_obj_metadata["assessmentrevision"],
+                    assessment_revision=int(s3_obj_metadata["assessmentrevision"]),
                     file_name=file_name)
             if json_schema is None:
                 logger.info("Did not find a JSON schema in archive-map.json for "
