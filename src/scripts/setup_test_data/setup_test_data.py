@@ -1,16 +1,17 @@
 '''
 This script creates a Synapse project if that project does not yet exist,
 executes a query over a raw data folder, samples one of each assessment
-revision for both iOS and Android platforms from that query, adds those records
-to a (potentially preexisting) namespaced dataset if the items are not
-already present, and creates a stable version (snapshot) of the dataset
-if any new items were added, otherwise no snapshot is created.
+revision for any app build (iOS and Android) which produced that revision
+from the query, adds those records to a (potentially preexisting) namespaced
+dataset if the items are not already present, and creates a stable version
+(snapshot) of the dataset if any new items were added, otherwise no snapshot
+is created.
 
-This script will write the "psuedo" query which curated the dataset to the
-dataset's snapshot comment. This "psuedo" query replaces what would
-normally be a file view's Synapse ID in the FROM clause with the Synapse ID
-of the bridge raw data folder, which contains production data from Bridge.
-The default behavior of this script is to
+This script will write the "psuedo" query which was used to initially query
+the data from Synapse to the dataset's snapshot comment. This "psuedo" query
+replaces what would normally be a file view's Synapse ID in the FROM clause
+with the Synapse ID of the bridge raw data folder, which contains production
+data from Bridge. The default behavior of this script is to
 take the first instance of each assessment revision for each assessment
 (for each osName/appVersion, i.e., each build on each platform iPhone OS
 or Android) from `syn26253352`, which contains all MTB data from across
