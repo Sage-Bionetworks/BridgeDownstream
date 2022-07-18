@@ -1,11 +1,7 @@
 standard:
-  - answers_v1
-  - info_v1
-  - metadata_v1
-  - taskdata_v1
-  - taskresult_v1
-  - weather_v1
+  - ArchiveMetadata_v1
+  - sharedSchema_v1
+  - WeatherResult_v1
 array_of_records:
-  - microphone_levels_v1
-  - microphone_v1
-  - motion_v1
+  - AudioLevelRecord_v1
+  - MotionRecord_v1

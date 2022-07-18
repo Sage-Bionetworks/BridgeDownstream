@@ -1,65 +1,5 @@
 tables:
-  answers_v1:
-    columns:
-      - Name: distractions
-        Type: boolean
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: int
-      - Name: month
-        Type: int
-      - Name: day
-        Type: int
-      - Name: recordid
-        Type: string
-    partition_keys:
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: string
-      - Name: month
-        Type: string
-      - Name: day
-        Type: string
-  info_v1:
-    columns:
-      - Name: format
-        Type: string
-      - Name: appversion
-        Type: string
-      - Name: appname
-        Type: string
-      - Name: datafilename
-        Type: string
-      - Name: schemarevision
-        Type: int
-      - Name: phoneinfo
-        Type: string
-      - Name: files
-        Type: array<struct<contentType:string,createdOn:double,filename:string,timestamp:string>>
-      - Name: item
-        Type: string
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: int
-      - Name: month
-        Type: int
-      - Name: day
-        Type: int
-      - Name: recordid
-        Type: string
-    partition_keys:
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: string
-      - Name: month
-        Type: string
-      - Name: day
-        Type: string
-  metadata_v1:
+  ArchiveMetadata_v1:
     columns:
       - Name: deviceinfo
         Type: string
@@ -162,7 +102,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  microphone_levels_v1:
+  AudioLevelRecord_v1:
     columns:
       - Name: uptime
         Type: double
@@ -197,42 +137,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  microphone_v1:
-    columns:
-      - Name: uptime
-        Type: double
-      - Name: unit
-        Type: string
-      - Name: peak
-        Type: double
-      - Name: average
-        Type: double
-      - Name: steppath
-        Type: string
-      - Name: timeinterval
-        Type: int
-      - Name: timestamp
-        Type: double
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: int
-      - Name: month
-        Type: int
-      - Name: day
-        Type: int
-      - Name: recordid
-        Type: string
-    partition_keys:
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: string
-      - Name: month
-        Type: string
-      - Name: day
-        Type: string
-  motion_v1:
+  MotionRecord_v1:
     columns:
       - Name: uptime
         Type: double
@@ -269,7 +174,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  taskdata_v1:
+  sharedSchema_v1:
     columns:
       - Name: taskrunuuid
         Type: string
@@ -320,52 +225,7 @@ tables:
         Type: string
       - Name: day
         Type: string
-  taskresult_v1:
-    columns:
-      - Name: stephistory
-        Type: >-
-          array<struct<wasInterrupted:boolean,interactions:array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:int,stepGroup:string,score:int,responseTime:int,asyncResults:array<struct<taskRunUUID:string,schemaIdentifier:string,testVersion:string,stepHistory:array<struct<instruction:boolean,wasInterrupted:boolean,startDate:string,type:string,identifier:string,endDate:string,response:string,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string,practice:boolean,section:string,didTimeout:boolean,parentStepIdentifier:string,sequenceNumber:int,exactMatchScoreName:string,adjacentPairScoreName:string,se:double,theta:double>>,locale:string,endDate:string,scores:struct<nAnticipationLive:int,rawScore:int,accuracy:double,nAnticipationPractice:int,totalErrors:int,rateScore:double,fsbScore:int,fnmScore:int,fnlScore:int,timeout:string,exactMatch2:int,adjacentPairs2:int,exactMatch1:int,adjacentPairs1:int,practiceSuccess:int,finalTheta:double,startSE:int,finalSE:double,startTheta:int,itemCount:int>,taskStatus:array<string>,startDate:string,taskName:string,userInteractions:array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,value:string,parent:string>>,steps:array<struct<wasInterrupted:boolean,position:int,endDate:string,startDate:string,identifier:string,type:string,instruction:boolean,response:string,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string,practice:boolean,section:string,didTimeout:boolean,sequenceNumber:int,parentStepIdentifier:string,exactMatchScoreName:string,adjacentPairScoreName:string,se:double,theta:double>>,consideredSteps:array<struct<randomNumber:double,identifier:string,exposure:double,administered:boolean>>>>,stepHistory:array<struct<wasInterrupted:boolean,interactions:array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,value:string,parent:string>>,startDate:string,endDate:string,identifier:string,type:string,instruction:boolean,response:string,score:int,failRuleSection:string,responseTime:int,anticipationError:int,stepGroup:string,practice:boolean,section:string,didTimeout:boolean,sequenceNumber:int,parentStepIdentifier:string,skipToIdentifier:string,exactMatchScoreName:string,adjacentPairScoreName:string,se:double,theta:double>>,taskRunUUID:string,versionString:string,nodePath:array<string>,assessmentIdentifier:string,schemaIdentifier:string>>
-      - Name: enddate
-        Type: string
-      - Name: startdate
-        Type: string
-      - Name: taskrunuuid
-        Type: string
-      - Name: identifier
-        Type: string
-      - Name: versionstring
-        Type: string
-      - Name: type
-        Type: string
-      - Name: nodepath
-        Type: array<string>
-      - Name: assessmentidentifier
-        Type: string
-      - Name: schemaidentifier
-        Type: string
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: int
-      - Name: month
-        Type: int
-      - Name: day
-        Type: int
-      - Name: recordid
-        Type: string
-      - Name: asyncresults
-        Type: >-
-          array<struct<locale:string,scores:struct<proportionCorrect:double,rawScore:int>,endDate:string,startDate:string,steps:array<struct<wasInterrupted:boolean,position:int,endDate:string,startDate:string,identifier:string,type:string,instruction:boolean,response:int,stepGroup:string,score:int,responseTime:int>>,taskName:string,userInteractions:array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string>>,testVersion:string,stepHistory:array<struct<instruction:boolean,wasInterrupted:boolean,startDate:string,type:string,identifier:string,endDate:string,response:int,stepGroup:string,score:int,responseTime:int>>,taskStatus:array<string>,schemaIdentifier:string,weather:struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int>,seaLevelPressure:int,temperature:double,identifier:string,type:string>,type:string,identifier:string,contentType:string,startUptime:double,relativePath:string,airQuality:struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>>>
-    partition_keys:
-      - Name: assessmentid
-        Type: string
-      - Name: year
-        Type: string
-      - Name: month
-        Type: string
-      - Name: day
-        Type: string
-  weather_v1:
+  WeatherResult_v1:
     columns:
       - Name: weather
         Type: struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int>,seaLevelPressure:int,temperature:double,identifier:string,type:string>
