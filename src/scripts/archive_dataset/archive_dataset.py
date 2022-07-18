@@ -23,15 +23,15 @@ of `dataset_metadata`) are created. For ease of use with the typical
 use case, descendent datasets are archived when passing the root
 dataset to `--dataset`. For example, passing `--dataset=dataset_metadata`
 and `--dataset-version=v2` will archive both `dataset_metadata_v2` and
-`dataset_metadata_files_v2`.
+`dataset_metadata_v2_files`.
 
 Archive updates are tracked at the root dataset level.
 For example, if a struct `folders` is added to the `metadata_v2`
 JSON dataset in that dataset's second compatible schema update, then
 the next time a compatible schema update occurs the third archive
 operation will also occur. Although this is the first time that the
-`metadata_folders_v2` dataset will be archived, its archive will be
-named `metadata_folders_v2_3`.
+`metadata_v2_folders` dataset will be archived, its archive will be
+named `metadata_v2_folders_3`.
 """
 import argparse
 import os
@@ -78,7 +78,7 @@ def get_source_and_dest_prefix(s3_client, bucket, app, dataset, dataset_version)
     source_and_dest = dict()
     study_prefix_obj = s3_client.list_objects_v2(
             Bucket=bucket,
-            Prefix=f"{app}/",
+            Prefix=f"bridge-downstream/{app}/",
             Delimiter="/")
     study_prefixes = [cp["Prefix"] for cp in study_prefix_obj["CommonPrefixes"]]
     for study_prefix in study_prefixes:
@@ -101,19 +101,14 @@ def get_source_and_dest_prefix(s3_client, bucket, app, dataset, dataset_version)
                     "s3://",
                     bucket,
                     descendent_dataset_prefix)
-            descendent_dataset = "_".join(
-                    descendent_dataset_prefix
-                    .split("/")[-2]
-                    .split("_")[:-1])
+            descendent_dataset = descendent_dataset_prefix.split("/")[-2]
             archive_dataset_name = "_".join([
                     descendent_dataset,
-                    dataset_version,
                     str(latest_archive_dataset_update+1)])
             dest_path = os.path.join(
                     "s3://",
                     bucket,
-                    study_prefix,
-                    "parquet",
+                    parquet_prefix,
                     "archive",
                     archive_dataset_name)
             source_and_dest[source_path] = dest_path

@@ -130,6 +130,7 @@ def get_json_schema(archive_map, file_metadata):
     Returns:
         dict: A JSON Schema, if it exists. Otherwise returns None.
     """
+    file_metadata["assessment_revision"] = int(file_metadata["assessment_revision"])
     # First check universally used files
     for file in archive_map["anyOf"]:
         json_schema = get_schema_from_file_info(
