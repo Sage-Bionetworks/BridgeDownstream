@@ -18,7 +18,7 @@ tables:
       - Name: assessmentid
         Type: string
       - Name: assessmentrevision
-        Type: string
+        Type: int
       - Name: taskidentifier
         Type: string
       - Name: activitylabel
@@ -34,7 +34,7 @@ tables:
       - Name: datagroups
         Type: string
       - Name: files
-        Type: array<struct<filename:string,timestamp:string,contentType:string,identifier:string,stepPath:string>>
+        Type: array<struct<filename:string,timestamp:string,contentType:string,identifier:string,stepPath:string,jsonSchema:string,metadata:string>>
       - Name: appname
         Type: string
       - Name: appversion
@@ -60,13 +60,13 @@ tables:
       - Name: eventtimestamp
         Type: string
       - Name: sessioninstancestartday
-        Type: string
+        Type: int
       - Name: sessioninstanceendday
-        Type: string
+        Type: int
       - Name: session
         Type: string
       - Name: participantversion
-        Type: string
+        Type: int
       - Name: createdon
         Type: string
       - Name: uploadedon
@@ -115,9 +115,11 @@ tables:
       - Name: steppath
         Type: string
       - Name: timeinterval
-        Type: int
+        Type: double
       - Name: timestamp
         Type: double
+      - Name: timestampdate
+        Type: string
       - Name: assessmentid
         Type: string
       - Name: year
@@ -143,10 +145,26 @@ tables:
         Type: double
       - Name: timestamp
         Type: double
-      - Name: timestampdate
-        Type: string
       - Name: steppath
         Type: string
+      - Name: timestampdate
+        Type: string
+      - Name: sensortype
+        Type: string
+      - Name: eventaccuracy
+        Type: int
+      - Name: referencecoordinate
+        Type: string
+      - Name: heading
+        Type: double
+      - Name: x
+        Type: double
+      - Name: y
+        Type: double
+      - Name: z
+        Type: double
+      - Name: w
+        Type: double
       - Name: assessmentid
         Type: string
       - Name: year
@@ -157,14 +175,6 @@ tables:
         Type: int
       - Name: recordid
         Type: string
-      - Name: x
-        Type: double
-      - Name: y
-        Type: double
-      - Name: sensortype
-        Type: string
-      - Name: z
-        Type: double
     partition_keys:
       - Name: assessmentid
         Type: string
@@ -186,7 +196,7 @@ tables:
         Type: string
       - Name: stephistory
         Type: >-
-          array<struct<instruction:boolean,wasInterrupted:boolean,startDate:string,type:string,identifier:string,endDate:string,response:string,score:int,position:int,failRuleSection:string,responseTime:int,stepGroup:string,anticipationError:int,section:string,parentStepIdentifier:string,sequenceNumber:int,exactMatchScoreName:string,adjacentPairScoreName:string,didTimeout:string,se:double,theta:double,practice:boolean>>
+          array<struct<instruction:boolean,wasInterrupted:boolean,startDate:string,type:string,identifier:string,endDate:string,response:string,score:int,position:int,failRuleSection:string,responseTime:int,stepGroup:string,anticipationError:int,section:string,parentStepIdentifier:string,sequenceNumber:int,exactMatchScoreName:string,adjacentPairScoreName:string,didTimeout:boolean,se:double,theta:double,practice:boolean>>
       - Name: locale
         Type: string
       - Name: enddate
@@ -200,7 +210,7 @@ tables:
       - Name: taskname
         Type: string
       - Name: userinteractions
-        Type: array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,value:string,parent:string>>
+        Type: array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,value:string,parent:string,parentStepIdentifier:string,responseTime:int>>
       - Name: steps
         Type: >-
           array<struct<wasInterrupted:boolean,position:int,endDate:string,startDate:string,identifier:string,type:string,instruction:boolean,response:string,stepGroup:string,score:int,responseTime:int,practice:boolean,failRuleSection:string,anticipationError:int,section:string,parentStepIdentifier:string,sequenceNumber:int,exactMatchScoreName:string,adjacentPairScoreName:string,didTimeout:boolean,se:double,theta:double>>
@@ -215,7 +225,7 @@ tables:
       - Name: recordid
         Type: string
       - Name: consideredsteps
-        Type: array<struct<randomNumber:double,identifier:string,exposure:double,administered:boolean>>
+        Type: array<struct<stepIdentifier:string,randomNumber:double,exposure:double,administered:boolean>>
     partition_keys:
       - Name: assessmentid
         Type: string
@@ -228,7 +238,9 @@ tables:
   WeatherResult_v1:
     columns:
       - Name: weather
-        Type: struct<clouds:int,humidity:int,provider:string,startDate:string,wind:struct<speed:double,degrees:int>,seaLevelPressure:int,temperature:double,identifier:string,type:string>
+        Type: struct<clouds:double,humidity:double,provider:string,startDate:string,wind:struct<speed:double,degrees:double,gust:double>,rain:struct<pastHour:double,pastThreeHours:double>,snow:struct<pastHour:double,pastThreeHours:double>,seaLevelPressure:double,groundLevelPressure:double,temperature:double,identifier:string,type:string>
+      - Name: airquality
+        Type: struct<category:struct<number:double,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:double>
       - Name: startdate
         Type: string
       - Name: type
@@ -247,8 +259,6 @@ tables:
         Type: int
       - Name: recordid
         Type: string
-      - Name: airquality
-        Type: struct<category:struct<number:int,name:string>,provider:string,startDate:string,type:string,identifier:string,aqi:int>
     partition_keys:
       - Name: assessmentid
         Type: string
