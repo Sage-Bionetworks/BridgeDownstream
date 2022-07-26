@@ -142,7 +142,7 @@ def get_json_schema(archive_map, file_metadata):
         if app["appId"] == "mobile-toolbox":
             is_valid_assessment = any([
                     a["assessmentIdentifier"] == file_metadata["assessment_id"]
-                    and a["assessmentRevision"] == file_metadata["assessment_revision"]
+                    and str(a["assessmentRevision"]) == file_metadata["assessment_revision"]
                     for a in app["assessments"]])
             if is_valid_assessment:
                 if "default" in app and "files" in app["default"]:
@@ -163,7 +163,7 @@ def get_json_schema(archive_map, file_metadata):
     for assessment in archive_map["assessments"]:
         if (
                 assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
-                and assessment["assessmentRevision"] == file_metadata["assessment_revision"]
+                and str(assessment["assessmentRevision"]) == file_metadata["assessment_revision"]
            ):
             for file in assessment["files"]:
                 json_schema = get_schema_from_file_info(
