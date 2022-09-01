@@ -13,12 +13,35 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def get_archive_map(version):
+    """
+    Get a specific version of archive-map.json from
+    Sage-Bionetworks/mobile-client-json.
+
+    Args:
+        version (str): A release version of Sage-Bionetworks/mobile-client-json.
+
+    Returns (dict): A dict representation of archive-map.json.
+    """
     archive_map_url = f"https://raw.githubusercontent.com/Sage-Bionetworks/mobile-client-json/{version}/archive-map.json"
     r = requests.get(archive_map_url)
     return r.json()
 
 
 def parse_client_info_metadata(client_info_str):
+    """
+    Read a subset of client info metadata as a dict.
+
+    Currently appName is fixed "mobile-toolbox". See BRIDGE-3325.
+
+    Args:
+        client_info_str (str): The client info
+
+    Returns:
+        client_info (dict): Contains keys
+            * appVersion
+            * osName
+            * appName
+    """
     try:
         client_info = json.loads(client_info_str)
     except json.JSONDecodeError:
@@ -56,6 +79,24 @@ def validate_data(syn, message_parameters, archive_map, sts_tokens):
         not conform to the JSON Schema specified in archive-map.json.
 
     Otherwise, this record is valid.
+
+    Args:
+        syn (synapseclient.Synapse)
+        message_parameters (dict): A dictionary containing keys `source_bucket`,
+            `source_key`, and `raw_folder_id`.
+        archive_map (dict): The dict representation of archive-map.json.
+        sts_tokens (dict): A mapping from Synapse IDs to their respective STS
+            tokens (also a dict) containing AWS credentials that can be used
+            with `boto3.client`.
+
+    Returns:
+        validation_result (dict): A dictionary containing keys
+            * assessmendId (str)
+            * assessmentRevision (str)
+            * appId (str)
+            * recordId (str)
+            * errors (dict): mapping file names to their validation errors.
+                See `validate_against_schema` for format.
     """
     logger.info(f"Retrieving S3 object for Bucket {message_parameters['source_bucket']} "
                 f"and Key {message_parameters['source_key']}'")
@@ -110,7 +151,24 @@ def validate_data(syn, message_parameters, archive_map, sts_tokens):
 
 
 def get_json_schema(archive_map, file_name, app_id, assessment_id, assessment_revision):
-    result = {
+    """
+    Fetch the JSON Schema for a given JSON file.
+
+    Args:
+        archive_map (dict): The dict representation of archive-map.json.
+        file_name (str): The basename of the JSON file.
+        app_id (str): The Bridge app identifier.
+        assessment_id (str): The Bridge assessment ID.
+        assessment_revision (str): The Bridge assessment revision.
+
+    Returns:
+        json_schema_obj (dict): A dictionary with keys
+            * url (str)
+            * allowed_app_specific_files (bool)
+            * error (str)
+            * archive_map_version (str)
+    """
+    json_schema_obj = {
             "url": None,
             "allowed_app_specific_files": None,
             "error": None,
@@ -121,34 +179,45 @@ def get_json_schema(archive_map, file_name, app_id, assessment_id, assessment_re
                 and assessment["assessmentRevision"] == assessment_revision):
             for file in assessment["files"]:
                 if file["filename"] == file_name:
-                    result["url"] = file["jsonSchema"]
-                    return result
+                    json_schema_obj["url"] = file["jsonSchema"]
+                    return json_schema_obj
     for app in archive_map["apps"]:
         if app["appId"] == app_id:
             allowed_app_specific_files = any([
                     a["assessmentIdentifier"] == assessment_id
                     and a["assessmentRevision"] == assessment_revision
                     for a in app["assessments"]])
-            result["allowed_app_specific_files"] = allowed_app_specific_files
+            json_schema_obj["allowed_app_specific_files"] = allowed_app_specific_files
             if allowed_app_specific_files:
                 for default_file in app["default"]["files"]:
                     if default_file["filename"] == file_name:
-                        result["url"] = default_file["jsonSchema"]
+                        json_schema_obj["url"] = default_file["jsonSchema"]
                         break
                 for file in app["anyOf"]:
                     if file["filename"] == file_name:
-                        result["url"] = file["jsonSchema"]
+                        json_schema_obj["url"] = file["jsonSchema"]
                         break
-    if result["url"] is not None:
-        return result
+    if json_schema_obj["url"] is not None:
+        return json_schema_obj
     for file in archive_map["anyOf"]:
         if file["filename"] == file_name and "jsonSchema" in file:
-            result["url"] = file["jsonSchema"]
+            json_schema_obj["url"] = file["jsonSchema"]
             break
-    return result
+    return json_schema_obj
 
 
 def validate_against_schema(data, schema, base_uri):
+    """
+    Validate JSON data against a schema from a given base URI.
+
+    Args:
+        data (dict): JSON data
+        schema (dict): a JSON Schema
+        base_uri (str): The base URI from which to resolve JSON pointers against.
+
+    Returns:
+        all_errors (list): A list of validation errors
+    """
     ref_resolver = jsonschema.RefResolver(base_uri=base_uri, referrer=None)
     validator_cls = jsonschema.validators.validator_for(schema)
     validator = validator_cls(schema=schema, resolver=ref_resolver)
@@ -157,6 +226,19 @@ def validate_against_schema(data, schema, base_uri):
 
 
 def update_sts_tokens(syn, synapse_data_folder, sts_tokens):
+    """
+    Update a dict of STS tokens if that token does not yet exist.
+
+    Args:
+        syn (synapseclient.Synapse)
+        synapse_data_folder (str): Synapse ID of a folder containing Bridge data.
+        sts_tokens (dict): A mapping from Synapse IDs to their respective STS
+            tokens (also a dict) containing AWS credentials that can be used
+            with `boto3.client`.
+
+    Returns:
+        sts_tokens (dict)
+    """
     if synapse_data_folder not in sts_tokens:
         logger.debug(f"Did not find a cached STS token "
                      f"for {synapse_data_folder}. Getting and adding.")
@@ -172,6 +254,22 @@ def mark_as_invalid(validation_result, sqs_queue):
     pass
 
 def lambda_handler(event, context):
+    """
+    The Lambda entrypoint
+
+    Given an event list of Bridge records to be processed, validate the schema
+    of each file in the zipped archive. Records which pass validation and
+    associate with the same study will be submitted all at once to the same
+    Glue workflow. Records which do not pass validation will have their
+    metadata sent to an SQS queue.
+
+    Args:
+        event (dict): An SQS event
+        context (dict)
+
+    Returns:
+        (None) Submits validated records to a Glue workflow.
+    """
     namespace = os.environ.get('NAMESPACE')
     primary_aws_session = boto3.Session()
     glue_client = primary_aws_session.client("glue")
