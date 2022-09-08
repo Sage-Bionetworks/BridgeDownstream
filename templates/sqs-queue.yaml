@@ -4,13 +4,33 @@ Description: >
   Creates an SQS queue and corresponding dead-letter queue and
   subscribes that queue to an SNS topic
 
+Parameters:
+
+  MessageRetentionPeriod:
+    Type: Number
+    Default: 1209600
+    Description: How long to retain messages in the primary queue.
+
+  SubscribePrimaryToSNS:
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+    Description: Whether to subscribe the PrimaryQueue to an SNS topic
+
+Conditions:
+  SubscribeSNS: !Equals
+    - !Ref SubscribePrimaryToSNS
+    - 'true'
+
 Resources:
 
   PrimaryQueue:
     Type: AWS::SQS::Queue
     Properties:
       DelaySeconds: 0
-      MessageRetentionPeriod: 86400
+      MessageRetentionPeriod: !Ref MessageRetentionPeriod
       QueueName: !Sub '${AWS::StackName}-Queue'
       ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy:
@@ -31,6 +51,16 @@ Resources:
           Action:
           - SQS:*
           Resource: !GetAtt PrimaryQueue.Arn
+      Queues:
+      - !Ref PrimaryQueue
+
+  PrimaryQueueSNSPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Condition: SubscribeSNS
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
         - Sid: SNSSend
           Effect: Allow
           Principal:
@@ -72,9 +102,11 @@ Resources:
       - !Ref DeadLetterQueue
 
   SnsTopic:
+    Condition: SubscribeSNS
     Type: AWS::SNS::Topic
 
   SnsSubscription:
+    Condition: SubscribeSNS
     Type: AWS::SNS::Subscription
     Properties:
       Protocol: sqs
@@ -87,3 +119,8 @@ Outputs:
     Value: !GetAtt PrimaryQueue.Arn
     Export:
       Name: !Sub '${AWS::Region}-${AWS::StackName}-PrimaryQueueArn'
+
+  PrimaryQueueUrl:
+    Value: !Ref PrimaryQueue
+    Export:
+      Name: !Sub '${AWS::Region}-${AWS::StackName}-PrimaryQueueUrl'

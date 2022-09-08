@@ -116,6 +116,10 @@ Parameters:
     Type: String
     Description: GitHub version tag of archive-map.json to use
 
+  InvalidSQSQueueUrl:
+    Type: String
+    Description: URL of the SQS queue which we send invalid records to.
+
 Resources:
 
   SparkJob:
@@ -137,6 +141,7 @@ Resources:
         --dataset-mapping: !Ref DatasetMapping
         --schema-mapping: !Ref SchemaMapping
         --archive-map-version: !Ref ArchiveMapVersion
+        --invalid-sqs: !Ref InvalidSQSQueueUrl
         # --conf spark.sql.adaptive.enabled
       Description: !Ref JobDescription
       ExecutionProperty:

@@ -1,6 +1,9 @@
 template_path: glue-job-role.yaml
 stack_name: glue-job-role
+dependencies:
+  - prod/invalid-sqs-queue.yaml
 parameters:
   SsmParameterName: {{ stack_group_config.synapseAuthSsmParameterName }}
+  InvalidSQSQueueArn: !stack_output_external '{{ stack_group_config.namespace }}-invalid-sqs::PrimaryQueueArn'
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

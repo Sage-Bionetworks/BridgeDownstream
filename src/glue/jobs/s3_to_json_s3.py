@@ -42,7 +42,8 @@ args = getResolvedOptions(
          "ssm-parameter-name",
          "dataset-mapping",
          "schema-mapping",
-         "archive-map-version"])
+         "archive-map-version",
+         "invalid-sqs"])
 workflow_run_properties = glue_client.get_workflow_run_properties(
         Name=args["WORKFLOW_NAME"],
         RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
@@ -581,12 +582,16 @@ def main():
                 dataset_mapping=dataset_mapping
         )
         if len(validation_result["errors"]) > 0:
+            for file_name in validation_result["errors"]:
+                # limit 10 errors reported per file to avoid redundandant errors
+                validation_result["errors"][file_name] = \
+                        validation_result["errors"][file_name][:10]
             message["validation_result"] = validation_result
             logger.warning(f"Failed validation: {json.dumps(message)}")
-            #sqs_client.send_message(
-            #        QueueUrl=workflow_run_properties["invalid_sqs"],
-            #        MessageBody=json.dumps(message)
-            #)
+            sqs_client.send_message(
+                    QueueUrl=args["invalid_sqs"],
+                    MessageBody=json.dumps(message)
+            )
         else:
             process_record(
                     s3_obj=s3_obj,

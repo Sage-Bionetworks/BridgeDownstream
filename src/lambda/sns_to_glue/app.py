@@ -11,18 +11,15 @@ def lambda_handler(event, context):
     """
     The Lambda entrypoint
 
-    Given an event list of Bridge records to be processed, validate the schema
-    of each file in the zipped archive. Records which pass validation and
-    associate with the same study will be submitted all at once to the same
-    Glue workflow. Records which do not pass validation will have their
-    metadata sent to an SQS queue.
+    Given an event list of Bridge records to be processed, submit those records
+    which associate with the same study to the same Glue workflow.
 
     Args:
         event (dict): An SQS event
         context (dict)
 
     Returns:
-        (None) Submits validated records to a Glue workflow.
+        (None) Submits new records to a Glue workflow.
     """
     namespace = os.environ.get('NAMESPACE')
     glue_client = boto3.client("glue")
