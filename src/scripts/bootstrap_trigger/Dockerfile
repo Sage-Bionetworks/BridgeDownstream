@@ -1,4 +1,4 @@
-FROM python:3.9.10-slim-bullseye
+FROM python:3.10.6-slim-bullseye
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install git -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install boto3==1.16.33 pandas==1.1.5 synapseclient==2.5.1 pyarrow==4.0.0
