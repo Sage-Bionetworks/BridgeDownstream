@@ -1,4 +1,7 @@
 template_path: sqs-queue.yaml
+parameters:
+  MessageRetentionPeriod: '86400'
+  SubscribePrimaryToSNS: 'true'
 stack_name: '{{ stack_group_config.namespace }}-sqs-SNSToLambda'
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

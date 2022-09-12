@@ -1,13 +1,26 @@
-import boto3
 import json
 import logging
 import os
+import boto3
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
+    """
+    The Lambda entrypoint
+
+    Given an event list of Bridge records to be processed, submit those records
+    which associate with the same study to the same Glue workflow.
+
+    Args:
+        event (dict): An SQS event
+        context (dict)
+
+    Returns:
+        (None) Submits new records to a Glue workflow.
+    """
     namespace = os.environ.get('NAMESPACE')
     glue_client = boto3.client("glue")
     messages = {} # indexed by app and study
