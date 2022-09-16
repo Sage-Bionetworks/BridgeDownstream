@@ -25,28 +25,6 @@ import synapseclient
 from awsglue.utils import getResolvedOptions
 
 
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-glue_client = boto3.client("glue")
-s3_client = boto3.client("s3")
-ssm_client = boto3.client("ssm")
-sqs_client = boto3.client("sqs")
-synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
-
-args = getResolvedOptions(
-        sys.argv,
-        ["WORKFLOW_NAME",
-         "WORKFLOW_RUN_ID",
-         "ssm-parameter-name",
-         "dataset-mapping",
-         "schema-mapping",
-         "archive-map-version",
-         "invalid-sqs"])
-workflow_run_properties = glue_client.get_workflow_run_properties(
-        Name=args["WORKFLOW_NAME"],
-        RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
 
 def get_data_mapping(data_mapping_uri):
     """
@@ -58,6 +36,8 @@ def get_data_mapping(data_mapping_uri):
     Returns:
         dict: A mapping to dataset identifiers.
     """
+    s3_client = boto3.client("s3")
+    logger = logging.getLogger(__name__)
     data_mapping_location = urlparse(data_mapping_uri)
     data_mapping_bucket = data_mapping_location.netloc
     data_mapping_key = data_mapping_location.path[1:]
@@ -88,6 +68,7 @@ def update_sts_tokens(syn, synapse_data_folder, sts_tokens):
     Returns:
         sts_tokens (dict)
     """
+    logger = logging.getLogger(__name__)
     if synapse_data_folder not in sts_tokens:
         logger.debug(f"Did not find a cached STS token "
                      f"for {synapse_data_folder}. Getting and adding.")
@@ -166,6 +147,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
             * assessment_revision,
             * file_name
             * app_id
+        json_schemas (list): A list of cached results from this function
 
     Returns:
         json_schema (dict): A dictionary with keys
@@ -278,6 +260,7 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
             * errors (dict): mapping file names to their validation errors.
                 See `validate_against_schema` for format.
     """
+    logger = logging.getLogger(__name__)
     assessment_id = s3_obj["Metadata"]["assessmentid"]
     assessment_revision = int(s3_obj["Metadata"]["assessmentrevision"])
     # Currently app_id is fixed "mobile-toolbox". See BRIDGE-3325 / ETL-231.
@@ -365,6 +348,7 @@ def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_me
     Returns:
         str: The dataset identifier if it exists, otherwise returns None.
     """
+    logger = logging.getLogger(__name__)
     if (
             json_schema is not None
             and "$id" in json_schema
@@ -397,7 +381,8 @@ def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_me
     dataset_identifier = dataset_identifier_mapping[file_metadata["file_name"]]
     return dataset_identifier
 
-def write_file_to_json_dataset(z, json_path, dataset_identifier, s3_obj_metadata):
+def write_file_to_json_dataset(z, json_path, dataset_identifier,
+        s3_obj_metadata, workflow_run_properties):
     """
     Write a JSON from a zipfile to a JSON dataset.
 
@@ -420,10 +405,13 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier, s3_obj_metadata
         json_path (str): A path relative to the root of `z` to a JSON file.
         dataset_identifier (str): A BridgeDownstream dataset identifier.
         s3_obj_metadata (dict): A dictionary of S3 object metadata.
+        workflow_run_properties (dict): The workflow arguments
 
     Returns:
         None
     """
+    s3_client = boto3.client("s3")
+    logger = logging.getLogger(__name__)
     schema_identifier = dataset_identifier.split("_")[0]
     uploaded_on = datetime.strptime(
             s3_obj_metadata["uploadedon"],
@@ -476,7 +464,8 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier, s3_obj_metadata
                     Metadata = s3_obj_metadata)
             logger.debug(f"put object response: {json.dumps(response)}")
 
-def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping, archive_map):
+def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping,
+        archive_map, workflow_run_properties):
     """
     Write the contents of a .zip archive stored on S3 to their respective JSON dataset.
 
@@ -497,10 +486,12 @@ def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping, archiv
         schema_mapping (dict): A mapping from JSON schema $id to dataset identifiers.
         archive_map (dict): The dict representation of archive-map.json from
             Sage-Bionetworks/mobile-client-json
+        workflow_run_properties (dict): The workflow arguments
 
     Returns:
         None
     """
+    logger = logging.getLogger(__name__)
     s3_obj_metadata = s3_obj["Metadata"]
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"])) as z:
         contents = z.namelist()
@@ -535,23 +526,57 @@ def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping, archiv
                     z=z,
                     json_path=json_path,
                     dataset_identifier=dataset_identifier,
-                    s3_obj_metadata=s3_obj_metadata)
+                    s3_obj_metadata=s3_obj_metadata,
+                    workflow_run_properties=workflow_run_properties)
 
 def main():
+    # Configure logger
+    logging.basicConfig()
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    # Instantiate boto clients
+    glue_client = boto3.client("glue")
+    ssm_client = boto3.client("ssm")
+    sqs_client = boto3.client("sqs")
+    synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
+
+    # Get job and workflow arguments
+    args = getResolvedOptions(
+            sys.argv,
+            ["WORKFLOW_NAME",
+             "WORKFLOW_RUN_ID",
+             "ssm-parameter-name",
+             "dataset-mapping",
+             "schema-mapping",
+             "archive-map-version",
+             "invalid-sqs"])
+    workflow_run_properties = glue_client.get_workflow_run_properties(
+            Name=args["WORKFLOW_NAME"],
+            RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
     logger.debug(f"getResolvedOptions: {json.dumps(args)}")
-    logger.info(f"Retrieving dataset mapping at {args['dataset_mapping']}")
+    logger.debug(f"get_workflow_run_properties: {json.dumps(workflow_run_properties)}")
+
+    # Get reference files
+    logger.info("Downloading reference files")
     dataset_mapping = get_data_mapping(
-            data_mapping_uri=args["dataset_mapping"])
+            data_mapping_uri=args["dataset_mapping"]
+    )
     schema_mapping = get_data_mapping(
-            data_mapping_uri=args["schema_mapping"])
+            data_mapping_uri=args["schema_mapping"]
+    )
     archive_map = get_archive_map(archive_map_version=args["archive_map_version"])
+
+    # Authenticate with Synapse
     logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
     synapse_auth_token = ssm_client.get_parameter(
               Name=args["ssm_parameter_name"],
               WithDecryption=True)
     syn = synapseclient.Synapse()
     syn.login(authToken=synapse_auth_token["Parameter"]["Value"], silent=True)
-    logger.info("Getting messages")
+
+    # Load messages to be processed
+    logger.info("Loading messages")
     messages = json.loads(workflow_run_properties["messages"])
     sts_tokens = {}
     json_schemas = []
@@ -598,7 +623,8 @@ def main():
                     json_schemas=json_schemas,
                     dataset_mapping=dataset_mapping,
                     schema_mapping=schema_mapping,
-                    archive_map=archive_map
+                    archive_map=archive_map,
+                    workflow_run_properties=workflow_run_properties
             )
 
 if __name__ == "__main__":
