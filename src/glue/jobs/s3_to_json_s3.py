@@ -144,19 +144,19 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
         archive_map (dict): The dict representation of archive-map.json.
         file_metadata (dict): A dict with keys
             * assessment_id (str)
-            * assessment_revision,
-            * file_name
-            * app_id
+            * assessment_revision (int),
+            * file_name (str)
+            * app_id (str)
         json_schemas (list): A list of cached results from this function
 
     Returns:
         json_schema (dict): A dictionary with keys
             * url (str)
             * schema (dict)
-            * app_id
-            * assessment_id
-            * assessment_revision
-            * file_name
+            * app_id (str)
+            * assessment_id (int)
+            * assessment_revision (int)
+            * file_name (str)
             * archive_map_version (str)
     """
     json_schema = {
