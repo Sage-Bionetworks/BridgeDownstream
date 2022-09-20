@@ -25,7 +25,6 @@ import synapseclient
 from awsglue.utils import getResolvedOptions
 
 
-
 def get_data_mapping(data_mapping_uri):
     """
     Get a mapping to dataset identifiers from S3.
@@ -109,7 +108,7 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
         json_schemas (list): A list of JSON Schema (dict).
     """
     assessment_id = s3_obj["Metadata"]["assessmentid"]
-    assessment_revision = int(s3_obj["Metadata"]["assessmentrevision"])
+    assessment_revision = s3_obj["Metadata"]["assessmentrevision"]
     # Currently app_id is fixed "mobile-toolbox". See BRIDGE-3325 / ETL-231.
     app_id = "mobile-toolbox"
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"])) as z:
@@ -135,7 +134,6 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
                 json_schemas.append(json_schema)
     return json_schemas
 
-
 def get_json_schema(archive_map, file_metadata, json_schemas):
     """
     Fetch the JSON Schema for a given JSON file.
@@ -144,7 +142,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
         archive_map (dict): The dict representation of archive-map.json.
         file_metadata (dict): A dict with keys
             * assessment_id (str)
-            * assessment_revision (int),
+            * assessment_revision (str or int),
             * file_name (str)
             * app_id (str)
         json_schemas (list): A list of cached results from this function
@@ -168,6 +166,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
             "file_name": file_metadata["file_name"],
             "archive_map_version": os.environ.get("archive_map_version")
     }
+    file_metadata["assessment_revision"] = int(file_metadata["assessment_revision"])
     for assessment in archive_map["assessments"]:
         if (assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
                 and assessment["assessmentRevision"] == file_metadata["assessment_revision"]):
@@ -253,7 +252,7 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
 
     Returns:
         validation_result (dict): A dictionary containing keys
-            * assessmendId (str)
+            * assessmentId (str)
             * assessmentRevision (str)
             * appId (str)
             * recordId (str)
@@ -266,7 +265,7 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
     # Currently app_id is fixed "mobile-toolbox". See BRIDGE-3325 / ETL-231.
     app_id = "mobile-toolbox"
     validation_result = {
-            "assessmendId": assessment_id,
+            "assessmentId": assessment_id,
             "assessmentRevision": assessment_revision,
             "appId": app_id,
             "recordId": s3_obj["Metadata"]["recordid"],
@@ -408,7 +407,7 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
         workflow_run_properties (dict): The workflow arguments
 
     Returns:
-        None
+        output_path (str) The local path the file was written to.
     """
     s3_client = boto3.client("s3")
     logger = logging.getLogger(__name__)
@@ -417,6 +416,7 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
             s3_obj_metadata["uploadedon"],
             '%Y-%m-%dT%H:%M:%S.%fZ')
     os.makedirs(dataset_identifier, exist_ok=True)
+    output_path = None
     with z.open(json_path, "r") as p:
         j = json.load(p)
         # We inject all S3 metadata into the metadata file
@@ -463,6 +463,7 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
                     Key = s3_output_key,
                     Metadata = s3_obj_metadata)
             logger.debug(f"put object response: {json.dumps(response)}")
+    return output_path
 
 def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping,
         archive_map, workflow_run_properties):

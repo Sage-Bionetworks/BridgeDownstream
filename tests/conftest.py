@@ -14,6 +14,22 @@ def artifact_bucket(request):
     return request.config.getoption("artifact_bucket")
 
 @pytest.fixture
+def schema_mapping_uri(artifact_bucket, namespace):
+    schema_mapping_uri = (
+            f"s3://{artifact_bucket}/BridgeDownstream/{namespace}/"
+            "glue/resources/schema_mapping.json"
+    )
+    return schema_mapping_uri
+
+@pytest.fixture
+def dataset_mapping_uri(artifact_bucket, namespace):
+    dataset_mapping_uri = (
+            f"s3://{artifact_bucket}/BridgeDownstream/{namespace}/"
+            "glue/resources/dataset_mapping.json"
+    )
+    return dataset_mapping_uri
+
+@pytest.fixture
 def syn():
     pass
 
@@ -152,6 +168,107 @@ def s3_obj(shared_datadir):
     with open(shared_datadir / "OCJByUtSrVTYtqObYp7XZV_J-mtbSpelling.zip", "rb") as z:
         s3_obj["Body"] = z.read()
     return s3_obj
+
+@pytest.fixture
+def metadata_json_schema():
+    metadata_json_schema = {
+      "$id" : "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/ArchiveMetadata.json",
+      "$schema" : "http://json-schema.org/draft-07/schema#",
+      "type" : "object",
+      "title" : "ArchiveMetadata",
+      "description" : "The metadata for an archive that can be zipped using the app developer's choice of third-party archival tools.",
+      "definitions" : {
+        "FileInfo" : {
+          "$id" : "#FileInfo",
+          "type" : "object",
+          "title" : "FileInfo",
+          "description" : "",
+          "properties" : {
+            "filename" : {
+              "type" : "string",
+              "description" : "The filename of the archive object. This should be unique within the manifest.",
+              "format" : "uri-relative"
+            },
+            "timestamp" : {
+              "type" : "string",
+              "description" : "The file creation date.",
+              "format" : "date-time"
+            },
+            "contentType" : {
+              "type" : "string",
+              "description" : "The content type of the file."
+            },
+            "identifier" : {
+              "type" : "string",
+              "description" : "The identifier for the result."
+            },
+            "stepPath" : {
+              "type" : "string",
+              "description" : "The full path to the result if it is within the step history."
+            },
+            "jsonSchema" : {
+              "type" : "string",
+              "description" : "The uri for the json schema if the content type is 'application/json'.",
+              "format" : "uri"
+            },
+            "metadata" : {
+              "description" : "Any additional metadata about this file."
+            }
+          },
+          "required" : [
+            "filename",
+            "timestamp"
+          ],
+          "additionalProperties" : False,
+          "examples" : [
+            {
+              "filename" : "foo.json",
+              "timestamp" : "2022-06-14T11:29:59.915-07:00",
+              "contentType" : "application/json",
+              "identifier" : "foo",
+              "stepPath" : "Bar/foo",
+              "jsonSchema" : "http://example.org/schemas/v1/Foo.json",
+              "metadata" : {
+                "value" : 1
+              }
+            }
+          ]
+        }
+      },
+      "properties" : {
+        "appName" : {
+          "type" : "string",
+          "description" : "Name of the app that built the archive."
+        },
+        "appVersion" : {
+          "type" : "string",
+          "description" : "Version of the app that built the archive."
+        },
+        "deviceInfo" : {
+          "type" : "string",
+          "description" : "Information about the specific device."
+        },
+        "deviceTypeIdentifier" : {
+          "type" : "string",
+          "description" : "Specific model identifier of the device."
+        },
+        "files" : {
+          "type" : "array",
+          "description" : "A list of the files included in this archive.",
+          "items" : {
+            "$ref" : "#/definitions/FileInfo"
+          }
+        }
+      },
+      "required" : [
+        "appName",
+        "appVersion",
+        "deviceInfo",
+        "deviceTypeIdentifier",
+        "files"
+      ]
+    }
+    return metadata_json_schema
 
 #def safe_load_config(artifact_bucket, namespace):
 #    config_uri = (
