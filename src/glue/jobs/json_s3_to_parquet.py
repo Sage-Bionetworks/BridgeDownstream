@@ -21,20 +21,18 @@ from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
 from pyspark import SparkContext
 
-glue_client = boto3.client("glue")
-args = getResolvedOptions(
-         sys.argv,
-         ["WORKFLOW_NAME",
-          "WORKFLOW_RUN_ID",
-          "JOB_NAME",
-          "table"])
-workflow_run_properties = glue_client.get_workflow_run_properties(
-        Name=args["WORKFLOW_NAME"],
-        RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
-glueContext = GlueContext(SparkContext.getOrCreate())
-logger = glueContext.get_logger()
-job = Job(glueContext)
-job.init(args["JOB_NAME"], args)
+def get_args():
+    glue_client = boto3.client("glue")
+    args = getResolvedOptions(
+             sys.argv,
+             ["WORKFLOW_NAME",
+              "WORKFLOW_RUN_ID",
+              "JOB_NAME",
+              "table"])
+    workflow_run_properties = glue_client.get_workflow_run_properties(
+            Name=args["WORKFLOW_NAME"],
+            RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
+    return args, workflow_run_properties
 
 def has_nested_fields(schema):
     """
@@ -58,7 +56,7 @@ def has_nested_fields(schema):
             return True
     return False
 
-def get_table(table_name, database_name):
+def get_table(table_name, database_name, glue_context):
     """
     Return a table as a DynamicFrame with an unambiguous schema.
 
@@ -69,7 +67,7 @@ def get_table(table_name, database_name):
     Returns:
         awsglue.DynamicFrame
     """
-    table = glueContext.create_dynamic_frame.from_catalog(
+    table = glue_context.create_dynamic_frame.from_catalog(
                  database=database_name,
                  table_name=table_name,
                  additional_options={"groupFiles": "inPartition"},
@@ -80,7 +78,7 @@ def get_table(table_name, database_name):
             table_name=table_name)
     return table
 
-def write_table_to_s3(dynamic_frame, bucket, key):
+def write_table_to_s3(dynamic_frame, bucket, key, glue_context):
     """
     Write a DynamicFrame to S3 as a parquet dataset.
 
@@ -92,9 +90,10 @@ def write_table_to_s3(dynamic_frame, bucket, key):
     Returns:
         None
     """
+    logger = glue_context.get_logger()
     s3_write_path = os.path.join("s3://", bucket, key)
     logger.info(f"Writing {os.path.basename(key)} to {s3_write_path}")
-    glueContext.write_dynamic_frame.from_options(
+    glue_context.write_dynamic_frame.from_options(
             frame = dynamic_frame,
             connection_type = "s3",
             connection_options = {
@@ -178,12 +177,23 @@ def add_index_to_table(table_key, table_name, processed_tables, unprocessed_tabl
     return df_with_index
 
 def main():
+    # Get args and setup environment
+    args, workflow_run_properties = get_args()
+    glue_context = GlueContext(SparkContext.getOrCreate())
+    logger = glue_context.get_logger()
+    job = Job(glue_context)
+    job.init(args["JOB_NAME"], args)
+
+    # Get table info
     table_name = args["table"]
     table = get_table(
             table_name=table_name,
-            database_name=workflow_run_properties["database"]
+            database_name=workflow_run_properties["database"],
+            glue_context=glue_context
     )
     table_schema = table.schema()
+
+    # Export new table records to parquet
     if has_nested_fields(table_schema) and table.count() > 0:
         tables_with_index = {}
         table_relationalized = table.relationalize(
@@ -202,7 +212,7 @@ def main():
             clean_name = t.replace(".val.", "_")
             dynamic_frame_with_index = DynamicFrame.fromDF(
                     tables_with_index[t],
-                    glue_ctx = glueContext,
+                    glue_ctx = glue_context,
                     name = clean_name
             )
             write_table_to_s3(
@@ -210,6 +220,7 @@ def main():
                     bucket=workflow_run_properties["parquet_bucket"],
                     key=os.path.join(
                         workflow_run_properties["parquet_prefix"], clean_name),
+                    glue_context=glue_context
             )
     elif table.count() > 0:
         write_table_to_s3(
@@ -217,8 +228,9 @@ def main():
                 bucket=workflow_run_properties["parquet_bucket"],
                 key=os.path.join(
                     workflow_run_properties["parquet_prefix"], args["table"]),
+                glue_context=glue_context
         )
+    job.commit()
 
 if __name__ == "__main__":
     main()
-    job.commit()
