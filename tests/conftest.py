@@ -5,15 +5,15 @@ def pytest_addoption(parser):
     parser.addoption("--namespace")
     parser.addoption("--artifact-bucket")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def namespace(request):
     return request.config.getoption("namespace")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def artifact_bucket(request):
     return request.config.getoption("artifact_bucket")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def schema_mapping_uri(artifact_bucket, namespace):
     schema_mapping_uri = (
             f"s3://{artifact_bucket}/BridgeDownstream/{namespace}/"
@@ -21,7 +21,7 @@ def schema_mapping_uri(artifact_bucket, namespace):
     )
     return schema_mapping_uri
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def dataset_mapping_uri(artifact_bucket, namespace):
     dataset_mapping_uri = (
             f"s3://{artifact_bucket}/BridgeDownstream/{namespace}/"
@@ -33,7 +33,7 @@ def dataset_mapping_uri(artifact_bucket, namespace):
 def syn():
     pass
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def archive_map():
     archive_map = {
       "anyOf": [
