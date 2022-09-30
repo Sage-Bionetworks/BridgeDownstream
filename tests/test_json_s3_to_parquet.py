@@ -38,14 +38,14 @@ def glue_database(glue_database_name, glue_database_path):
             DatabaseInput={
                 "Name": glue_database_name,
                 "Description": "A database for pytest unit tests.",
-                "LocationUri": glue_database_path
             }
     )
     yield glue_database
     glue_client.delete_database(Name=glue_database_name)
 
 @pytest.fixture(scope="class")
-def glue_nested_table(glue_database_name, glue_database_path, glue_nested_table_name):
+def glue_nested_table(glue_database, glue_database_name, glue_database_path,
+                      glue_nested_table_name):
     glue_client = boto3.client("glue")
     glue_table = glue_client.create_table(
             DatabaseName=glue_database_name,
@@ -108,7 +108,8 @@ def glue_nested_table(glue_database_name, glue_database_path, glue_nested_table_
     return glue_table
 
 @pytest.fixture(scope="class")
-def glue_flat_table(glue_database_name, glue_database_path, glue_flat_table_name):
+def glue_flat_table(glue_database, glue_database_name, glue_database_path,
+                    glue_flat_table_name):
     glue_client = boto3.client("glue")
     glue_table = glue_client.create_table(
             DatabaseName=glue_database_name,
@@ -194,7 +195,8 @@ def glue_crawler_role():
     iam_client.delete_role(RoleName=role_name)
 
 @pytest.fixture(scope="class")
-def glue_crawler(glue_database_name, glue_database_path, glue_flat_table_name,
+def glue_crawler(glue_database, glue_database_name, glue_database_path,
+                 glue_flat_table, glue_flat_table_name, glue_nested_table,
                  glue_nested_table_name, glue_crawler_role):
     glue_client = boto3.client("glue")
     crawler_name = "pytest-crawler"
@@ -365,24 +367,28 @@ class TestJsonS3ToParquet:
                 set(['id', 'index', 'filename', 'timestamp', 'assessmentid',
                      'year', 'month', 'day', 'recordid'])
         )
-        df = (tables_with_index[table_key]
+        child_table_with_index = (tables_with_index[table_key]
               .toPandas()
-              .sort_values("id")
-              .reset_index(drop=True))
+              .sort_values("recordid")
+              .reset_index(drop=True)
+              .drop(columns=["id", "index"]))
+        print("Child table with index:")
+        print(child_table_with_index)
         correct_df = pandas.DataFrame({
-            "id": [1,2,3],
-            "index": [0,0,0],
-            "filename": ["one", "two", "three"],
-            "timestamp": ["one", "two", "three"],
+            "filename": ["one", "three", "two"],
+            "timestamp": ["one", "three", "two"],
             "assessmentid": ["exampleassessment", "exampleassessment", "exampleassessment"],
             "year": ["2022", "2022", "2022"],
             "month": ["09", "09", "09"],
-            "day": ["01", "01", "02"],
-            "recordid": ["one", "two", "three"]
+            "day": ["01", "02", "01"],
+            "recordid": ["one", "three", "two"]
         })
-        for col in tables_with_index[table_key].schema.fieldNames():
-            print(df[col].values == correct_df[col].values)
-            assert all(df[col].values == correct_df[col].values)
+        print("Correct table:")
+        print(correct_df)
+        for col in child_table_with_index.columns:
+            print(col)
+            print(child_table_with_index[col].values == correct_df[col].values)
+            assert all(child_table_with_index[col].values == correct_df[col].values)
 
     def test_write_table_to_s3(self, artifact_bucket, namespace, glue_database_name,
                                glue_database_path, glue_flat_table_name, glue_context):

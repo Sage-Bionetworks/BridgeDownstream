@@ -29,10 +29,6 @@ def dataset_mapping_uri(artifact_bucket, namespace):
     )
     return dataset_mapping_uri
 
-@pytest.fixture
-def syn():
-    pass
-
 @pytest.fixture(scope="session")
 def archive_map():
     archive_map = {
@@ -269,10 +265,3 @@ def metadata_json_schema():
       ]
     }
     return metadata_json_schema
-
-#def safe_load_config(artifact_bucket, namespace):
-#    config_uri = (
-#            f"s3://{artifact_bucket}/BridgeDownstream/{namespace}/"
-#            "config/config.yaml"
-#    )
-#    reque
