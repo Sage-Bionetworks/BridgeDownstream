@@ -24,7 +24,7 @@ jobs:
     environment: develop
     runs-on: ubuntu-latest
     container:
-      image: philsnyder/bridge-downstream-pytest
+      image: philsnyder/bridge-downstream-pytest:latest
       env:
         DISABLE_SSL: true
       options: "--user root"

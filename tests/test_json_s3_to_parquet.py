@@ -7,6 +7,7 @@ import pytest
 from awsglue.context import GlueContext
 from pyspark.sql.session import SparkSession
 from src.glue.jobs.json_s3_to_parquet import *
+# requires pytest-datadir to be installed
 
 @pytest.fixture(scope="class")
 def glue_database_name():
