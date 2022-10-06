@@ -9,283 +9,292 @@ from pyspark.sql.session import SparkSession
 from src.glue.jobs.json_s3_to_parquet import *
 # requires pytest-datadir to be installed
 
-@pytest.fixture(scope="class")
-def glue_database_name():
-    return "pytest-database"
-
-@pytest.fixture(scope="class")
-def glue_nested_table_name():
-    return "dataset_pytest_nested_table"
-
-@pytest.fixture(scope="class")
-def glue_flat_table_name():
-    return "dataset_pytest_flat_table"
-
-@pytest.fixture(scope="class")
-def glue_database_path(artifact_bucket, namespace):
-    glue_database_path = os.path.join(
-            "s3://",
-            artifact_bucket,
-            "BridgeDownstream",
-            namespace,
-            "tests/test_json_s3_to_parquet"
-    )
-    return glue_database_path
-
-@pytest.fixture(scope="class")
-def glue_database(glue_database_name, glue_database_path):
-    glue_client = boto3.client("glue")
-    glue_database = glue_client.create_database(
-            DatabaseInput={
-                "Name": glue_database_name,
-                "Description": "A database for pytest unit tests.",
-            }
-    )
-    yield glue_database
-    glue_client.delete_database(Name=glue_database_name)
-
-@pytest.fixture(scope="class")
-def glue_nested_table(glue_database, glue_database_name, glue_database_path,
-                      glue_nested_table_name):
-    glue_client = boto3.client("glue")
-    glue_table = glue_client.create_table(
-            DatabaseName=glue_database_name,
-            TableInput={
-                "Name": glue_nested_table_name,
-                "Description": "A table for pytest unit tests.",
-                "Retention": 0,
-                "TableType": "EXTERNAL_TABLE",
-                "StorageDescriptor": {
-                    "Location": os.path.join(
-                        glue_database_path,
-                        glue_nested_table_name.replace("_", "=", 1)
-                    ) + "/",
-                    "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
-                    "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
-                    "Compressed": False,
-                    "StoredAsSubDirectories": False,
-                    "Columns": [
-                        {
-                            "Name": "recordid",
-                            "Type": "string"
-                        },
-                        {
-                            "Name": "arrayofobjectsfield",
-                            "Type": "array<struct<filename:string,timestamp:string>>"
-                        },
-                        {
-                            "Name": "objectfield",
-                            "Type": "struct<filename:string,timestamp:string>"
-                        }
-                    ]
-                },
-                "PartitionKeys": [
-                    {
-                        "Name": "assessmentid",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "year",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "month",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "day",
-                        "Type": "string"
-                    }
-                ],
-                "Parameters": {
-                    "classification": "json",
-                    "compressionType": "none",
-                    "typeOfData": "file",
-                    "CrawlerSchemaDeserializerVersion": "1.0",
-                    "CrawlerSchemaSerializerVersion": "1.0"
-                }
-            }
-    )
-    return glue_table
-
-@pytest.fixture(scope="class")
-def glue_flat_table(glue_database, glue_database_name, glue_database_path,
-                    glue_flat_table_name):
-    glue_client = boto3.client("glue")
-    glue_table = glue_client.create_table(
-            DatabaseName=glue_database_name,
-            TableInput={
-                "Name": glue_flat_table_name,
-                "Description": "A table for pytest unit tests.",
-                "Retention": 0,
-                "TableType": "EXTERNAL_TABLE",
-                "StorageDescriptor": {
-                    "Location": os.path.join(
-                            glue_database_path,
-                            glue_flat_table_name.replace("_", "=", 1)
-                    ) + "/",
-                    "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
-                    "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
-                    "Compressed": False,
-                    "StoredAsSubDirectories": False,
-                    "Columns": [
-                        {
-                            "Name": "recordid",
-                            "Type": "string"
-                        }
-                    ]
-                },
-                "PartitionKeys": [
-                    {
-                        "Name": "assessmentid",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "year",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "month",
-                        "Type": "string"
-                    },
-                    {
-                        "Name": "day",
-                        "Type": "string"
-                    }
-                ],
-                "Parameters": {
-                    "classification": "json",
-                    "compressionType": "none",
-                    "typeOfData": "file",
-                    "CrawlerSchemaDeserializerVersion": "1.0",
-                    "CrawlerSchemaSerializerVersion": "1.0"
-                }
-            }
-    )
-    return glue_table
-
-@pytest.fixture(scope="class")
-def glue_crawler_role():
-    iam_client = boto3.client("iam")
-    role_name="pytest-crawler-role"
-    managed_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
-    glue_crawler_role = iam_client.create_role(
-            RoleName=role_name,
-            AssumeRolePolicyDocument=json.dumps({
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": ["glue.amazonaws.com"]
-                        },
-                        "Action": ["sts:AssumeRole"]
-                    }
-                ]
-            }),
-    )
-    iam_client.attach_role_policy(
-            RoleName=role_name,
-            PolicyArn=managed_policy_arn
-    )
-    yield glue_crawler_role["Role"]["Arn"]
-    iam_client.detach_role_policy(
-            RoleName=role_name,
-            PolicyArn=managed_policy_arn
-    )
-    iam_client.delete_role(RoleName=role_name)
-
-@pytest.fixture(scope="class")
-def glue_crawler(glue_database, glue_database_name, glue_database_path,
-                 glue_flat_table, glue_flat_table_name, glue_nested_table,
-                 glue_nested_table_name, glue_crawler_role):
-    glue_client = boto3.client("glue")
-    crawler_name = "pytest-crawler"
-    time.sleep(10) # give time for the IAM role trust policy to set in
-    glue_crawler = glue_client.create_crawler(
-            Name=crawler_name,
-            Role=glue_crawler_role,
-            DatabaseName=glue_database_name,
-            Description="A crawler for pytest unit test data.",
-            Targets={
-                "S3Targets": [
-                    {
-                        "Path": os.path.join(
-                            glue_database_path,
-                            glue_flat_table_name.replace("_", "=", 1)
-                        ) + "/"
-                    },
-                    {
-                        "Path": os.path.join(
-                            glue_database_path,
-                            glue_nested_table_name.replace("_", "=", 1)
-                        ) + "/"
-                    }
-                ]
-            },
-            SchemaChangePolicy={
-                "DeleteBehavior": "LOG",
-                "UpdateBehavior": "LOG"
-            },
-            RecrawlPolicy={
-                "RecrawlBehavior": "CRAWL_NEW_FOLDERS_ONLY"
-            },
-            Configuration=json.dumps({
-                "Version":1.0,
-                "CrawlerOutput": {
-                    "Partitions": {
-                        "AddOrUpdateBehavior":"InheritFromTable"
-                    }
-                },
-                "Grouping": {
-                    "TableGroupingPolicy":"CombineCompatibleSchemas"
-                }
-            })
-    )
-    glue_client.start_crawler(Name=crawler_name)
-    response = {"Crawler": {}}
-    for i in range(60): # wait up to 10 minutes for crawler to finish
-        # This should take approximately 5 minutes
-        response = glue_client.get_crawler(Name=crawler_name)
-        if (
-                "LastCrawl" in response["Crawler"]
-                and "Status" in response["Crawler"]["LastCrawl"]
-                and response["Crawler"]["LastCrawl"]["Status"] == "SUCCEEDED"
-           ):
-            break
-        else:
-            time.sleep(10)
-    yield glue_crawler
-    glue_client.delete_crawler(Name=crawler_name)
-
-@pytest.fixture
-def json_s3_objects(datadir, artifact_bucket, namespace):
-    s3_client = boto3.client("s3")
-    dataset_prefix = os.path.join(
-            "BridgeDownstream", namespace, "tests")
-    object_keys = []
-    for dirpath, _, filenames in os.walk(datadir):
-        if len(filenames) > 0:
-            object_prefix = os.path.join(
-                    dataset_prefix,
-                    os.path.join(*dirpath.split("/")[-6:]))
-            for filename in filenames:
-                object_key = os.path.join(object_prefix, filename)
-                s3_client.upload_file(
-                        Filename=os.path.join(dirpath, filename),
-                        Bucket=artifact_bucket,
-                        Key=object_key)
-                object_keys.append(object_key)
-    return object_keys
-
-@pytest.fixture(scope="class")
-def glue_context():
-    glue_context = GlueContext(SparkSession.builder.getOrCreate())
-    return glue_context
-
 
 class TestJsonS3ToParquet:
 
+    @pytest.fixture(scope="class")
+    def glue_database_name(self):
+        return "pytest-database"
+
+    @pytest.fixture(scope="class")
+    def glue_nested_table_name(self):
+        return "dataset_pytest_nested_table"
+
+    @pytest.fixture(scope="class")
+    def glue_flat_table_name(self):
+        return "dataset_pytest_flat_table"
+
+    @pytest.fixture(scope="class")
+    def glue_database_path(self, artifact_bucket, namespace):
+        glue_database_path = os.path.join(
+                "s3://",
+                artifact_bucket,
+                "BridgeDownstream",
+                namespace,
+                "tests/test_json_s3_to_parquet"
+        )
+        return glue_database_path
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_database(self, glue_database_name, glue_database_path):
+        glue_client = boto3.client("glue")
+        glue_database = glue_client.create_database(
+                DatabaseInput={
+                    "Name": glue_database_name,
+                    "Description": "A database for pytest unit tests.",
+                    "LocationUri": glue_database_path
+                }
+        )
+        yield glue_database
+        glue_client.delete_database(Name=glue_database_name)
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_nested_table(self, glue_database, glue_database_name, glue_database_path,
+                          glue_nested_table_name):
+        glue_client = boto3.client("glue")
+        glue_table = glue_client.create_table(
+                DatabaseName=glue_database_name,
+                TableInput={
+                    "Name": glue_nested_table_name,
+                    "Description": "A table for pytest unit tests.",
+                    "Retention": 0,
+                    "TableType": "EXTERNAL_TABLE",
+                    "StorageDescriptor": {
+                        "Location": os.path.join(
+                            glue_database_path,
+                            glue_nested_table_name.replace("_", "=", 1)
+                        ) + "/",
+                        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+                        "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+                        "Compressed": False,
+                        "StoredAsSubDirectories": False,
+                        "Columns": [
+                            {
+                                "Name": "recordid",
+                                "Type": "string"
+                            },
+                            {
+                                "Name": "arrayofobjectsfield",
+                                "Type": "array<struct<filename:string,timestamp:string>>"
+                            },
+                            {
+                                "Name": "objectfield",
+                                "Type": "struct<filename:string,timestamp:string>"
+                            }
+                        ]
+                    },
+                    "PartitionKeys": [
+                        {
+                            "Name": "assessmentid",
+                            "Type": "string"
+                        },
+                        {
+                            "Name": "year",
+                            "Type": "string"
+                        },
+                        {
+                            "Name": "month",
+                            "Type": "string"
+                        },
+                        {
+                            "Name": "day",
+                            "Type": "string"
+                        }
+                    ],
+                    "Parameters": {
+                        "classification": "json",
+                        "compressionType": "none",
+                        "typeOfData": "file",
+                        "CrawlerSchemaDeserializerVersion": "1.0",
+                        "CrawlerSchemaSerializerVersion": "1.0"
+                    }
+                }
+        )
+        return glue_table
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_flat_table(self, glue_database, glue_database_name,
+                        glue_database_path, glue_flat_table_name):
+        glue_client = boto3.client("glue")
+        glue_table = glue_client.create_table(
+                DatabaseName=glue_database_name,
+                TableInput={
+                    "Name": glue_flat_table_name,
+                    "Description": "A table for pytest unit tests.",
+                    "Retention": 0,
+                    "TableType": "EXTERNAL_TABLE",
+                    "StorageDescriptor": {
+                        "Location": os.path.join(
+                                glue_database_path,
+                                glue_flat_table_name.replace("_", "=", 1)
+                        ) + "/",
+                        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+                        "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+                        "Compressed": False,
+                        "StoredAsSubDirectories": False,
+                        "Columns": [
+                            {
+                                "Name": "recordid",
+                                "Type": "string"
+                            }
+                        ]
+                    },
+                    "PartitionKeys": [
+                        {
+                            "Name": "assessmentid",
+                            "Type": "string"
+                        },
+                        {
+                            "Name": "year",
+                            "Type": "string"
+                        },
+                        {
+                            "Name": "month",
+                            "Type": "string"
+                        },
+                        {
+                            "Name": "day",
+                            "Type": "string"
+                        }
+                    ],
+                    "Parameters": {
+                        "classification": "json",
+                        "compressionType": "none",
+                        "typeOfData": "file",
+                        "CrawlerSchemaDeserializerVersion": "1.0",
+                        "CrawlerSchemaSerializerVersion": "1.0"
+                    }
+                }
+        )
+        return glue_table
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_crawler_role(self):
+        iam_client = boto3.client("iam")
+        role_name="pytest-crawler-role"
+        glue_service_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+        s3_read_policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+        glue_crawler_role = iam_client.create_role(
+                RoleName=role_name,
+                AssumeRolePolicyDocument=json.dumps({
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": ["glue.amazonaws.com"]
+                            },
+                            "Action": ["sts:AssumeRole"]
+                        }
+                    ]
+                }),
+        )
+        iam_client.attach_role_policy(
+                RoleName=role_name,
+                PolicyArn=glue_service_policy_arn
+        )
+        iam_client.attach_role_policy(
+                RoleName=role_name,
+                PolicyArn=s3_read_policy_arn
+        )
+        yield glue_crawler_role["Role"]["Arn"]
+        iam_client.detach_role_policy(
+                RoleName=role_name,
+                PolicyArn=glue_service_policy_arn
+        )
+        iam_client.detach_role_policy(
+                RoleName=role_name,
+                PolicyArn=s3_read_policy_arn
+        )
+        iam_client.delete_role(RoleName=role_name)
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_crawler(self, glue_database, glue_database_name, glue_database_path, glue_flat_table,
+                     glue_flat_table_name, glue_nested_table, glue_nested_table_name,
+                     glue_crawler_role):
+        glue_client = boto3.client("glue")
+        crawler_name = "pytest-crawler"
+        time.sleep(10) # give time for the IAM role trust policy to set in
+        glue_crawler = glue_client.create_crawler(
+                Name=crawler_name,
+                Role=glue_crawler_role,
+                DatabaseName=glue_database_name,
+                Description="A crawler for pytest unit test data.",
+                Targets={
+                    "S3Targets": [
+                        {
+                            "Path": os.path.join(
+                                glue_database_path,
+                                glue_flat_table_name.replace("_", "=", 1)
+                            ) + "/"
+                        },
+                        {
+                            "Path": os.path.join(
+                                glue_database_path,
+                                glue_nested_table_name.replace("_", "=", 1)
+                            ) + "/"
+                        }
+                    ]
+                },
+                SchemaChangePolicy={
+                    "DeleteBehavior": "LOG",
+                    "UpdateBehavior": "LOG"
+                },
+                RecrawlPolicy={
+                    "RecrawlBehavior": "CRAWL_NEW_FOLDERS_ONLY"
+                },
+                Configuration=json.dumps({
+                    "Version":1.0,
+                    "CrawlerOutput": {
+                        "Partitions": {
+                            "AddOrUpdateBehavior":"InheritFromTable"
+                        }
+                    },
+                    "Grouping": {
+                        "TableGroupingPolicy":"CombineCompatibleSchemas"
+                    }
+                })
+        )
+        glue_client.start_crawler(Name=crawler_name)
+        response = {"Crawler": {}}
+        for i in range(60): # wait up to 10 minutes for crawler to finish
+            # This should take about 5 minutes
+            response = glue_client.get_crawler(Name=crawler_name)
+            if (
+                    "LastCrawl" in response["Crawler"]
+                    and "Status" in response["Crawler"]["LastCrawl"]
+                    and response["Crawler"]["LastCrawl"]["Status"] == "SUCCEEDED"
+               ):
+                break
+            else:
+                time.sleep(10)
+        yield glue_crawler
+        glue_client.delete_crawler(Name=crawler_name)
+
+    @pytest.fixture()
+    def json_s3_objects(self, datadir, artifact_bucket, namespace):
+        s3_client = boto3.client("s3")
+        dataset_prefix = os.path.join(
+                "BridgeDownstream", namespace, "tests")
+        object_keys = []
+        for dirpath, _, filenames in os.walk(datadir):
+            if len(filenames) > 0:
+                object_prefix = os.path.join(
+                        dataset_prefix,
+                        os.path.join(*dirpath.split("/")[-6:]))
+                for filename in filenames:
+                    object_key = os.path.join(object_prefix, filename)
+                    s3_client.upload_file(
+                            Filename=os.path.join(dirpath, filename),
+                            Bucket=artifact_bucket,
+                            Key=object_key)
+                    object_keys.append(object_key)
+        return object_keys
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_context(self):
+        glue_context = GlueContext(SparkSession.builder.getOrCreate())
+        return glue_context
 
     def test_upload_s3_objects(self, json_s3_objects):
         """
