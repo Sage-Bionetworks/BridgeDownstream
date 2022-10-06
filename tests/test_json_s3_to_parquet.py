@@ -13,8 +13,8 @@ from src.glue.jobs.json_s3_to_parquet import *
 class TestJsonS3ToParquet:
 
     @pytest.fixture(scope="class")
-    def glue_database_name(self):
-        return "pytest-database"
+    def glue_database_name(self, namespace):
+        return f"{namespace}-pytest-database"
 
     @pytest.fixture(scope="class")
     def glue_nested_table_name(self):
@@ -169,9 +169,9 @@ class TestJsonS3ToParquet:
         return glue_table
 
     @pytest.fixture(scope="class", autouse=True)
-    def glue_crawler_role(self):
+    def glue_crawler_role(self, namespace):
         iam_client = boto3.client("iam")
-        role_name="pytest-crawler-role"
+        role_name=f"{namespace}-pytest-crawler-role"
         glue_service_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
         s3_read_policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
         glue_crawler_role = iam_client.create_role(
@@ -211,9 +211,9 @@ class TestJsonS3ToParquet:
     @pytest.fixture(scope="class", autouse=True)
     def glue_crawler(self, glue_database, glue_database_name, glue_database_path, glue_flat_table,
                      glue_flat_table_name, glue_nested_table, glue_nested_table_name,
-                     glue_crawler_role):
+                     glue_crawler_role, namespace):
         glue_client = boto3.client("glue")
-        crawler_name = "pytest-crawler"
+        crawler_name = "{namespace}-pytest-crawler"
         time.sleep(10) # give time for the IAM role trust policy to set in
         glue_crawler = glue_client.create_crawler(
                 Name=crawler_name,
