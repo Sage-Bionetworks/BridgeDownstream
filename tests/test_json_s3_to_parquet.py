@@ -6,7 +6,7 @@ import pandas
 import pytest
 from awsglue.context import GlueContext
 from pyspark.sql.session import SparkSession
-from src.glue.jobs.json_s3_to_parquet import *
+from src.glue.jobs import json_s3_to_parquet
 # requires pytest-datadir to be installed
 
 
@@ -306,14 +306,14 @@ class TestJsonS3ToParquet:
 
     def test_get_table(self, glue_database_name, glue_flat_table_name,
                        glue_nested_table_name, glue_crawler, glue_context):
-        flat_table = get_table(
+        flat_table = json_s3_to_parquet.get_table(
                 table_name=glue_flat_table_name,
                 database_name=glue_database_name,
                 glue_context=glue_context
         )
         assert flat_table.count() == 3
         assert len(flat_table.schema().fields) == 5
-        nested_table = get_table(
+        nested_table = json_s3_to_parquet.get_table(
                 table_name=glue_nested_table_name,
                 database_name=glue_database_name,
                 glue_context=glue_context
@@ -323,25 +323,25 @@ class TestJsonS3ToParquet:
 
     def test_has_nested_fields(self, glue_database_name, glue_flat_table_name,
                                glue_nested_table_name, glue_context):
-            flat_table = get_table(
+            flat_table = json_s3_to_parquet.get_table(
                     table_name=glue_flat_table_name,
                     database_name=glue_database_name,
                     glue_context=glue_context
             )
             flat_table_schema = flat_table.schema()
-            assert not has_nested_fields(flat_table_schema)
-            nested_table = get_table(
+            assert not json_s3_to_parquet.has_nested_fields(flat_table_schema)
+            nested_table = json_s3_to_parquet.get_table(
                     table_name=glue_nested_table_name,
                     database_name=glue_database_name,
                     glue_context=glue_context
             )
             nested_table_schema = nested_table.schema()
-            assert has_nested_fields(nested_table_schema)
+            assert json_s3_to_parquet.has_nested_fields(nested_table_schema)
 
     def test_add_index_to_table(self, glue_database_name, glue_database_path,
                                 glue_nested_table_name, artifact_bucket, namespace,
                                 glue_context):
-        nested_table = get_table(
+        nested_table = json_s3_to_parquet.get_table(
                 table_name=glue_nested_table_name,
                 database_name=glue_database_name,
                 glue_context=glue_context
@@ -354,7 +354,7 @@ class TestJsonS3ToParquet:
             )
         )
         tables_with_index = {}
-        tables_with_index[glue_nested_table_name] = add_index_to_table(
+        tables_with_index[glue_nested_table_name] = json_s3_to_parquet.add_index_to_table(
                 table_key=glue_nested_table_name,
                 table_name=glue_nested_table_name,
                 processed_tables=tables_with_index,
@@ -366,7 +366,7 @@ class TestJsonS3ToParquet:
                      "objectfield_timestamp", "assessmentid", "year", "month", "day"])
         )
         table_key = f"{glue_nested_table_name}_arrayofobjectsfield"
-        tables_with_index[table_key] =  add_index_to_table(
+        tables_with_index[table_key] =  json_s3_to_parquet.add_index_to_table(
                 table_key=table_key,
                 table_name=glue_nested_table_name,
                 processed_tables=tables_with_index,
@@ -402,7 +402,7 @@ class TestJsonS3ToParquet:
 
     def test_write_table_to_s3(self, artifact_bucket, namespace, glue_database_name,
                                glue_database_path, glue_flat_table_name, glue_context):
-        flat_table = get_table(
+        flat_table = json_s3_to_parquet.get_table(
                 table_name=glue_flat_table_name,
                 database_name=glue_database_name,
                 glue_context=glue_context
@@ -412,7 +412,7 @@ class TestJsonS3ToParquet:
                     namespace,
                     "tests/test_json_s3_to_parquet/flat_table"
         )
-        write_table_to_s3(
+        json_s3_to_parquet.write_table_to_s3(
                 dynamic_frame=flat_table,
                 bucket=artifact_bucket,
                 key=parquet_key,
