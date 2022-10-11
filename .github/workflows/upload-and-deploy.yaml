@@ -18,11 +18,89 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: pre-commit/action@v2.0.3
 
+  pytest-docker:
+    name: Build and push testing docker image to ECR
+    needs: pre-commit
+    runs-on: ubuntu-latest
+    environment: develop
+    steps:
+      - name: Assume AWS role
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1200
+          mask-aws-account-id: false
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Get ECR secret names
+        id: ecr
+        run: |
+          usernameKey=docker_username_$(echo ${{ steps.login-ecr.outputs.registry }} | tr '.-' _)
+          echo "::set-output name=username-key::$usernameKey"
+          passwordKey=docker_password_$(echo ${{ steps.login-ecr.outputs.registry }} | tr '.-' _)
+          echo "::set-output name=password-key::$passwordKey"
+      - uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push to ECR
+        id: docker-build-push
+        uses: docker/build-push-action@v3
+        env:
+          DOCKER_IMAGE: ${{ steps.login-ecr.outputs.registry }}/pytest:${{ github.ref_name }}
+        with:
+          push: true
+          tags: ${{ env.DOCKER_IMAGE }}
+          file: tests/Dockerfile
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+    outputs:
+      docker-metadata: ${{ steps.docker-build-push.outputs.metadata }}
+      ecr-username: ${{ steps.login-ecr.outputs[steps.ecr.outputs.username-key] }}
+      ecr-password: ${{ steps.login-ecr.outputs[steps.ecr.outputs.password-key] }}
+
+  unit-tests:
+    name: Run Pytest unit tests
+    needs: pytest-docker
+    environment: develop
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ fromJSON(needs.pytest-docker.outputs.docker-metadata)['image.name'] }}
+      credentials:
+        username: ${{ needs.pytest-docker.outputs.ecr-username }}
+        password: ${{ needs.pytest-docker.outputs.ecr-password }}
+      env:
+        DISABLE_SSL: true
+      options: "--user root"
+    steps:
+      - name: Assume AWS role
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1200
+      - uses: actions/checkout@v2
+      - run: chown -R glue_user $GITHUB_WORKSPACE
+      - run: su - glue_user --command "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
+      - run: su - glue_user --command "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
+      - run: su - glue_user --command "aws configure set aws_session_token $AWS_SESSION_TOKEN"
+      - run: su - glue_user --command "aws configure set region $AWS_REGION"
+      - name: Set namespace for non-default branch or for tag
+        if: github.ref_name != 'main'
+        run: echo "NAMESPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
+      - name: Run Pytest unit tests
+        run: su - glue_user --command "cd $GITHUB_WORKSPACE && python3 -m pytest --namespace $NAMESPACE --artifact-bucket $CFN_BUCKET"
+
   upload-files:
 
     name: Upload files to S3 bucket
     runs-on: ubuntu-latest
-    needs: pre-commit
+    needs: unit-tests
     environment: develop
     steps:
 
@@ -48,7 +126,7 @@ jobs:
   sceptre-deploy-branch:
     name: Deploy branch using sceptre
     runs-on: ubuntu-latest
-    needs: [pre-commit, upload-files]
+    needs: upload-files
     env:
       NAMESPACE: $GITHUB_REF_NAME
     if: github.ref_name != 'main' && github.ref_type != 'tag'
@@ -71,7 +149,7 @@ jobs:
   integration-test:
     name: Deploys test events from the workflow
     runs-on: ubuntu-latest
-    needs: [pre-commit, upload-files, sceptre-deploy-branch]
+    needs: sceptre-deploy-branch
     env:
       NAMESPACE: $GITHUB_REF_NAME
       LEMBDA_ENV_VARS_FILE: namespace_vars.json
@@ -95,12 +173,12 @@ jobs:
         run: sam build -s src/lambda/ -t src/lambda/template.yaml
 
       - name: Invoke Lambda
-        run:  sam local invoke -e src/lambda/events/single-record.json --env-vars src/lambda/test-env-vars.json
+        run: sam local invoke -e src/lambda/events/single-record.json --env-vars src/lambda/test-env-vars.json
 
   sceptre-deploy-main:
     name: Deploy trunk using sceptre
     runs-on: ubuntu-latest
-    needs: [pre-commit, upload-files]
+    needs: [pre-commit, unit-tests, upload-files]
     if: github.ref_name == 'main' && github.ref_type != 'tag'
 
     strategy:
