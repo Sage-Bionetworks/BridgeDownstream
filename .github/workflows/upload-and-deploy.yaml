@@ -84,17 +84,17 @@ jobs:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
           role-duration-seconds: 1200
-      #- name: Login to Amazon ECR
-      #  id: login-ecr
-      #  uses: aws-actions/amazon-ecr-login@v1
       - uses: actions/checkout@v2
       - run: chown -R glue_user $GITHUB_WORKSPACE
       - run: su - glue_user --command "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
       - run: su - glue_user --command "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
       - run: su - glue_user --command "aws configure set aws_session_token $AWS_SESSION_TOKEN"
       - run: su - glue_user --command "aws configure set region $AWS_REGION"
+      - name: Set namespace for non-default branch or for tag
+        if: github.ref_name != 'main'
+        run: echo "NAMESPACE=$GITHUB_REF_NAME" >> $GITHUB_ENV
       - name: Run Pytest unit tests
-        run: su - glue_user --command "cd $GITHUB_WORKSPACE && python3 -m pytest --namespace $GITHUB_REF_NAME --artifact-bucket $CFN_BUCKET"
+        run: su - glue_user --command "cd $GITHUB_WORKSPACE && python3 -m pytest --namespace $NAMESPACE --artifact-bucket $CFN_BUCKET"
 
   upload-files:
 
