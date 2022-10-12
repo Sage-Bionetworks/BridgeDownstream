@@ -5,5 +5,8 @@ dependencies:
 parameters:
   SsmParameterName: {{ stack_group_config.synapseAuthSsmParameterName }}
   InvalidSQSQueueArn: !stack_output_external '{{ stack_group_config.namespace }}-invalid-sqs::PrimaryQueueArn'
+  S3IntermediateBucketName: !stack_output_external bridge-downstream-intermediate-bucket::BucketName
+  S3ParquetBucketName: !stack_output_external bridge-downstream-parquet-bucket::BucketName
+  S3ArtifactBucketName: {{ stack_group_config.artifact_bucket_name }}
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
