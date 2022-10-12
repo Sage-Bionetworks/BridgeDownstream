@@ -12,12 +12,46 @@ Parameters:
     Type: String
     Description: ARN of the SQS queue which we send invalid records to.
 
+  S3IntermediateBucketName:
+    Type: String
+    Description: Name of the S3 intermediate (JSON) bucket
+
+  S3ParquetBucketName:
+    Type: String
+    Description: Name of the S3 Parquet bucket
+
+  S3ArtifactBucketName:
+    Type: String
+    Description: Name of the S3 bucket where cloudformation templates and tests are stored.
+
+
 Resources:
 
   JobRole:
     Type: AWS::IAM::Role
     Properties:
       Policies:
+      - PolicyName: Glue
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - glue:*
+            - cloudwatch:PutMetricData
+            Resource:
+            - "*"
+      - PolicyName: IAM
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - iam:ListRolePolicies
+            - iam:GetRole
+            - iam:GetRolePolicy
+            Resource:
+            - "*"
       - PolicyName: GetSsmParam
         PolicyDocument:
           Version: '2012-10-17'
@@ -38,6 +72,52 @@ Resources:
             - sqs:GetQueueUrl
             Resource:
             - !Ref InvalidSQSQueueArn
+      - PolicyName: ReadWriteS3
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:PutObject
+            - s3:DeleteObject
+            - s3:GetBucketLocation
+            - s3:ListBucket
+            - s3:ListAllMyBuckets
+            - s3:GetBucketAcl
+            Resource:
+            - !Sub arn:aws:s3:::${S3IntermediateBucketName}/*
+            - !Sub arn:aws:s3:::${S3ParquetBucketName}/*
+            - !Sub arn:aws:s3:::${S3ArtifactBucketName}/*
+      - PolicyName: EC2
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - ec2:DescribeVpcEndpoints
+            - ec2:DescribeRouteTables
+            - ec2:CreateNetworkInterface
+            - ec2:DeleteNetworkInterface
+            - ec2:DescribeNetworkInterfaces
+            - ec2:DescribeSecurityGroups
+            - ec2:DescribeSubnets
+            - ec2:DescribeVpcAttribute
+            - ec2:CreateTags
+            - ec2:DeleteTags
+            Resource:
+            - "*"
+      - PolicyName: Logs
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+              - "arn:aws:logs:*:*:/aws-glue/*"
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -47,8 +127,6 @@ Resources:
             - glue.amazonaws.com
           Action:
           - 'sts:AssumeRole'
-      ManagedPolicyArns:
-      - 'arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole'
 
 Outputs:
 
