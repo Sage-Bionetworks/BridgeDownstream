@@ -13,20 +13,6 @@ Parameters:
     Description: Name of the bucket.
     Default: ''
 
-  ReadWriteAccessArns:
-    Type: List<String>
-    Default: ''
-    Description: >-
-      (Optional) List of IAM users and roles (strings) who
-      should have read- and write-access to the S3 bucket.
-
-  ReadOnlyAccessArns:
-    Type: List<String>
-    Default: ''
-    Description: >-
-      (Optional) List of IAM users and roles (strings)
-      who should only have read-access to the S3 bucket.
-
   SynapseIds:
     Type: List<String>
     Default: ''
@@ -36,10 +22,6 @@ Parameters:
       (i.e. 1111111, 2222222)
 
 Conditions:
-  HasReadWriteAccessArns:
-    !Not [!Equals [!Join [",", !Ref ReadWriteAccessArns], ""]]
-  HasReadOnlyAccessArns:
-    !Not [!Equals [!Join [",", !Ref ReadOnlyAccessArns], ""]]
   HasBucketName: !Not [!Equals [!Ref BucketName, ""]]
   ConnectToSynapse:
     !Not [!Equals [!Join [",", !Ref SynapseIds], ""]]
@@ -73,36 +55,6 @@ Resources:
             Resource:
               - !Sub 'arn:aws:s3:::${Bucket}'
               - !Sub 'arn:aws:s3:::${Bucket}/*'
-          - !If
-            - HasReadWriteAccessArns
-            - Sid: ReadWriteAccess
-              Effect: Allow
-              Principal:
-                AWS: !Ref ReadWriteAccessArns
-              Action:
-                - 's3:*MultipartUpload*'
-                - 's3:DeleteObject*'
-                - 's3:Get*'
-                - 's3:List*'
-                - 's3:PutObject'
-                - 's3:PutObjectTagging'
-              Resource:
-                - !Sub 'arn:aws:s3:::${Bucket}'
-                - !Sub 'arn:aws:s3:::${Bucket}/*'
-            - !Ref AWS::NoValue
-          - !If
-            - HasReadOnlyAccessArns
-            - Sid: ReadOnlyAccess
-              Effect: Allow
-              Principal:
-                AWS: !Ref ReadOnlyAccessArns
-              Action:
-                - 's3:Get*'
-                - 's3:List*'
-              Resource:
-                - !Sub 'arn:aws:s3:::${Bucket}'
-                - !Sub 'arn:aws:s3:::${Bucket}/*'
-            - !Ref AWS::NoValue
           - !If
             - ConnectToSynapse
             - Sid: SynapseBucketAccess

@@ -78,16 +78,18 @@ Resources:
           Statement:
           - Effect: Allow
             Action:
-            - s3:GetObject
+            - s3:Get*
+            - s3:List*
             - s3:PutObject
-            - s3:DeleteObject
-            - s3:GetBucketLocation
-            - s3:ListBucket
-            - s3:ListAllMyBuckets
-            - s3:GetBucketAcl
+            - s3:PutObjectTagging
+            - s3:DeleteObject*
+            - s3:*MultipartUpload*
             Resource:
+            - !Sub arn:aws:s3:::${S3IntermediateBucketName}
             - !Sub arn:aws:s3:::${S3IntermediateBucketName}/*
+            - !Sub arn:aws:s3:::${S3ParquetBucketName}
             - !Sub arn:aws:s3:::${S3ParquetBucketName}/*
+            - !Sub arn:aws:s3:::${S3ArtifactBucketName}
             - !Sub arn:aws:s3:::${S3ArtifactBucketName}/*
       - PolicyName: EC2
         PolicyDocument:

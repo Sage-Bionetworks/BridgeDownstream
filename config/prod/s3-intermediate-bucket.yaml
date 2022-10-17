@@ -1,10 +1,6 @@
 template_path: s3-bucket.yaml
 stack_name: bridge-downstream-intermediate-bucket
-dependencies:
-  - prod/glue-job-role.yaml
 parameters:
   BucketName: bridge-downstream-intermediate-data
-  ReadWriteAccessArns:
-    - !stack_output_external glue-job-role::RoleArn
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
