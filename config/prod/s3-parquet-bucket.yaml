@@ -2,6 +2,6 @@ template_path: s3-bucket.yaml
 stack_name: bridge-downstream-parquet-bucket
 parameters:
   BucketName: bridge-downstream-parquet
-  SynapseIds: {{ stack_group_config.synapseBridgeDownstreamUserId }}
+  SynapseIds: "3432808"
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
