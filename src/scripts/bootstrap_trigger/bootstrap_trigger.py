@@ -38,6 +38,11 @@ def read_args():
                               "If this argument is not specified, all files in "
                               "the --file-view will be submitted to the "
                               "--glue-workflow."))
+    parser.add_argument("--drop-duplicates",
+                        default=False,
+                        action="store_true",
+                        help=("Optional. Only use the most recently exported record "
+                              "for a given record ID. Defaults to false"))
     parser.add_argument("--diff-s3-uri",
                         help=("Optional. The S3 URI of a parquet dataset to diff with "
                               "before submitting to the --glue-workflow."))
@@ -144,6 +149,10 @@ def main():
             entity_view=args.file_view,
             index_field=args.diff_file_view_field,
             query=args.query)
+    if (args.drop_duplicates):
+        sorted_synapse_df = synapse_df.sort_values(by="exportedOn")
+        synapse_df = sorted_synapse_df[
+                ~sorted_synapse_df.index.duplicated(keep="last")]
     if (
             args.diff_s3_uri is not None
             and args.diff_parquet_field is not None
