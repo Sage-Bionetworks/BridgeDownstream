@@ -208,10 +208,10 @@ class TestJsonS3ToParquet:
         )
         iam_client.delete_role(RoleName=role_name)
 
-    @pytest.fixture(scope="class", autouse=True)
+    @pytest.fixture()
     def glue_crawler(self, glue_database, glue_database_name, glue_database_path, glue_flat_table,
                      glue_flat_table_name, glue_nested_table, glue_nested_table_name,
-                     glue_crawler_role, namespace):
+                     glue_crawler_role, json_s3_objects, namespace):
         glue_client = boto3.client("glue")
         crawler_name = "{namespace}-pytest-crawler"
         time.sleep(10) # give time for the IAM role trust policy to set in
@@ -296,16 +296,14 @@ class TestJsonS3ToParquet:
         glue_context = GlueContext(SparkSession.builder.getOrCreate())
         return glue_context
 
-    def test_upload_s3_objects(self, json_s3_objects):
+    def test_setup(self, glue_crawler):
         """
-        Since `datadir` is function scoped, we invoke the `json_s3_objects`
-        fixture once here so that it doesn't need to be invoked for all the
-        other test functions.
+        Perform setup for resources which we won't need to reference later.
         """
         pass
 
     def test_get_table(self, glue_database_name, glue_flat_table_name,
-                       glue_nested_table_name, glue_crawler, glue_context):
+                       glue_nested_table_name, glue_context):
         flat_table = json_s3_to_parquet.get_table(
                 table_name=glue_flat_table_name,
                 database_name=glue_database_name,
