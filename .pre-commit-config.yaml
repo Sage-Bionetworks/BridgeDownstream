@@ -17,6 +17,7 @@ repos:
     rev: v1.1.13
     hooks:
       - id: remove-tabs
+exclude: src/ec2/resources/crontab
   # - repo: https://github.com/pycqa/pylint
   #   rev: v2.11.1
   #   hooks:
