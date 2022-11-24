@@ -2,6 +2,8 @@
 
 BridgeDownstream is a data pipeline which processes digital health data originating from Sage’s [Bridge](https://developer.sagebridge.org/) platform. Bridge receives data from digital health apps and exports the same data to Synapse with its metadata as annotations. In general, Bridge can process data of any format, but typically the data is a ZIP archive of JSON files. This data is bucketed into JSON datasets of similar schemas and these JSON datasets are then “relationalized” into flat, tabular data frames and written to S3 as one or more Parquet datasets.
 
+This README explains how this repo is organized and how to set up the development environment. For documentation on the Bridge Downstream pipeline, please see the [developer documentation](https://sagebionetworks.jira.com/wiki/spaces/BD/pages/2746351624/Developer+Documentation).
+
 ## Setting up the development environment
 
 The development environment is managed using [pipenv](https://pipenv.pypa.io/en/latest/basics/). Run the following command in the same folder as the `Pipfile` and start a new shell subprocess utilizing this environment:
