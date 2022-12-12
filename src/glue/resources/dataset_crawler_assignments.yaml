@@ -2,6 +2,7 @@ standard:
   - ArchiveMetadata_v1
   - sharedSchema_v1
   - WeatherResult_v1
+  - sharedSchema_for_Gradual_Onset_v1
 array_of_records:
   - AudioLevelRecord_v1
   - MotionRecord_v1
