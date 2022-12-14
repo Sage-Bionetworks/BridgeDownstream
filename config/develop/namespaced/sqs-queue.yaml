@@ -1,5 +1,4 @@
-template:
-  path: sqs-queue.yaml
+template_path: sqs-queue.yaml
 parameters:
   MessageRetentionPeriod: '86400'
   SubscribePrimaryToSNS: 'true'

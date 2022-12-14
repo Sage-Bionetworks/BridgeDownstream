@@ -1,5 +1,4 @@
-template:
-  path: glue-job-role.yaml
+template_path: glue-job-role.yaml
 stack_name: glue-job-role
 dependencies:
   - prod/invalid-sqs-queue.yaml

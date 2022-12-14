@@ -1,5 +1,4 @@
-template:
-  path: s3-bucket.yaml
+template_path: s3-bucket.yaml
 stack_name: bridge-downstream-intermediate-bucket
 parameters:
   BucketName: bridge-downstream-intermediate-data

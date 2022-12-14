@@ -1,5 +1,4 @@
-template:
-  path: ec2-bootstrap-trigger.yaml
+template_path: ec2-bootstrap-trigger.yaml
 stack_name: ec2-bootstrap-trigger
 parameters:
   SsmParameterName: synapse-bridgedownstream-auth

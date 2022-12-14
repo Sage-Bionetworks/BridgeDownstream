@@ -1,5 +1,4 @@
-template:
-  path: study-pipeline-infra.j2
+template_path: study-pipeline-infra.j2
 stack_name: '{{ stack_group_config.namespace }}-fmqcjv'
 dependencies:
   - prod/glue-job-role.yaml
