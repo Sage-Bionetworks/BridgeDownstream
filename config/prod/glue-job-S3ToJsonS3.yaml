@@ -1,4 +1,5 @@
-template_path: glue-job-S3ToJsonS3.yaml
+template:
+  path: glue-job-S3ToJsonS3.yaml
 dependencies:
   - prod/s3-intermediate-bucket.yaml
   - prod/invalid-sqs-queue.yaml

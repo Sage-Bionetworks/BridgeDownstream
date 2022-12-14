@@ -1,4 +1,5 @@
-template_path: ecr-repository.yaml
+template:
+  path: ecr-repository.yaml
 stack_name: pytest
 parameters:
   RepositoryName: pytest
