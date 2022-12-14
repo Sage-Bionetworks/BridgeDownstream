@@ -1,4 +1,5 @@
-template_path: study-pipeline-infra.j2
+template:
+  path: study-pipeline-infra.j2
 stack_name: '{{ stack_group_config.namespace }}-mtb-alpha'
 dependencies:
   - prod/glue-job-role.yaml
