@@ -15,7 +15,7 @@ parameters:
   AdditionalPythonModules: 'synapseclient,jsonschema'
   DatasetMapping: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.namespace }}/glue/resources/dataset_mapping.json
   SchemaMapping: s3://{{ stack_group_config.artifact_bucket_name }}/BridgeDownstream/{{ stack_group_config.namespace }}/glue/resources/schema_mapping.json
-  ArchiveMapVersion: v4.4.1
+  ArchiveMapVersion: v4.5.2
   InvalidSQSQueueUrl: !stack_output_external '{{ stack_group_config.namespace }}-invalid-sqs::PrimaryQueueUrl'
 stack_tags:
   {{ stack_group_config.default_stack_tags }}

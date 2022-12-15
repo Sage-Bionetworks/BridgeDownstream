@@ -167,32 +167,36 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
             "archive_map_version": os.environ.get("archive_map_version")
     }
     file_metadata["assessment_revision"] = int(file_metadata["assessment_revision"])
+    valid_assessments = []
     for assessment in archive_map["assessments"]:
         if (assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
-                and assessment["assessmentRevision"] == file_metadata["assessment_revision"]):
-            for file in assessment["files"]:
-                if file["filename"] == file_metadata["file_name"]:
-                    json_schema["url"] = file["jsonSchema"]
-                    json_schema["schema"] = _get_cached_json_schema(
-                            url=json_schema["url"],
-                            json_schemas=json_schemas
-                    )
-                    return json_schema
+                and assessment["assessmentRevision"] <= file_metadata["assessment_revision"]):
+            valid_assessments.append(assessment)
+    if len(valid_assessments):
+        revision_distance = [
+                    int(file_metadata["assessment_revision"]) - a["assessmentRevision"]
+                    for a in valid_assessments
+        ]
+        this_assessment = valid_assessments[revision_distance.index(min(revision_distance))]
+        for file in this_assessment["files"]:
+            if file["filename"] == file_metadata["file_name"]:
+                json_schema["url"] = file["jsonSchema"]
+                json_schema["schema"] = _get_cached_json_schema(
+                        url=json_schema["url"],
+                        json_schemas=json_schemas
+                )
+                return json_schema
     for app in archive_map["apps"]:
         if app["appId"] == file_metadata["app_id"]:
-            allowed_app_specific_files = any([
-                    a["assessmentIdentifier"] == file_metadata["assessment_id"]
-                    and a["assessmentRevision"] == file_metadata["assessment_revision"]
-                    for a in app["assessments"]])
-            if allowed_app_specific_files:
-                for default_file in app["default"]["files"]:
+            for default_org in app["default"]:
+                for default_file in default_org["files"]:
                     if default_file["filename"] == file_metadata["file_name"]:
                         json_schema["url"] = default_file["jsonSchema"]
                         break
-                for file in app["anyOf"]:
-                    if file["filename"] == file_metadata["file_name"]:
-                        json_schema["url"] = file["jsonSchema"]
-                        break
+            for file in app["anyOf"]:
+                if file["filename"] == file_metadata["file_name"]:
+                    json_schema["url"] = file["jsonSchema"]
+                    break
     if json_schema["url"] is not None:
         json_schema["schema"] = _get_cached_json_schema(
                 url=json_schema["url"],
