@@ -1,5 +1,6 @@
 #{% set ns = stack_group_config.namespace %}
-template_path: study-pipeline-infra.j2
+template:
+  path: study-pipeline-infra.j2
 stack_name: '{{ ns }}-example-app-1-study-1'
 dependencies:
   - develop/glue-job-role.yaml
