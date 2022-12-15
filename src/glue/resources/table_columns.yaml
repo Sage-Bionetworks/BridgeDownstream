@@ -251,16 +251,16 @@ tables:
         Type: string
       - Name: testversion
         Type: string
-      - Name: scores
-        Type: struct<accuracy:double,adjacentPairs1:int,adjacentPairs2:int,exactMatch2:int,exactMatch1:int,finalSE:double,finalTheta:double,fnlScore:int,fnmScore:int,fsbScore:int,itemCount:int,nAnticipationLive:int,nAnticipationPractice:int,practiceSuccess:int,proportionCorrect:double,rateScore:double,rawScore:int,startSE:int,startTheta:double,timeout:string,totalErrors:int>
       - Name: taskrunuuid
         Type: string
       - Name: userinteractions
         Type: array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string>>
       - Name: steps
-        Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:integer>>
+        Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:int>>
       - Name: stephistory
-        Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:integer>>
+        Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:int>>
+      - Name: recordid
+        Type: string
     partition_keys:
       - Name: assessmentid
         Type: string
