@@ -136,7 +136,13 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
 
 def get_json_schema(archive_map, file_metadata, json_schemas):
     """
-    Fetch the JSON Schema for a given JSON file.
+    Fetch the JSON Schema for a given JSON file by cross-referencing the
+    file metadata with archive-map.json from the
+    Sage-Bionetworks/mobile-client-json repository.
+
+    archive-map.json has schemas scoped at three different levels: assessment,
+    app, and inter-app (that is, shared among apps). Each scope will be checked
+    for this JSON file's schema.
 
     Args:
         archive_map (dict): The dict representation of archive-map.json.
@@ -168,11 +174,14 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
     }
     file_metadata["assessment_revision"] = int(file_metadata["assessment_revision"])
     valid_assessments = []
+    # Check assessment-specific schemas
     for assessment in archive_map["assessments"]:
+        # Collect any assessments which satisfy the min assessment revision
         if (assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
                 and assessment["assessmentRevision"] <= file_metadata["assessment_revision"]):
             valid_assessments.append(assessment)
-    if len(valid_assessments):
+    if valid_assessments:
+        # Then find the assessment which is applicable to this data (if any exist)
         revision_distance = [
                     int(file_metadata["assessment_revision"]) - a["assessmentRevision"]
                     for a in valid_assessments
@@ -186,6 +195,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
                         json_schemas=json_schemas
                 )
                 return json_schema
+    # Check app-specific schemas
     for app in archive_map["apps"]:
         if app["appId"] == file_metadata["app_id"]:
             for default_org in app["default"]:
@@ -203,6 +213,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
                 json_schemas=json_schemas
         )
         return json_schema
+    # Check inter-app schemas
     for file in archive_map["anyOf"]:
         if file["filename"] == file_metadata["file_name"] and "jsonSchema" in file:
             json_schema["url"] = file["jsonSchema"]
@@ -303,9 +314,6 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
                 continue
             with z.open(json_path, "r") as p:
                 j = json.load(p)
-                # We are not currently validating Northwestern schemas
-                if json_path == "taskData.json":
-                    continue
                 all_errors = validate_against_schema(
                         data=j,
                         schema=json_schema["schema"]
