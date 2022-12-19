@@ -301,7 +301,6 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
                         f"in record_id = {validation_result['recordId']}. "
                         f"Unable to validate: {json.dumps(json_schema)}")
                 continue
-            base_uri = os.path.dirname(json_schema["url"])
             with z.open(json_path, "r") as p:
                 j = json.load(p)
                 # We are not currently validating Northwestern schemas
@@ -309,28 +308,25 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
                     continue
                 all_errors = validate_against_schema(
                         data=j,
-                        schema=json_schema["schema"],
-                        base_uri=base_uri
+                        schema=json_schema["schema"]
                 )
                 if len(all_errors) > 0:
                     validation_result["errors"][json_path] = all_errors
     return validation_result
 
-def validate_against_schema(data, schema, base_uri):
+def validate_against_schema(data, schema):
     """
     Validate JSON data against a schema from a given base URI.
 
     Args:
         data (dict): JSON data
         schema (dict): a JSON Schema
-        base_uri (str): The base URI from which to resolve JSON pointers against.
 
     Returns:
         all_errors (list): A list of validation errors
     """
-    ref_resolver = jsonschema.RefResolver(base_uri=base_uri, referrer=None)
     validator_cls = jsonschema.validators.validator_for(schema)
-    validator = validator_cls(schema=schema, resolver=ref_resolver)
+    validator = validator_cls(schema=schema)
     all_errors = [e.message for e in validator.iter_errors(data)]
     return all_errors
 
