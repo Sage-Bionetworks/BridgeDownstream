@@ -235,6 +235,41 @@ tables:
         Type: string
       - Name: day
         Type: string
+  sharedSchema_for_Gradual_Onset_v1:
+    columns:
+      - Name: startdate
+        Type: string
+      - Name: enddate
+        Type: string
+      - Name: taskstatus
+        Type: array<string>
+      - Name: locale
+        Type: string
+      - Name: taskname
+        Type: string
+      - Name: schemaidentifier
+        Type: string
+      - Name: testversion
+        Type: string
+      - Name: taskrunuuid
+        Type: string
+      - Name: userinteractions
+        Type: array<struct<controlEvent:array<string>,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string>>
+      - Name: steps
+        Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:int>>
+      - Name: stephistory
+        Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:int>>
+      - Name: recordid
+        Type: string
+    partition_keys:
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: string
+      - Name: month
+        Type: string
+      - Name: day
+        Type: string
   WeatherResult_v1:
     columns:
       - Name: weather
