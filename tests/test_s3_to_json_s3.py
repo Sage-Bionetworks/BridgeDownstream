@@ -83,26 +83,23 @@ class TestS3ToJsonS3():
               "appId": "mobile-toolbox",
               "iOS": 0,
               "android" : 0,
-              "default" : {
-                  "files": [
-                    {
-                      "filename": "assessmentResult.json",
-                      "isRequired": True,
-                      "jsonSchema": "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/AssessmentResultObject.json"
-                    }
-                  ]
-              },
+              "default" : [
+                  {
+                      "organization": "Sage Bionetworks",
+                      "files": [
+                        {
+                          "filename": "assessmentResult.json",
+                          "isRequired": True,
+                          "jsonSchema": "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/AssessmentResultObject.json"
+                        }
+                      ]
+                  }
+              ],
               "anyOf": [
                 {
                   "filename": "motion.json",
                   "isRequired": False,
                   "jsonSchema": "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/MotionRecord.json"
-                }
-              ],
-              "assessments": [
-                {
-                  "assessmentIdentifier": "spelling",
-                  "assessmentRevision": 5
                 }
               ]
             }
@@ -380,21 +377,6 @@ class TestS3ToJsonS3():
         assert isinstance(json_schema_assessment_result, dict)
         assert isinstance(json_schema_assessment_result["schema"], dict)
 
-    def test_get_json_schema_app_specific_file_invalid_assessment(self, archive_map):
-        file_metadata_motion = {
-                "assessment_id": "jellybeanz",
-                "assessment_revision": 5,
-                "file_name": "motion.json",
-                "app_id": "mobile-toolbox"
-        }
-        json_schema_motion = s3_to_json_s3.get_json_schema(
-                archive_map=archive_map,
-                file_metadata=file_metadata_motion,
-                json_schemas={}
-        )
-        assert isinstance(json_schema_motion, dict)
-        assert json_schema_motion["schema"] is None
-
     def test_get_json_schema_unlisted_filename(self, archive_map):
         file_metadata_no_schema = {
                 "assessment_id": "spelling",
@@ -509,8 +491,7 @@ class TestS3ToJsonS3():
                 j = json.load(p)
                 all_errors = s3_to_json_s3.validate_against_schema(
                         data=j,
-                        schema=metadata_json_schema,
-                        base_uri="https://sage-bionetworks.github.io/mobile-client-json/schemas/v2"
+                        schema=metadata_json_schema
                 )
                 assert isinstance(all_errors, list)
                 incorrect_metadata_json_schema = metadata_json_schema
@@ -519,8 +500,7 @@ class TestS3ToJsonS3():
                         incorrect_metadata_json_schema["required"] + ["cookies"]
                 all_errors = s3_to_json_s3.validate_against_schema(
                         data=j,
-                        schema=incorrect_metadata_json_schema,
-                        base_uri="https://sage-bionetworks.github.io/mobile-client-json/schemas/v2"
+                        schema=incorrect_metadata_json_schema
                 )
                 assert len(all_errors) == 1
 
