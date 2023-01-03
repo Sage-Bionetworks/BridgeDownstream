@@ -363,30 +363,31 @@ def is_expected_validation_error(validation_result, client_info):
     """
     if not validation_result["errors"]:
         return False
-    else:
-        if "Android" not in client_info:
+    if validation_result["appId"] != "mobile-toolbox":
+        return False
+    if "Android" not in client_info:
+        return False
+    if "metadata.json" in validation_result["errors"]:
+        metadata_errors = validation_result["errors"]["metadata.json"]
+        if not (len(metadata_errors) == 2 and
+                "'appName' is a required property" in metadata_errors and
+                "'files' is a required property" in metadata_errors):
             return False
-        if "metadata.json" in validation_result["errors"]:
-            metadata_errors = validation_result["errors"]["metadata.json"]
-            if not (len(metadata_errors) == 2 and
-                    "'appName' is a required property" in metadata_errors and
-                    "'files' is a required property" in metadata_errors):
-                return False
-        if "taskData.json" in validation_result["errors"]:
-            taskdata_errors = validation_result["errors"]["taskData.json"]
-            if not taskdata_errors == [
-                    "Additional properties are not allowed ('type' was unexpected)"]:
-                return False
-        if "weather.json" in validation_result["errors"]:
-            weather_errors = validation_result["errors"]["weather.json"]
-            if not weather_errors == [
-                    "'type' is a required property"]:
-                return False
-        if "motion.json" in validation_result["errors"]:
-            motion_errors = validation_result["errors"]["motion.json"]
-            if not motion_errors == [
-                    "'type' is a required property"]:
-                return False
+    if "taskData.json" in validation_result["errors"]:
+        taskdata_errors = validation_result["errors"]["taskData.json"]
+        if not taskdata_errors == [
+                "Additional properties are not allowed ('type' was unexpected)"]:
+            return False
+    if "weather.json" in validation_result["errors"]:
+        weather_errors = validation_result["errors"]["weather.json"]
+        if not weather_errors == [
+                "'type' is a required property"]:
+            return False
+    if "motion.json" in validation_result["errors"]:
+        motion_errors = validation_result["errors"]["motion.json"]
+        if not motion_errors == [
+                "'type' is a required property"]:
+            return False
     return True
 
 def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_metadata):

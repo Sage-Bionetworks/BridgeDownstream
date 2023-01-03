@@ -533,6 +533,71 @@ class TestS3ToJsonS3():
             assert key in validation_result
         assert isinstance(validation_result["errors"], dict)
 
+    def test_is_expected_validation_error(self):
+        validation_result = {
+                "assessmentId": "flanker",
+                "assessmentRevision": "5",
+                "appId": "mobile-toolbox",
+                "recordId": "123456789",
+                "errors": {}
+        }
+        client_info = "{osName:'Android'}"
+        # test not validation_result["errors"]
+        assert not s3_to_json_s3.is_expected_validation_error(
+                validation_result=validation_result,
+                client_info=client_info)
+        # test "Android" not in client_info:
+        assert not s3_to_json_s3.is_expected_validation_error(
+                validation_result=validation_result,
+                client_info="{osName:'iOS'}")
+        # test validation_result["appId"] != "mobile-toolbox":
+        assert not s3_to_json_s3.is_expected_validation_error(
+            validation_result = {
+                    "assessmentId": "flanker",
+                    "assessmentRevision": "5",
+                    "appId": "example-app",
+                    "recordId": "123456789",
+                    "errors": {}
+            },
+            client_info=client_info)
+        # test metadata.json
+        validation_result["errors"] = {
+                "metadata.json": [
+                    "'appName' is a required property",
+                    "'files' is a required property"
+                ]
+        }
+        assert s3_to_json_s3.is_expected_validation_error(
+                validation_result=validation_result,
+                client_info=client_info)
+        # test taskData.json
+        validation_result["errors"] = {
+                "taskData.json": [
+                    "Additional properties are not allowed ('type' was unexpected)"
+                ]
+        }
+        assert s3_to_json_s3.is_expected_validation_error(
+                validation_result=validation_result,
+                client_info=client_info)
+        # test weather.json
+        validation_result["errors"] = {
+                "weather.json": [
+                    "'type' is a required property"
+                ]
+        }
+        assert s3_to_json_s3.is_expected_validation_error(
+                validation_result=validation_result,
+                client_info=client_info)
+        # test motion.json
+        validation_result["errors"] = {
+                "motion.json": [
+                    "'type' is a required property"
+                ]
+        }
+        assert s3_to_json_s3.is_expected_validation_error(
+                validation_result=validation_result,
+                client_info=client_info)
+
     def test_write_metadata_file_to_json_dataset(self, s3_obj, namespace, monkeypatch):
         monkeypatch.setattr("boto3.client", lambda x : MockAWSClient())
         workflow_run_properties = {
