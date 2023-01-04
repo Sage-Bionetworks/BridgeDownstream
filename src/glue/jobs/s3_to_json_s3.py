@@ -375,17 +375,17 @@ def is_expected_validation_error(validation_result, client_info):
             return False
     if "taskData.json" in validation_result["errors"]:
         taskdata_errors = validation_result["errors"]["taskData.json"]
-        if not taskdata_errors == [
+        if taskdata_errors != [
                 "Additional properties are not allowed ('type' was unexpected)"]:
             return False
     if "weather.json" in validation_result["errors"]:
         weather_errors = validation_result["errors"]["weather.json"]
-        if not weather_errors == [
+        if weather_errors != [
                 "'type' is a required property"]:
             return False
     if "motion.json" in validation_result["errors"]:
         motion_errors = validation_result["errors"]["motion.json"]
-        if not motion_errors == [
+        if motion_errors != [
                 "'type' is a required property"]:
             return False
     return True
