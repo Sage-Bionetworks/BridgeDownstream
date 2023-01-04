@@ -271,8 +271,8 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
             * assessmentRevision (str)
             * appId (str)
             * recordId (str)
-            * errors (dict): mapping file names to their validation errors.
-                See `validate_against_schema` for format.
+            * errors (dict): mapping file names (str) to their
+                validation errors (list[str]).
     """
     logger = logging.getLogger(__name__)
     assessment_id = s3_obj["Metadata"]["assessmentid"]
@@ -337,6 +337,58 @@ def validate_against_schema(data, schema):
     validator = validator_cls(schema=schema)
     all_errors = [e.message for e in validator.iter_errors(data)]
     return all_errors
+
+def is_expected_validation_error(validation_result, client_info):
+    """
+    In the first year of MTB there were a number of issues with Android
+    data not conforming to the JSON Schema. These aren't very severe
+    inconsistincies (mostly missing or superfluous properties), but they
+    prevent almost all Android data from being processed. This function
+    checks whether the validation errors fall into this non-severe category.
+    See ETL-312 for more details.
+
+    Args:
+        validation_result (dict): A dictionary containing keys
+            * assessmentId (str)
+            * assessmentRevision (str)
+            * appId (str)
+            * recordId (str)
+            * errors (dict): mapping file names (str) to their
+                validation errors (list[str]).
+        client_info (str): A JSON blob containing the client info from the
+            relevant S3 object's metadata.
+
+    Returns:
+        bool: Whether the validation errors match expected, non-severe errors.
+    """
+    if not validation_result["errors"]:
+        return False
+    if validation_result["appId"] != "mobile-toolbox":
+        return False
+    if "Android" not in client_info:
+        return False
+    if "metadata.json" in validation_result["errors"]:
+        metadata_errors = validation_result["errors"]["metadata.json"]
+        if not (len(metadata_errors) == 2 and
+                "'appName' is a required property" in metadata_errors and
+                "'files' is a required property" in metadata_errors):
+            return False
+    if "taskData.json" in validation_result["errors"]:
+        taskdata_errors = validation_result["errors"]["taskData.json"]
+        if taskdata_errors != [
+                "Additional properties are not allowed ('type' was unexpected)"]:
+            return False
+    if "weather.json" in validation_result["errors"]:
+        weather_errors = validation_result["errors"]["weather.json"]
+        if weather_errors != [
+                "'type' is a required property"]:
+            return False
+    if "motion.json" in validation_result["errors"]:
+        motion_errors = validation_result["errors"]["motion.json"]
+        if motion_errors != [
+                "'type' is a required property"]:
+            return False
+    return True
 
 def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_metadata):
     """
@@ -615,7 +667,12 @@ def main():
                 json_schemas=json_schemas,
                 dataset_mapping=dataset_mapping
         )
-        if len(validation_result["errors"]) > 0:
+        expected_validation_error = is_expected_validation_error(
+                validation_result=validation_result,
+                client_info=s3_obj["Metadata"]["clientinfo"])
+        if validation_result["errors"] and expected_validation_error:
+            validation_result["errors"] = {}
+        if validation_result["errors"]:
             for file_name in validation_result["errors"]:
                 # limit 10 errors reported per file to avoid redundandant errors
                 validation_result["errors"][file_name] = \
