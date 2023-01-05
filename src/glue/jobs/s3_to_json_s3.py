@@ -385,8 +385,15 @@ def is_expected_validation_error(validation_result, client_info):
             return False
     if "motion.json" in validation_result["errors"]:
         motion_errors = validation_result["errors"]["motion.json"]
-        if motion_errors != [
-                "'type' is a required property"]:
+        allowed_errors = [
+                (
+                    "'acceleration' is not one of ['accelerometer', 'gyro', "
+                    "'magnetometer', 'attitude', 'gravity', 'magneticField', "
+                    "'rotationRate', 'userAcceleration']"
+                ),
+                "'stepPath' is a required property",
+        ]
+        if not all([e in allowed_errors for e in motion_errors]):
             return False
     return True
 

@@ -591,7 +591,12 @@ class TestS3ToJsonS3():
         # test motion.json
         validation_result["errors"] = {
                 "motion.json": [
-                    "'type' is a required property"
+                    (
+                        "'acceleration' is not one of ['accelerometer', 'gyro', "
+                        "'magnetometer', 'attitude', 'gravity', 'magneticField', "
+                        "'rotationRate', 'userAcceleration']"
+                    ),
+                    "'stepPath' is a required property",
                 ]
         }
         assert s3_to_json_s3.is_expected_validation_error(
