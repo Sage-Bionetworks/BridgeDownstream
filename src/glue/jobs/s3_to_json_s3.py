@@ -338,14 +338,14 @@ def validate_against_schema(data, schema):
     all_errors = [e.message for e in validator.iter_errors(data)]
     return all_errors
 
-def is_expected_validation_error(validation_result, client_info):
+def remove_expected_validation_errors(validation_result, client_info):
     """
     In the first year of MTB there were a number of issues with Android
     data not conforming to the JSON Schema. These aren't very severe
     inconsistincies (mostly missing or superfluous properties), but they
     prevent almost all Android data from being processed. This function
-    checks whether the validation errors fall into this non-severe category.
-    See ETL-312 for more details.
+    checks for and drops validation errors which fall into this non-severe
+    category. See ETL-312 and ETL-358 for more details.
 
     Args:
         validation_result (dict): A dictionary containing keys
@@ -362,30 +362,34 @@ def is_expected_validation_error(validation_result, client_info):
         bool: Whether the validation errors match expected, non-severe errors.
     """
     if not validation_result["errors"]:
-        return False
+        return validation_result["errors"]
     if validation_result["appId"] != "mobile-toolbox":
-        return False
+        return validation_result["errors"]
     if "Android" not in client_info:
-        return False
+        return validation_result["errors"]
     if "metadata.json" in validation_result["errors"]:
         metadata_errors = validation_result["errors"]["metadata.json"]
-        if not (len(metadata_errors) == 2 and
-                "'appName' is a required property" in metadata_errors and
-                "'files' is a required property" in metadata_errors):
-            return False
+        allowed_metadata_errors = [
+            "'appName' is a required property",
+            "'files' is a required property"]
+        unexpected_metadata_errors = [
+                e for e in metadata_errors if e not in allowed_metadata_errors]
+        validation_result["errors"]["metadata.json"] = unexpected_metadata_errors
     if "taskData.json" in validation_result["errors"]:
         taskdata_errors = validation_result["errors"]["taskData.json"]
-        if taskdata_errors != [
-                "Additional properties are not allowed ('type' was unexpected)"]:
-            return False
+        unexpected_taskdata_errors = [
+                e for e in taskdata_errors if
+                e != "Additional properties are not allowed ('type' was unexpected)"]
+        validation_result["errors"]["taskData.json"] = unexpected_taskdata_errors
     if "weather.json" in validation_result["errors"]:
         weather_errors = validation_result["errors"]["weather.json"]
-        if weather_errors != [
-                "'type' is a required property"]:
-            return False
+        unexpected_weather_errors = [
+                e for e in weather_errors if
+                e != "'type' is a required property"]
+        validation_result["errors"]["weather.json"] = unexpected_weather_errors
     if "motion.json" in validation_result["errors"]:
         motion_errors = validation_result["errors"]["motion.json"]
-        allowed_errors = [
+        allowed_motion_errors = [
                 (
                     "'acceleration' is not one of ['accelerometer', 'gyro', "
                     "'magnetometer', 'attitude', 'gravity', 'magneticField', "
@@ -393,9 +397,14 @@ def is_expected_validation_error(validation_result, client_info):
                 ),
                 "'stepPath' is a required property",
         ]
-        if not all([e in allowed_errors for e in motion_errors]):
-            return False
-    return True
+        unexpected_motion_errors = [
+                e for e in motion_errors if e not in allowed_motion_errors]
+        validation_result["errors"]["motion.json"] = unexpected_motion_errors
+    for file_name in list(validation_result["errors"].keys()):
+        if not validation_result["errors"][file_name]:
+            validation_result["errors"].pop(file_name)
+    return validation_result["errors"]
+
 
 def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_metadata):
     """
@@ -674,11 +683,9 @@ def main():
                 json_schemas=json_schemas,
                 dataset_mapping=dataset_mapping
         )
-        expected_validation_error = is_expected_validation_error(
+        validation_result["errors"] = remove_expected_validation_errors(
                 validation_result=validation_result,
                 client_info=s3_obj["Metadata"]["clientinfo"])
-        if validation_result["errors"] and expected_validation_error:
-            validation_result["errors"] = {}
         if validation_result["errors"]:
             for file_name in validation_result["errors"]:
                 # limit 10 errors reported per file to avoid redundandant errors
