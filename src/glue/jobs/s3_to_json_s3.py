@@ -359,7 +359,8 @@ def remove_expected_validation_errors(validation_result, client_info):
             relevant S3 object's metadata.
 
     Returns:
-        bool: Whether the validation errors match expected, non-severe errors.
+        dict: mapping file names (str) to their (unexpected) validation
+              errors (list[str]).
     """
     if not validation_result["errors"]:
         return validation_result["errors"]
