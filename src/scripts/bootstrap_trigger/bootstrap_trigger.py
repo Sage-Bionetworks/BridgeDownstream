@@ -50,6 +50,14 @@ def read_args():
                         help=("Optional. The field name in the parquet dataset to diff "
                               "upon. Defaults to 'recordid'."),
                         default="recordid")
+    parser.add_argument("--diff-s3-uri-2",
+                        help=("Optional. The S3 URI of a parquet dataset to take the "
+                              "union with --diff-s3-uri before taking the diff "
+                              "and submitting to the --glue-workflow."))
+    parser.add_argument("--diff-parquet-field-2",
+                        help=("Optional. The field name in the --diff-s3-uri-2 parquet "
+                              "dataset to diff upon. Defaults to 'recordid'."),
+                        default="recordid")
     parser.add_argument("--diff-file-view-field",
                         help=("Optional. The field name in the --file-view to diff "
                               "upon. Defaults to 'recordId'."),
@@ -226,8 +234,16 @@ def main():
                 dataset_uri=args.diff_s3_uri,
                 aws_session=aws_session,
                 columns=[args.diff_parquet_field])
+        already_processed_records = parquet_dataset[args.diff_parquet_field]
+        if args.diff_s3_uri_2 is not None and args.diff_parquet_field_2 is not None:
+            parquet_dataset_2 = get_parquet_dataset(
+                    dataset_uri=args.diff_s3_uri_2,
+                    aws_session=aws_session,
+                    columns=[args.diff_parquet_field_2])
+            already_processed_records = already_processed_records.append(
+                    parquet_dataset_2[args.diff_parquet_field])
         synapse_df = synapse_df.drop(
-                parquet_dataset[args.diff_parquet_field].values)
+                list(set(already_processed_records.values)))
     if len(synapse_df) > 0:
         print(f"Submitting { len(synapse_df) } records to { args.glue_workflow }")
         submit_archives_to_workflow(
