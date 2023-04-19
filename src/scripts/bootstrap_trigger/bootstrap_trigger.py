@@ -11,6 +11,7 @@ processed again.
 import json
 import argparse
 import boto3
+import pandas
 import synapseclient
 from pyarrow import fs, parquet
 
@@ -240,8 +241,12 @@ def main():
                     dataset_uri=args.diff_s3_uri_2,
                     aws_session=aws_session,
                     columns=[args.diff_parquet_field_2])
-            already_processed_records = already_processed_records.append(
-                    parquet_dataset_2[args.diff_parquet_field])
+            already_processed_records = pandas.concat(
+                [
+                    already_processed_records,
+                    parquet_dataset_2[args.diff_parquet_field_2]
+                ]
+            )
         synapse_df = synapse_df.drop(
                 list(set(already_processed_records.values)))
     if len(synapse_df) > 0:
