@@ -1,17 +1,14 @@
 """
 Submit Synapse files stored on an external S3 bucket to a Glue workflow.
-Of course, this assumes that the workflow has read permissions on the S3
-bucket.
 
-The --diff-* arguments allow a parquet dataset in a Synapse-linked S3 location to
-be diffed upon before submitting matching --query results to the --glue-workflow.
-In this way, data which has already been processed by the pipeline is not
-processed again.
+The --diff-* arguments allow one or two parquet dataset in a Synapse-linked S3 location to
+be diffed upon before submitting matching --query results from a Synapse table
+to the --glue-workflow. In this way, data which does not appear in the specified
+parquet datasets is submitted for processing.
 """
 import json
 import argparse
 import boto3
-import pandas
 import synapseclient
 from pyarrow import fs, parquet
 
@@ -235,20 +232,22 @@ def main():
                 dataset_uri=args.diff_s3_uri,
                 aws_session=aws_session,
                 columns=[args.diff_parquet_field])
-        already_processed_records = parquet_dataset[args.diff_parquet_field]
+        records_needing_processing = synapse_df.drop(
+                parquet_dataset[args.diff_parquet_field].values)
         if args.diff_s3_uri_2 is not None and args.diff_parquet_field_2 is not None:
             parquet_dataset_2 = get_parquet_dataset(
                     dataset_uri=args.diff_s3_uri_2,
                     aws_session=aws_session,
                     columns=[args.diff_parquet_field_2])
-            already_processed_records = pandas.concat(
-                [
-                    already_processed_records,
-                    parquet_dataset_2[args.diff_parquet_field_2]
-                ]
-            )
-        synapse_df = synapse_df.drop(
-                list(set(already_processed_records.values)))
+            records_needing_processing_2 = synapse_df.drop(
+                    parquet_dataset_2[args.diff_parquet_field_2].values)
+            synapse_df = synapse_df.loc[
+                    records_needing_processing.index.union(records_needing_processing_2.index)
+            ]
+        else:
+            synapse_df = synapse_df.loc[
+                    records_needing_processing.index
+            ]
     if len(synapse_df) > 0:
         print(f"Submitting { len(synapse_df) } records to { args.glue_workflow }")
         submit_archives_to_workflow(
