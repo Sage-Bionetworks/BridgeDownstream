@@ -101,13 +101,9 @@ def get_source_and_dest_prefix(s3_client, bucket, app, dataset, dataset_version)
                     "s3://",
                     bucket,
                     descendent_dataset_prefix)
-            descendent_dataset = "_".join(
-                    descendent_dataset_prefix
-                    .split("/")[-2]
-                    .split("_")[:-1])
+            descendent_dataset = descendent_dataset_prefix.split("/")[-2]
             archive_dataset_name = "_".join([
                     descendent_dataset,
-                    dataset_version,
                     str(latest_archive_dataset_update+1)])
             dest_path = os.path.join(
                     "s3://",
