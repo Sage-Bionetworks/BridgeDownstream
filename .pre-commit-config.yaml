@@ -1,22 +1,26 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.4.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.26.3
+    rev: v1.30.0
     hooks:
       - id: yamllint
   - repo: https://github.com/awslabs/cfn-python-lint
-    rev: v0.58.4
+    rev: v0.77.0
     hooks:
       - id: cfn-python-lint
         files: templates/.*\.(json|yml|yaml)$
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.13
+    rev: v1.5.1
     hooks:
       - id: remove-tabs
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
 exclude: src/ec2/resources/crontab
   # - repo: https://github.com/pycqa/pylint
   #   rev: v2.11.1
