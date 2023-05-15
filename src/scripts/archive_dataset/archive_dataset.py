@@ -43,20 +43,18 @@ import boto3
 def read_args():
     """Read command line arguments."""
     parser = argparse.ArgumentParser(
-            description=("Archive a parquet dataset for each study of an app "
-                         "by copying it to the standard archive location: "
-                         "s3://{--bucket}/{--app}/{study}/parquet/archive/"
-                         "{--dataset}_{--dataset-version}_{update-number}/"))
-    parser.add_argument("--bucket",
-                        help="The name of the S3 bucket.")
-    parser.add_argument("--app",
-                        help="The app identifier.")
-    parser.add_argument("--dataset",
-                        help="The dataset name.")
-    parser.add_argument("--dataset-version",
-                        help="The dataset name.")
-    parser.add_argument("--profile",
-                        help="The AWS profile to use.")
+        description=(
+            "Archive a parquet dataset for each study of an app "
+            "by copying it to the standard archive location: "
+            "s3://{--bucket}/{--app}/{study}/parquet/archive/"
+            "{--dataset}_{--dataset-version}_{update-number}/"
+        )
+    )
+    parser.add_argument("--bucket", help="The name of the S3 bucket.")
+    parser.add_argument("--app", help="The app identifier.")
+    parser.add_argument("--dataset", help="The dataset name.")
+    parser.add_argument("--dataset-version", help="The dataset name.")
+    parser.add_argument("--profile", help="The AWS profile to use.")
     args = parser.parse_args()
     return args
 
@@ -77,47 +75,47 @@ def get_source_and_dest_prefix(s3_client, bucket, app, dataset, dataset_version)
     """
     source_and_dest = dict()
     study_prefix_obj = s3_client.list_objects_v2(
-            Bucket=bucket,
-            Prefix=f"{app}/",
-            Delimiter="/")
+        Bucket=bucket, Prefix=f"{app}/", Delimiter="/"
+    )
     study_prefixes = [cp["Prefix"] for cp in study_prefix_obj["CommonPrefixes"]]
     for study_prefix in study_prefixes:
         parquet_prefix = f"{study_prefix}parquet/"
         parquet_dataset_prefix_obj = s3_client.list_objects_v2(
-                Bucket=bucket,
-                Prefix=parquet_prefix,
-                Delimiter="/")
+            Bucket=bucket, Prefix=parquet_prefix, Delimiter="/"
+        )
         descendent_dataset_prefixes = [
-                cp["Prefix"] for cp in parquet_dataset_prefix_obj["CommonPrefixes"]
-                if f"{dataset}_" in cp["Prefix"] and dataset_version in cp["Prefix"]]
+            cp["Prefix"]
+            for cp in parquet_dataset_prefix_obj["CommonPrefixes"]
+            if f"{dataset}_" in cp["Prefix"] and dataset_version in cp["Prefix"]
+        ]
         latest_archive_dataset_update = get_archive_dataset_update_number(
-                s3_client=s3_client,
-                bucket=bucket,
-                study_prefix=study_prefix,
-                dataset=dataset,
-                dataset_version=dataset_version)
+            s3_client=s3_client,
+            bucket=bucket,
+            study_prefix=study_prefix,
+            dataset=dataset,
+            dataset_version=dataset_version,
+        )
         for descendent_dataset_prefix in descendent_dataset_prefixes:
-            source_path = os.path.join(
-                    "s3://",
-                    bucket,
-                    descendent_dataset_prefix)
+            source_path = os.path.join("s3://", bucket, descendent_dataset_prefix)
             descendent_dataset = descendent_dataset_prefix.split("/")[-2]
-            archive_dataset_name = "_".join([
-                    descendent_dataset,
-                    str(latest_archive_dataset_update+1)])
+            archive_dataset_name = "_".join(
+                [descendent_dataset, str(latest_archive_dataset_update + 1)]
+            )
             dest_path = os.path.join(
-                    "s3://",
-                    bucket,
-                    study_prefix,
-                    "parquet",
-                    "archive",
-                    archive_dataset_name)
+                "s3://",
+                bucket,
+                study_prefix,
+                "parquet",
+                "archive",
+                archive_dataset_name,
+            )
             source_and_dest[source_path] = dest_path
     return source_and_dest
 
 
-def get_archive_dataset_update_number(s3_client, bucket, study_prefix,
-                                      dataset, dataset_version):
+def get_archive_dataset_update_number(
+    s3_client, bucket, study_prefix, dataset, dataset_version
+):
     """Get the most recent update number for the specified dataset and
     dataset version. The update number of the archive we are creating should
     be one more than this.
@@ -135,19 +133,21 @@ def get_archive_dataset_update_number(s3_client, bucket, study_prefix,
     """
     archive_prefix = f"{study_prefix}parquet/archive/"
     archive_dataset_prefix_obj = s3_client.list_objects_v2(
-            Bucket=bucket,
-            Prefix=archive_prefix,
-            Delimiter="/")
+        Bucket=bucket, Prefix=archive_prefix, Delimiter="/"
+    )
     relevant_archive_dataset_prefixes = []
     if "CommonPrefixes" in archive_dataset_prefix_obj.keys():
         relevant_archive_dataset_prefixes = [
-                cp["Prefix"] for cp in archive_dataset_prefix_obj["CommonPrefixes"]
-                if f"{dataset}_{dataset_version}" in cp["Prefix"]]
+            cp["Prefix"]
+            for cp in archive_dataset_prefix_obj["CommonPrefixes"]
+            if f"{dataset}_{dataset_version}" in cp["Prefix"]
+        ]
     if len(relevant_archive_dataset_prefixes) == 0:
         # No datasets of this type and version in archive
         return 0
     preexisting_update_nums = [
-            prefix.split("_")[-1][:-1] for prefix in relevant_archive_dataset_prefixes]
+        prefix.split("_")[-1][:-1] for prefix in relevant_archive_dataset_prefixes
+    ]
     latest_version = max([int(n) for n in preexisting_update_nums])
     return latest_version
 
@@ -164,9 +164,7 @@ def copy_source_to_dest(source_and_dest):
     for source in source_and_dest:
         dest = source_and_dest[source]
         bash_command = f"aws s3 cp --recursive {source} {dest}"
-        subprocess.run(
-                shlex.split(bash_command),
-                check=True)
+        subprocess.run(shlex.split(bash_command), check=True)
 
 
 def main():
@@ -174,11 +172,12 @@ def main():
     aws_session = boto3.session.Session(profile_name=args.profile)
     s3_client = aws_session.client("s3")
     source_and_dest = get_source_and_dest_prefix(
-            s3_client=s3_client,
-            bucket=args.bucket,
-            app=args.app,
-            dataset=args.dataset,
-            dataset_version=args.dataset_version)
+        s3_client=s3_client,
+        bucket=args.bucket,
+        app=args.app,
+        dataset=args.dataset,
+        dataset_version=args.dataset_version,
+    )
     copy_source_to_dest(source_and_dest=source_and_dest)
 
 

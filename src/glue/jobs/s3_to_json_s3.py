@@ -42,16 +42,20 @@ def get_data_mapping(data_mapping_uri):
     data_mapping_key = data_mapping_location.path[1:]
     data_mapping_fname = os.path.basename(data_mapping_key)
     download_file_args = {
-            "Bucket":data_mapping_bucket,
-            "Key":data_mapping_key,
-            "Filename":data_mapping_fname}
-    logger.debug("Calling s3_client.download_file with args: "
-                 f"{json.dumps(download_file_args)}")
+        "Bucket": data_mapping_bucket,
+        "Key": data_mapping_key,
+        "Filename": data_mapping_fname,
+    }
+    logger.debug(
+        "Calling s3_client.download_file with args: "
+        f"{json.dumps(download_file_args)}"
+    )
     s3_client.download_file(**download_file_args)
     with open(data_mapping_fname, "r") as f:
         data_mapping = json.load(f)
-    logger.debug(f'data_mapping: {data_mapping}')
+    logger.debug(f"data_mapping: {data_mapping}")
     return data_mapping
+
 
 def update_sts_tokens(syn, synapse_data_folder, sts_tokens):
     """
@@ -69,14 +73,16 @@ def update_sts_tokens(syn, synapse_data_folder, sts_tokens):
     """
     logger = logging.getLogger(__name__)
     if synapse_data_folder not in sts_tokens:
-        logger.debug(f"Did not find a cached STS token "
-                     f"for {synapse_data_folder}. Getting and adding.")
+        logger.debug(
+            f"Did not find a cached STS token "
+            f"for {synapse_data_folder}. Getting and adding."
+        )
         sts_token = syn.get_sts_storage_token(
-                entity=synapse_data_folder,
-                permission="read_only",
-                output_format="boto")
+            entity=synapse_data_folder, permission="read_only", output_format="boto"
+        )
         sts_tokens[synapse_data_folder] = sts_token
     return sts_tokens
+
 
 def get_archive_map(archive_map_version):
     """
@@ -88,12 +94,15 @@ def get_archive_map(archive_map_version):
     Returns:
         dict: The specified version of archive-map.json
     """
-    archive_map_uri_template = ("https://raw.githubusercontent.com/Sage-Bionetworks"
-                                "/mobile-client-json/{version}/archive-map.json")
+    archive_map_uri_template = (
+        "https://raw.githubusercontent.com/Sage-Bionetworks"
+        "/mobile-client-json/{version}/archive-map.json"
+    )
     archive_map_uri = archive_map_uri_template.format(version=archive_map_version)
     archive_map = requests.get(archive_map_uri)
     archive_map_json = archive_map.json()
     return archive_map_json
+
 
 def update_json_schemas(s3_obj, archive_map, json_schemas):
     """
@@ -115,16 +124,17 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
         contents = z.namelist()
         for json_path in contents:
             file_name = os.path.basename(json_path)
-            file_metadata={
+            file_metadata = {
                 "file_name": file_name,
                 "app_id": app_id,
                 "assessment_id": assessment_id,
-                "assessment_revision": assessment_revision
+                "assessment_revision": assessment_revision,
             }
             json_schema = get_json_schema(
-                    archive_map=archive_map,
-                    file_metadata=file_metadata,
-                    json_schemas=json_schemas)
+                archive_map=archive_map,
+                file_metadata=file_metadata,
+                json_schemas=json_schemas,
+            )
             novel_schema = True
             for cached_schema in json_schemas:
                 if all([cached_schema[k] == json_schema[k] for k in file_metadata]):
@@ -133,6 +143,7 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
             if novel_schema:
                 json_schemas.append(json_schema)
     return json_schemas
+
 
 def get_json_schema(archive_map, file_metadata, json_schemas):
     """
@@ -164,35 +175,38 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
             * archive_map_version (str)
     """
     json_schema = {
-            "url": None,
-            "schema": None,
-            "app_id": file_metadata["app_id"],
-            "assessment_id": file_metadata["assessment_id"],
-            "assessment_revision": file_metadata["assessment_revision"],
-            "file_name": file_metadata["file_name"],
-            "archive_map_version": os.environ.get("archive_map_version")
+        "url": None,
+        "schema": None,
+        "app_id": file_metadata["app_id"],
+        "assessment_id": file_metadata["assessment_id"],
+        "assessment_revision": file_metadata["assessment_revision"],
+        "file_name": file_metadata["file_name"],
+        "archive_map_version": os.environ.get("archive_map_version"),
     }
     file_metadata["assessment_revision"] = int(file_metadata["assessment_revision"])
     valid_assessments = []
     # Check assessment-specific schemas
     for assessment in archive_map["assessments"]:
         # Collect any assessments which satisfy the min assessment revision
-        if (assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
-                and assessment["assessmentRevision"] <= file_metadata["assessment_revision"]):
+        if (
+            assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
+            and assessment["assessmentRevision"] <= file_metadata["assessment_revision"]
+        ):
             valid_assessments.append(assessment)
     if valid_assessments:
         # Then find the assessment which is applicable to this data (if any exist)
         revision_distance = [
-                    int(file_metadata["assessment_revision"]) - a["assessmentRevision"]
-                    for a in valid_assessments
+            int(file_metadata["assessment_revision"]) - a["assessmentRevision"]
+            for a in valid_assessments
         ]
-        this_assessment = valid_assessments[revision_distance.index(min(revision_distance))]
+        this_assessment = valid_assessments[
+            revision_distance.index(min(revision_distance))
+        ]
         for file in this_assessment["files"]:
             if file["filename"] == file_metadata["file_name"]:
                 json_schema["url"] = file["jsonSchema"]
                 json_schema["schema"] = _get_cached_json_schema(
-                        url=json_schema["url"],
-                        json_schemas=json_schemas
+                    url=json_schema["url"], json_schemas=json_schemas
                 )
                 return json_schema
     # Check app-specific schemas
@@ -209,8 +223,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
                     break
     if json_schema["url"] is not None:
         json_schema["schema"] = _get_cached_json_schema(
-                url=json_schema["url"],
-                json_schemas=json_schemas
+            url=json_schema["url"], json_schemas=json_schemas
         )
         return json_schema
     # Check inter-app schemas
@@ -220,10 +233,10 @@ def get_json_schema(archive_map, file_metadata, json_schemas):
             break
     if json_schema["url"] is not None:
         json_schema["schema"] = _get_cached_json_schema(
-                url=json_schema["url"],
-                json_schemas=json_schemas
+            url=json_schema["url"], json_schemas=json_schemas
         )
     return json_schema
+
 
 def _get_cached_json_schema(url, json_schemas):
     """
@@ -240,6 +253,7 @@ def _get_cached_json_schema(url, json_schemas):
         if url == json_schema["url"]:
             return json_schema["schema"]
     return requests.get(url).json()
+
 
 def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
     """
@@ -280,47 +294,49 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
     # Currently app_id is fixed "mobile-toolbox". See BRIDGE-3325 / ETL-231.
     app_id = "mobile-toolbox"
     validation_result = {
-            "assessmentId": assessment_id,
-            "assessmentRevision": assessment_revision,
-            "appId": app_id,
-            "recordId": s3_obj["Metadata"]["recordid"],
-            "errors": {}
+        "assessmentId": assessment_id,
+        "assessmentRevision": assessment_revision,
+        "appId": app_id,
+        "recordId": s3_obj["Metadata"]["recordid"],
+        "errors": {},
     }
     if (
-            assessment_id in dataset_mapping["assessmentIdentifier"]
-            and str(assessment_revision) in
-                dataset_mapping["assessmentIdentifier"][assessment_id]["assessmentRevision"]
-        ):
+        assessment_id in dataset_mapping["assessmentIdentifier"]
+        and str(assessment_revision)
+        in dataset_mapping["assessmentIdentifier"][assessment_id]["assessmentRevision"]
+    ):
         return validation_result
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"])) as z:
         contents = z.namelist()
         for json_path in contents:
             file_name = os.path.basename(json_path)
             json_schema = get_json_schema(
-                    archive_map=archive_map,
-                    file_metadata={
-                        "file_name": file_name,
-                        "app_id": app_id,
-                        "record_id": s3_obj["Metadata"]["recordid"],
-                        "assessment_id": assessment_id,
-                        "assessment_revision": assessment_revision
-                    },
-                    json_schemas=json_schemas)
+                archive_map=archive_map,
+                file_metadata={
+                    "file_name": file_name,
+                    "app_id": app_id,
+                    "record_id": s3_obj["Metadata"]["recordid"],
+                    "assessment_id": assessment_id,
+                    "assessment_revision": assessment_revision,
+                },
+                json_schemas=json_schemas,
+            )
             if json_schema["schema"] is None:
                 logger.warning(
-                        f"Did not find qualifying JSON Schema for {json_path}. "
-                        f"in record_id = {validation_result['recordId']}. "
-                        f"Unable to validate: {json.dumps(json_schema)}")
+                    f"Did not find qualifying JSON Schema for {json_path}. "
+                    f"in record_id = {validation_result['recordId']}. "
+                    f"Unable to validate: {json.dumps(json_schema)}"
+                )
                 continue
             with z.open(json_path, "r") as p:
                 j = json.load(p)
                 all_errors = validate_against_schema(
-                        data=j,
-                        schema=json_schema["schema"]
+                    data=j, schema=json_schema["schema"]
                 )
                 if len(all_errors) > 0:
                     validation_result["errors"][json_path] = all_errors
     return validation_result
+
 
 def validate_against_schema(data, schema):
     """
@@ -337,6 +353,7 @@ def validate_against_schema(data, schema):
     validator = validator_cls(schema=schema)
     all_errors = [e.message for e in validator.iter_errors(data)]
     return all_errors
+
 
 def remove_expected_validation_errors(validation_result, client_info):
     """
@@ -372,34 +389,39 @@ def remove_expected_validation_errors(validation_result, client_info):
         metadata_errors = validation_result["errors"]["metadata.json"]
         allowed_metadata_errors = [
             "'appName' is a required property",
-            "'files' is a required property"]
+            "'files' is a required property",
+        ]
         unexpected_metadata_errors = [
-                e for e in metadata_errors if e not in allowed_metadata_errors]
+            e for e in metadata_errors if e not in allowed_metadata_errors
+        ]
         validation_result["errors"]["metadata.json"] = unexpected_metadata_errors
     if "taskData.json" in validation_result["errors"]:
         taskdata_errors = validation_result["errors"]["taskData.json"]
         unexpected_taskdata_errors = [
-                e for e in taskdata_errors if
-                e != "Additional properties are not allowed ('type' was unexpected)"]
+            e
+            for e in taskdata_errors
+            if e != "Additional properties are not allowed ('type' was unexpected)"
+        ]
         validation_result["errors"]["taskData.json"] = unexpected_taskdata_errors
     if "weather.json" in validation_result["errors"]:
         weather_errors = validation_result["errors"]["weather.json"]
         unexpected_weather_errors = [
-                e for e in weather_errors if
-                e != "'type' is a required property"]
+            e for e in weather_errors if e != "'type' is a required property"
+        ]
         validation_result["errors"]["weather.json"] = unexpected_weather_errors
     if "motion.json" in validation_result["errors"]:
         motion_errors = validation_result["errors"]["motion.json"]
         allowed_motion_errors = [
-                (
-                    "'acceleration' is not one of ['accelerometer', 'gyro', "
-                    "'magnetometer', 'attitude', 'gravity', 'magneticField', "
-                    "'rotationRate', 'userAcceleration']"
-                ),
-                "'stepPath' is a required property",
+            (
+                "'acceleration' is not one of ['accelerometer', 'gyro', "
+                "'magnetometer', 'attitude', 'gravity', 'magneticField', "
+                "'rotationRate', 'userAcceleration']"
+            ),
+            "'stepPath' is a required property",
         ]
         unexpected_motion_errors = [
-                e for e in motion_errors if e not in allowed_motion_errors]
+            e for e in motion_errors if e not in allowed_motion_errors
+        ]
         validation_result["errors"]["motion.json"] = unexpected_motion_errors
     for file_name in list(validation_result["errors"].keys()):
         if not validation_result["errors"][file_name]:
@@ -426,39 +448,52 @@ def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_me
     """
     logger = logging.getLogger(__name__)
     if (
-            json_schema is not None
-            and "$id" in json_schema
-            and json_schema["$id"] in schema_mapping
+        json_schema is not None
+        and "$id" in json_schema
+        and json_schema["$id"] in schema_mapping
     ):
         dataset_identifier = schema_mapping[json_schema["$id"]]
         return dataset_identifier
     file_metadata_str = ", ".join(
-            [f"{key} = {value}" for key, value in file_metadata.items()])
+        [f"{key} = {value}" for key, value in file_metadata.items()]
+    )
     if file_metadata["assessment_id"] not in dataset_mapping["assessmentIdentifier"]:
-        logger.warning(f"Skipping {file_metadata_str} because "
-                       f"assessmentIdentifier = {file_metadata['assessment_id']} "
-                       "was not found in dataset mapping.")
+        logger.warning(
+            f"Skipping {file_metadata_str} because "
+            f"assessmentIdentifier = {file_metadata['assessment_id']} "
+            "was not found in dataset mapping."
+        )
         return None
-    revision_mapping = \
-            dataset_mapping["assessmentIdentifier"][file_metadata["assessment_id"]]
-    if file_metadata["assessment_revision"] not in revision_mapping["assessmentRevision"]:
-        logger.warning(f"Skipping {file_metadata_str} because "
-                       f"assessmentRevision = {file_metadata['assessment_revision']} "
-                       "was not found in dataset mapping.")
+    revision_mapping = dataset_mapping["assessmentIdentifier"][
+        file_metadata["assessment_id"]
+    ]
+    if (
+        file_metadata["assessment_revision"]
+        not in revision_mapping["assessmentRevision"]
+    ):
+        logger.warning(
+            f"Skipping {file_metadata_str} because "
+            f"assessmentRevision = {file_metadata['assessment_revision']} "
+            "was not found in dataset mapping."
+        )
         return None
-    dataset_identifier_mapping = \
-            revision_mapping["assessmentRevision"][file_metadata["assessment_revision"]]
+    dataset_identifier_mapping = revision_mapping["assessmentRevision"][
+        file_metadata["assessment_revision"]
+    ]
     if file_metadata["file_name"] not in dataset_identifier_mapping:
         logger.warning(
-                f"Skipping {file_metadata_str} "
-                f"because {file_metadata['file_name']} was not found in the "
-                "dataset mapping.")
+            f"Skipping {file_metadata_str} "
+            f"because {file_metadata['file_name']} was not found in the "
+            "dataset mapping."
+        )
         return None
     dataset_identifier = dataset_identifier_mapping[file_metadata["file_name"]]
     return dataset_identifier
 
-def write_file_to_json_dataset(z, json_path, dataset_identifier,
-        s3_obj_metadata, workflow_run_properties):
+
+def write_file_to_json_dataset(
+    z, json_path, dataset_identifier, s3_obj_metadata, workflow_run_properties
+):
     """
     Write a JSON from a zipfile to a JSON dataset.
 
@@ -490,8 +525,8 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
     logger = logging.getLogger(__name__)
     schema_identifier = dataset_identifier.split("_")[0]
     uploaded_on = datetime.strptime(
-            s3_obj_metadata["uploadedon"],
-            '%Y-%m-%dT%H:%M:%S.%fZ')
+        s3_obj_metadata["uploadedon"], "%Y-%m-%dT%H:%M:%S.%fZ"
+    )
     os.makedirs(dataset_identifier, exist_ok=True)
     output_path = None
     with z.open(json_path, "r") as p:
@@ -503,7 +538,7 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
             j["day"] = int(uploaded_on.day)
             for key in s3_obj_metadata:
                 j[key] = s3_obj_metadata[key]
-        else: # but only the partition fields and record ID into other files
+        else:  # but only the partition fields and record ID into other files
             if isinstance(j, list):
                 for item in j:
                     item["assessmentid"] = s3_obj_metadata["assessmentid"]
@@ -519,7 +554,7 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
                 j["recordid"] = s3_obj_metadata["recordid"]
         output_fname = s3_obj_metadata["recordid"] + ".ndjson"
         output_path = os.path.join(dataset_identifier, output_fname)
-        logger.debug(f'output_path: {output_path}')
+        logger.debug(f"output_path: {output_path}")
         with open(output_path, "w") as f_out:
             json.dump(j, f_out, indent=None)
             s3_output_key = os.path.join(
@@ -532,18 +567,27 @@ def write_file_to_json_dataset(z, json_path, dataset_identifier,
                 f"year={str(uploaded_on.year)}",
                 f"month={str(uploaded_on.month)}",
                 f"day={str(uploaded_on.day)}",
-                output_fname)
+                output_fname,
+            )
         with open(output_path, "rb") as f_in:
             response = s3_client.put_object(
-                    Body = f_in,
-                    Bucket = workflow_run_properties["json_bucket"],
-                    Key = s3_output_key,
-                    Metadata = s3_obj_metadata)
+                Body=f_in,
+                Bucket=workflow_run_properties["json_bucket"],
+                Key=s3_output_key,
+                Metadata=s3_obj_metadata,
+            )
             logger.debug(f"put object response: {json.dumps(response)}")
     return output_path
 
-def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping,
-        archive_map, workflow_run_properties):
+
+def process_record(
+    s3_obj,
+    json_schemas,
+    dataset_mapping,
+    schema_mapping,
+    archive_map,
+    workflow_run_properties,
+):
     """
     Write the contents of a .zip archive stored on S3 to their respective JSON dataset.
 
@@ -573,39 +617,45 @@ def process_record(s3_obj, json_schemas, dataset_mapping, schema_mapping,
     s3_obj_metadata = s3_obj["Metadata"]
     with zipfile.ZipFile(io.BytesIO(s3_obj["Body"])) as z:
         contents = z.namelist()
-        logger.debug(f'contents: {contents}')
+        logger.debug(f"contents: {contents}")
         for json_path in z.namelist():
             # Currently app_id is fixed "mobile-toolbox". See BRIDGE-3325 / ETL-231.
             file_metadata = {
-                    "assessment_id": s3_obj_metadata["assessmentid"],
-                    "assessment_revision": s3_obj_metadata["assessmentrevision"],
-                    "file_name": os.path.basename(json_path),
-                    "record_id":s3_obj_metadata["recordid"],
-                    "app_id": "mobile-toolbox"
+                "assessment_id": s3_obj_metadata["assessmentid"],
+                "assessment_revision": s3_obj_metadata["assessmentrevision"],
+                "file_name": os.path.basename(json_path),
+                "record_id": s3_obj_metadata["recordid"],
+                "app_id": "mobile-toolbox",
             }
             json_schema = get_json_schema(
-                    archive_map=archive_map,
-                    file_metadata=file_metadata,
-                    json_schemas=json_schemas)
+                archive_map=archive_map,
+                file_metadata=file_metadata,
+                json_schemas=json_schemas,
+            )
             if json_schema["schema"] is None:
-                logger.info("Did not find a JSON schema in archive-map.json for "
-                            f"assessmentId = {s3_obj_metadata['assessmentid']}, "
-                            f"assessmentRevision = {s3_obj_metadata['assessmentrevision']}, "
-                            f"file_name = {json_path}")
+                logger.info(
+                    "Did not find a JSON schema in archive-map.json for "
+                    f"assessmentId = {s3_obj_metadata['assessmentid']}, "
+                    f"assessmentRevision = {s3_obj_metadata['assessmentrevision']}, "
+                    f"file_name = {json_path}"
+                )
             dataset_identifier = get_dataset_identifier(
-                    json_schema=json_schema["schema"],
-                    schema_mapping=schema_mapping,
-                    dataset_mapping=dataset_mapping,
-                    file_metadata=file_metadata)
+                json_schema=json_schema["schema"],
+                schema_mapping=schema_mapping,
+                dataset_mapping=dataset_mapping,
+                file_metadata=file_metadata,
+            )
             if dataset_identifier is None:
                 continue
             logger.info(f"Writing {json_path} to dataset {dataset_identifier}")
             write_file_to_json_dataset(
-                    z=z,
-                    json_path=json_path,
-                    dataset_identifier=dataset_identifier,
-                    s3_obj_metadata=s3_obj_metadata,
-                    workflow_run_properties=workflow_run_properties)
+                z=z,
+                json_path=json_path,
+                dataset_identifier=dataset_identifier,
+                s3_obj_metadata=s3_obj_metadata,
+                workflow_run_properties=workflow_run_properties,
+            )
+
 
 def main():
     # Configure logger
@@ -617,39 +667,40 @@ def main():
     glue_client = boto3.client("glue")
     ssm_client = boto3.client("ssm")
     sqs_client = boto3.client("sqs")
-    synapseclient.core.cache.CACHE_ROOT_DIR = '/tmp/.synapseCache'
+    synapseclient.core.cache.CACHE_ROOT_DIR = "/tmp/.synapseCache"
 
     # Get job and workflow arguments
     args = getResolvedOptions(
-            sys.argv,
-            ["WORKFLOW_NAME",
-             "WORKFLOW_RUN_ID",
-             "ssm-parameter-name",
-             "dataset-mapping",
-             "schema-mapping",
-             "archive-map-version",
-             "invalid-sqs"])
+        sys.argv,
+        [
+            "WORKFLOW_NAME",
+            "WORKFLOW_RUN_ID",
+            "ssm-parameter-name",
+            "dataset-mapping",
+            "schema-mapping",
+            "archive-map-version",
+            "invalid-sqs",
+        ],
+    )
     workflow_run_properties = glue_client.get_workflow_run_properties(
-            Name=args["WORKFLOW_NAME"],
-            RunId=args["WORKFLOW_RUN_ID"])["RunProperties"]
+        Name=args["WORKFLOW_NAME"], RunId=args["WORKFLOW_RUN_ID"]
+    )["RunProperties"]
     logger.debug(f"getResolvedOptions: {json.dumps(args)}")
     logger.debug(f"get_workflow_run_properties: {json.dumps(workflow_run_properties)}")
 
     # Get reference files
     logger.info("Downloading reference files")
-    dataset_mapping = get_data_mapping(
-            data_mapping_uri=args["dataset_mapping"]
-    )
-    schema_mapping = get_data_mapping(
-            data_mapping_uri=args["schema_mapping"]
-    )
+    dataset_mapping = get_data_mapping(data_mapping_uri=args["dataset_mapping"])
+    schema_mapping = get_data_mapping(data_mapping_uri=args["schema_mapping"])
     archive_map = get_archive_map(archive_map_version=args["archive_map_version"])
 
     # Authenticate with Synapse
-    logger.info(f"Logging into Synapse using auth token at {args['ssm_parameter_name']}")
+    logger.info(
+        f"Logging into Synapse using auth token at {args['ssm_parameter_name']}"
+    )
     synapse_auth_token = ssm_client.get_parameter(
-              Name=args["ssm_parameter_name"],
-              WithDecryption=True)
+        Name=args["ssm_parameter_name"], WithDecryption=True
+    )
     syn = synapseclient.Synapse()
     syn.login(authToken=synapse_auth_token["Parameter"]["Value"], silent=True)
 
@@ -661,52 +712,51 @@ def main():
     for message in messages:
         synapse_data_folder = message["raw_folder_id"]
         sts_tokens = update_sts_tokens(
-                syn=syn,
-                synapse_data_folder=synapse_data_folder,
-                sts_tokens=sts_tokens
+            syn=syn, synapse_data_folder=synapse_data_folder, sts_tokens=sts_tokens
         )
-        logger.info(f"Retrieving S3 object for Bucket {message['source_bucket']} "
-                    f"and Key {message['source_key']}'")
+        logger.info(
+            f"Retrieving S3 object for Bucket {message['source_bucket']} "
+            f"and Key {message['source_key']}'"
+        )
         bridge_s3_client = boto3.client("s3", **sts_tokens[synapse_data_folder])
         s3_obj = bridge_s3_client.get_object(
-                Bucket = message["source_bucket"],
-                Key = message["source_key"]
+            Bucket=message["source_bucket"], Key=message["source_key"]
         )
         s3_obj["Body"] = s3_obj["Body"].read()
         json_schemas = update_json_schemas(
-                s3_obj=s3_obj,
-                archive_map=archive_map,
-                json_schemas=json_schemas
+            s3_obj=s3_obj, archive_map=archive_map, json_schemas=json_schemas
         )
         validation_result = validate_data(
-                s3_obj=s3_obj,
-                archive_map=archive_map,
-                json_schemas=json_schemas,
-                dataset_mapping=dataset_mapping
+            s3_obj=s3_obj,
+            archive_map=archive_map,
+            json_schemas=json_schemas,
+            dataset_mapping=dataset_mapping,
         )
         validation_result["errors"] = remove_expected_validation_errors(
-                validation_result=validation_result,
-                client_info=s3_obj["Metadata"]["clientinfo"])
+            validation_result=validation_result,
+            client_info=s3_obj["Metadata"]["clientinfo"],
+        )
         if validation_result["errors"]:
             for file_name in validation_result["errors"]:
                 # limit 10 errors reported per file to avoid redundandant errors
-                validation_result["errors"][file_name] = \
-                        validation_result["errors"][file_name][:10]
+                validation_result["errors"][file_name] = validation_result["errors"][
+                    file_name
+                ][:10]
             message["validation_result"] = validation_result
             logger.warning(f"Failed validation: {json.dumps(message)}")
             sqs_client.send_message(
-                    QueueUrl=args["invalid_sqs"],
-                    MessageBody=json.dumps(message)
+                QueueUrl=args["invalid_sqs"], MessageBody=json.dumps(message)
             )
         else:
             process_record(
-                    s3_obj=s3_obj,
-                    json_schemas=json_schemas,
-                    dataset_mapping=dataset_mapping,
-                    schema_mapping=schema_mapping,
-                    archive_map=archive_map,
-                    workflow_run_properties=workflow_run_properties
+                s3_obj=s3_obj,
+                json_schemas=json_schemas,
+                dataset_mapping=dataset_mapping,
+                schema_mapping=schema_mapping,
+                archive_map=archive_map,
+                workflow_run_properties=workflow_run_properties,
             )
+
 
 if __name__ == "__main__":
     main()
