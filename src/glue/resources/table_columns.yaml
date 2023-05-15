@@ -1,4 +1,49 @@
 tables:
+  3DRotation_v1:
+    columns:
+      - Name: consideredSteps
+        Type: struct<administered:boolean,exposure:double,identifier:string,randomNumber:double>
+      - Name: endDate
+        Type: string
+      - Name: fileName
+        Type: string
+      - Name: identifier
+        Type: string
+      - Name: locale
+        Type: string
+      - Name: schemaIdentifier
+        Type: string
+      - Name: scores
+        Type: struct<finalSE:double,finalTheta:double,itemCount:int,startSE:double,startTheta:double>
+      - Name: seed
+        Type: int
+      - Name: startDate
+        Type: string
+      - Name: stepHistory
+        Type: struct<endDate:string,identifier:string,interactions:struct<items:array<struct<controlEvent:string>>>,position:int,practice:boolean,response:int,responseTime:double,score:int,se:double,startDate:string,theta:double,type:string,wasInterrupted:boolean>
+      - Name: steps
+        Type: struct<endDate:string,identifier:string,interactions:struct<items:array<struct<controlEvent:string>>>,position:int,practice:boolean,response:int,responseTime:double,score:int,se:double,startDate:string,theta:double,type:string,wasInterrupted:boolean>
+      - Name: taskName
+        Type: string
+      - Name: taskRunUUID
+        Type: string
+      - Name: taskStatus
+        Type: string
+      - Name: testVersion
+        Type: string
+      - Name: type
+        Type: string
+      - Name: userInteractions
+        Type: struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>
+    partition_keys:
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: string
+      - Name: month
+        Type: string
+      - Name: day
+        Type: string
   ArchiveMetadata_v1:
     columns:
       - Name: deviceinfo
@@ -139,6 +184,47 @@ tables:
         Type: string
       - Name: day
         Type: string
+  LetterNumberSeries_v1:
+    columns:
+      - Name: endDate
+        Type: string
+      - Name: fileName
+        Type: string
+      - Name: identifier
+        Type: string
+      - Name: locale
+        Type: string
+      - Name: schemaIdentifier
+        Type: string
+      - Name: scores
+        Type: struct<mssRawScore:int,rawScore:int>
+      - Name: startDate
+        Type: string
+      - Name: stepHistory
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+      - Name: steps
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+      - Name: taskName
+        Type: string
+      - Name: taskRunUUID
+        Type: string
+      - Name: taskStatus
+        Type: string
+      - Name: testVersion
+        Type: string
+      - Name: type
+        Type: string
+      - Name: userInteractions
+        Type: struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>
+    partition_keys:
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: string
+      - Name: month
+        Type: string
+      - Name: day
+        Type: string
   MotionRecord_v1:
     columns:
       - Name: uptime
@@ -175,6 +261,51 @@ tables:
         Type: int
       - Name: recordid
         Type: string
+    partition_keys:
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: string
+      - Name: month
+        Type: string
+      - Name: day
+        Type: string
+  ProgressiveMatrices_v1:
+    columns:
+      - Name: consideredSteps
+        Type: struct<administered:boolean,exposure:double,identifier:string,randomNumber:double>
+      - Name: endDate
+        Type: string
+      - Name: fileName
+        Type: string
+      - Name: identifier
+        Type: string
+      - Name: locale
+        Type: string
+      - Name: schemaIdentifier
+        Type: string
+      - Name: scores
+        Type: struct<finalSE:double,finalTheta:double,itemCount:int,startSE:double,startTheta:double>
+      - Name: seed
+        Type: int
+      - Name: startDate
+        Type: string
+      - Name: stepHistory
+        Type: struct<endDate:string,identifier:string,interactions:struct<items:array<struct<controlEvent:string>>>,position:int,practice:boolean,response:int,responseTime:double,score:int,se:double,startDate:string,theta:double,type:string,wasInterrupted:boolean>
+      - Name: steps
+        Type: struct<endDate:string,identifier:string,interactions:struct<items:array<struct<controlEvent:string>>>,position:int,practice:boolean,response:int,responseTime:double,score:int,se:double,startDate:string,theta:double,type:string,wasInterrupted:boolean>
+      - Name: taskName
+        Type: string
+      - Name: taskRunUUID
+        Type: string
+      - Name: taskStatus
+        Type: string
+      - Name: testVersion
+        Type: string
+      - Name: type
+        Type: string
+      - Name: userInteractions
+        Type: struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>
     partition_keys:
       - Name: assessmentid
         Type: string
@@ -261,6 +392,47 @@ tables:
         Type: array<struct<type:string,identifier:string,trial:int,startDate:string,endDate:string,response:int,practice:boolean,wasInterrupted:boolean,score:int,rt:double,trialType:string,trialImg:string,trialLen:int,go:int,correct:int,responseType:int,responseCode:int,state:string,percentImage:int>>
       - Name: recordid
         Type: string
+    partition_keys:
+      - Name: assessmentid
+        Type: string
+      - Name: year
+        Type: string
+      - Name: month
+        Type: string
+      - Name: day
+        Type: string
+  VerbalReasoning_v1:
+    columns:
+      - Name: endDate
+        Type: string
+      - Name: fileName
+        Type: string
+      - Name: identifier
+        Type: string
+      - Name: locale
+        Type: string
+      - Name: schemaIdentifier
+        Type: string
+      - Name: scores
+        Type: struct<mssRawScore:int,rawScore:int>
+      - Name: startDate
+        Type: string
+      - Name: stepHistory
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+      - Name: steps
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+      - Name: taskName
+        Type: string
+      - Name: taskRunUUID
+        Type: string
+      - Name: taskStatus
+        Type: string
+      - Name: testVersion
+        Type: string
+      - Name: type
+        Type: string
+      - Name: userInteractions
+        Type: struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>
     partition_keys:
       - Name: assessmentid
         Type: string
