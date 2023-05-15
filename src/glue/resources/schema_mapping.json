@@ -5,5 +5,9 @@
     "https://sage-bionetworks.github.io/mobile-client-json/schemas/v1/TappingResultObject.json": "TappingResultObject_v1",
     "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/WeatherResult.json": "WeatherResult_v1",
     "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/AudioLevelRecord.json": "AudioLevelRecord_v1",
-    "sharedSchema_for_Gradual_Onset": "sharedSchema_for_Gradual_Onset_v1"
+    "sharedSchema_for_Gradual_Onset": "sharedSchema_for_Gradual_Onset_v1",
+    "schemas/v0/3DRotation.json": "3DRotation_v1",
+    "schemas/v0/ProgressiveMatrices.json": "ProgressiveMatrices_v1",
+    "schemas/v0/LetterNumberSeries.json": "LetterNumberSeries_v1",
+    "schemas/v0/VerbalReasoning.json": "VerbalReasoning_v1"
 }
