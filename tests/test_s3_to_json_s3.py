@@ -327,7 +327,8 @@ class TestS3ToJsonS3():
         json_schema_metadata = s3_to_json_s3.get_json_schema(
                 archive_map=archive_map,
                 file_metadata=file_metadata_metadata,
-                json_schemas={}
+                json_schemas={},
+                self_ref_schema_list={},
         )
         assert isinstance(json_schema_metadata, dict)
         assert isinstance(json_schema_metadata["schema"], dict)
@@ -342,7 +343,8 @@ class TestS3ToJsonS3():
         json_schema_taskdata = s3_to_json_s3.get_json_schema(
                 archive_map=archive_map,
                 file_metadata=file_metadata_taskdata,
-                json_schemas={}
+                json_schemas={},
+                self_ref_schema_list={},
         )
         assert isinstance(json_schema_taskdata, dict)
         assert isinstance(json_schema_taskdata["schema"], dict)
@@ -357,7 +359,8 @@ class TestS3ToJsonS3():
         json_schema_motion = s3_to_json_s3.get_json_schema(
                 archive_map=archive_map,
                 file_metadata=file_metadata_motion,
-                json_schemas={}
+                json_schemas={},
+                self_ref_schema_list={},
         )
         assert isinstance(json_schema_motion, dict)
         assert isinstance(json_schema_motion["schema"], dict)
@@ -372,7 +375,8 @@ class TestS3ToJsonS3():
         json_schema_assessment_result = s3_to_json_s3.get_json_schema(
                 archive_map=archive_map,
                 file_metadata=file_metadata_assessment_result,
-                json_schemas={}
+                json_schemas={},
+                self_ref_schema_list={},
         )
         assert isinstance(json_schema_assessment_result, dict)
         assert isinstance(json_schema_assessment_result["schema"], dict)
@@ -387,7 +391,8 @@ class TestS3ToJsonS3():
         json_schema_no_schema = s3_to_json_s3.get_json_schema(
                 archive_map=archive_map,
                 file_metadata=file_metadata_no_schema,
-                json_schemas={}
+                json_schemas={},
+                self_ref_schema_list={},
         )
         assert isinstance(json_schema_no_schema, dict)
         assert json_schema_no_schema["schema"] is None
