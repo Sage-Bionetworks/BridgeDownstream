@@ -20,3 +20,6 @@ boto3 = "==1.*"
 pyspark = "==3.*"
 synapseclient = "==2.5.*"
 pyarrow = "<= 10.*"
+# Glue 3.0 includes this version of jsonschema, but there is a sub-dependency conflict
+# with another package.
+# jsonschema = "==4.9.1"
