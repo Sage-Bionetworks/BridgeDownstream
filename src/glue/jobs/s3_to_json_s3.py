@@ -320,6 +320,7 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
             * assessmentRevision (str)
             * appId (str)
             * recordId (str)
+            * schema_url (str)
             * errors (dict): mapping file names (str) to their
                 validation errors (list[str]).
     """
@@ -333,6 +334,7 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
         "assessmentRevision": assessment_revision,
         "appId": app_id,
         "recordId": s3_obj["Metadata"]["recordid"],
+        "schema_url": "",
         "errors": {},
     }
     if (
@@ -365,7 +367,11 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
                     f"Unable to validate: {json.dumps(json_schema)}"
                 )
                 continue
+            validation_result["schema_url"] = json_schema["url"]
             with z.open(json_path, "r") as p:
+                logger.debug(
+                        "Validating %s from %s against %s",
+                        file_name, validation_result["recordId"], json_schema["url"])
                 j = json.load(p)
                 all_errors = validate_against_schema(
                     data=j, schema=json_schema["schema"]
@@ -387,6 +393,10 @@ def validate_against_schema(data, schema):
         all_errors (list): A list of validation errors
     """
     validator_cls = jsonschema.validators.validator_for(schema)
+    # This is a workaround for this bug
+    # https://github.com/python-jsonschema/jsonschema/issues/1012
+    if "$id" in schema and schema["$id"].startswith("schemas/v0/"):
+        schema["$id"] = ""
     validator = validator_cls(schema=schema)
     all_errors = [e.message for e in validator.iter_errors(data)]
     return all_errors
