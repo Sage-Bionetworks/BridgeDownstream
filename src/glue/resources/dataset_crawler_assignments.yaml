@@ -3,6 +3,10 @@ standard:
   - sharedSchema_v1
   - WeatherResult_v1
   - sharedSchema_for_Gradual_Onset_v1
+  - 3DRotation_v1
+  - LetterNumberSeries_v1
+  - ProgressiveMatrices_v1
+  - VerbalReasoning_v1
 array_of_records:
   - AudioLevelRecord_v1
   - MotionRecord_v1

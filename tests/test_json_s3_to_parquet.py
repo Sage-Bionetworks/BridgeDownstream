@@ -213,7 +213,7 @@ class TestJsonS3ToParquet:
                      glue_flat_table_name, glue_nested_table, glue_nested_table_name,
                      glue_crawler_role, json_s3_objects, namespace):
         glue_client = boto3.client("glue")
-        crawler_name = "{namespace}-pytest-crawler"
+        crawler_name = f"{namespace}-pytest-crawler"
         time.sleep(10) # give time for the IAM role trust policy to set in
         glue_crawler = glue_client.create_crawler(
                 Name=crawler_name,
