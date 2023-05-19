@@ -40,9 +40,10 @@ def get_self_ref_schema_list(zipfile_obj: zipfile.ZipFile) -> dict:
     if "metadata.json" in zipfile_obj.namelist():
         with zipfile_obj.open("metadata.json", "r") as metadata_f:
             metadata = json.load(metadata_f)
-            for file_info in metadata["files"]:
-                if "jsonSchema" in file_info:
-                    self_ref_schemas[file_info["filename"]] = file_info["jsonSchema"]
+            if "files" in metadata:
+                for file_info in metadata["files"]:
+                    if "jsonSchema" in file_info:
+                        self_ref_schemas[file_info["filename"]] = file_info["jsonSchema"]
     return self_ref_schemas
 
 
