@@ -201,9 +201,9 @@ tables:
       - Name: startDate
         Type: string
       - Name: stepHistory
-        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:int,practice:boolean,response:int,responseTime:double,score:int,startDate:string,type:string,wasInterrupted:boolean>
       - Name: steps
-        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:int,practice:boolean,response:int,responseTime:double,score:int,startDate:string,type:string,wasInterrupted:boolean>
       - Name: taskName
         Type: string
       - Name: taskRunUUID
@@ -418,9 +418,9 @@ tables:
       - Name: startDate
         Type: string
       - Name: stepHistory
-        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:int,practice:boolean,response:int,responseTime:double,score:int,startDate:string,type:string,wasInterrupted:boolean>
       - Name: steps
-        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:integer,practice:boolean,response:integer,responseTime:double,score:integer,startDate:string,type:string,wasInterrupted:boolean>
+        Type: struct<endDate:string,identifier:string,interactions:struct<controlEvent:string,parent:string,stepIdentifier:string,timestamp:string,userInteractionIdentifier:string,userInteractionNewStyleEncoder:boolean,value:string>,position:int,practice:boolean,response:int,responseTime:double,score:int,startDate:string,type:string,wasInterrupted:boolean>
       - Name: taskName
         Type: string
       - Name: taskRunUUID

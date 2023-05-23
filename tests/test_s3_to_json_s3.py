@@ -445,12 +445,8 @@ class TestS3ToJsonS3:
         )
         assert isinstance(json_schemas, list)
         file_names = [
-            "taskData",
             "taskData.json",
-            "info.json",
             "motion.json",
-            "weather.json",
-            "taskResult.json",
             "metadata.json",
         ]
         actual_file_names = [j["file_name"] for j in json_schemas]

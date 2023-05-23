@@ -10,6 +10,7 @@ derived from the $id property of the associated JSON Schema (if the file
 has a JSON schema) or mapped to directly from the assessment ID/revision
 and filename for certain older assessments.
 """
+import copy
 import io
 import json
 import logging
@@ -128,7 +129,9 @@ def get_archive_map(archive_map_version):
 
 def update_json_schemas(s3_obj, archive_map, json_schemas):
     """
-    Get JSON Schemas for all files in a zipped S3 object.
+    Get JSON Schemas for all files in a zipped S3 object (if the schema exists).
+    If a file does not have a JSON Schema, it will not be included in the
+    return object.
 
     Args:
         s3_obj (dict): An S3 object as returned by boto3.get_object.
@@ -150,6 +153,7 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
             file_metadata = {
                 "file_name": file_name,
                 "app_id": app_id,
+                "record_id": s3_obj["Metadata"]["recordid"],
                 "assessment_id": assessment_id,
                 "assessment_revision": assessment_revision,
             }
@@ -159,13 +163,14 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
                 json_schemas=json_schemas,
                 self_ref_schema_list=self_ref_schema_list,
             )
-            novel_schema = True
-            for cached_schema in json_schemas:
-                if all([cached_schema[k] == json_schema[k] for k in file_metadata]):
-                    novel_schema = False
-                    break
-            if novel_schema:
-                json_schemas.append(json_schema)
+            if json_schema["schema"] is not None:
+                novel_schema = True
+                for cached_schema in json_schemas:
+                    if cached_schema["schema"]["$id"] == json_schema["schema"]["$id"]:
+                        novel_schema = False
+                        break
+                if novel_schema:
+                    json_schemas.append(json_schema)
     return json_schemas
 
 
@@ -173,11 +178,12 @@ def get_json_schema(archive_map, file_metadata, json_schemas, self_ref_schema_li
     """
     Fetch the JSON Schema for a given JSON file by either cross-referencing the
     file metadata with archive-map.json from the
-    Sage-Bionetworks/mobile-client-json repository or if the JSON file has
-    a self referencing json schema, pulls the json schema directly from the
-    given json URL
+    Sage-Bionetworks/mobile-client-json repository or pulling the schema
+    directly from the records metadata (self-reference format). The JSON Schema
+    specified for a file in metadata.json takes precedence over one specified
+    in the archive map.
 
-    archive-map.json has schemas scoped at three different levels: assessment,
+    The archive map has schemas scoped at three different levels: assessment,
     app, and inter-app (that is, shared among apps). Each scope will be checked
     for this JSON file's schema.
 
@@ -185,8 +191,9 @@ def get_json_schema(archive_map, file_metadata, json_schemas, self_ref_schema_li
         archive_map (dict): The dict representation of archive-map.json.
         file_metadata (dict): A dict with keys
             * assessment_id (str)
-            * assessment_revision (str or int),
+            * assessment_revision (str),
             * file_name (str)
+            * record_id (str)
             * app_id (str)
         json_schemas (list): A list of cached results from this function
         self_ref_schema_list (dict): A dictionary of files with self referencing schemas
@@ -196,8 +203,8 @@ def get_json_schema(archive_map, file_metadata, json_schemas, self_ref_schema_li
             * url (str)
             * schema (dict)
             * app_id (str)
-            * assessment_id (int)
-            * assessment_revision (int)
+            * assessment_id (str)
+            * assessment_revision (str)
             * file_name (str)
             * archive_map_version (str)
     """
@@ -218,7 +225,6 @@ def get_json_schema(archive_map, file_metadata, json_schemas, self_ref_schema_li
         )
         json_schema["archive_map_version"] = None
     else:
-        file_metadata["assessment_revision"] = int(file_metadata["assessment_revision"])
         valid_assessments = []
         # Check assessment-specific schemas
         for assessment in archive_map["assessments"]:
@@ -226,7 +232,7 @@ def get_json_schema(archive_map, file_metadata, json_schemas, self_ref_schema_li
             if (
                 assessment["assessmentIdentifier"] == file_metadata["assessment_id"]
                 and assessment["assessmentRevision"]
-                <= file_metadata["assessment_revision"]
+                <= int(file_metadata["assessment_revision"])
             ):
                 valid_assessments.append(assessment)
         if valid_assessments:
@@ -297,17 +303,14 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
     to the JSON Schema it claims to conform to. If a JSON does not
     pass validation, then we cannot be certain we have the data
     consumption resources to process this data, and it will be
-    flagged as invalid. A record is considered invalid if:
-
-        1. There is no mapping in archive-map.json for at least
-        one JSON file in the record.
-        2. There is at least one JSON file in the record which does
-        not conform to the JSON Schema specified in archive-map.json.
+    flagged as invalid. A record is considered invalid if there is
+    at least one JSON file in the record which does not conform to
+    its JSON Schema.
 
     Otherwise, this record is valid. If a record comes from an assessment ID/revision
     contained in `dataset_mapping` we do not expect any of the data to conform to
     a JSON Schema, though this record is considered valid (since it has been
-    manually mapped to a data consumption resource in `dataset_mapping`).
+    manually mapped to a dataset in `dataset_mapping`).
 
     Args:
         s3_obj (dict): An S3 object as returned by boto3.get_object.
@@ -368,7 +371,6 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
                     f"Unable to validate: {json.dumps(json_schema)}"
                 )
                 continue
-            validation_result["schema_url"] = json_schema["url"]
             with z.open(json_path, "r") as p:
                 logger.debug(
                         "Validating %s from %s against %s",
@@ -397,8 +399,11 @@ def validate_against_schema(data, schema):
     # This is a workaround for this bug
     # https://github.com/python-jsonschema/jsonschema/issues/1012
     if "$id" in schema and schema["$id"].startswith("schemas/v0/"):
-        schema["$id"] = ""
-    validator = validator_cls(schema=schema)
+        substitute_schema = copy.deepcopy(schema)
+        substitute_schema["$id"] = ""
+        validator = validator_cls(schema=substitute_schema)
+    else:
+        validator = validator_cls(schema=schema)
     all_errors = [e.message for e in validator.iter_errors(data)]
     return all_errors
 
@@ -488,8 +493,12 @@ def get_dataset_identifier(json_schema, schema_mapping, dataset_mapping, file_me
         json_schema (dict): A JSON Schema.
         schema_mapping (dict): The schema mapping.
         dataset_mapping (dict): The legacy dataset mapping.
-        file_metadata (dict): A dict with keys assessment_id, assessment_revision,
-            file_name, and record_id.
+        file_metadata (dict): A dict with keys
+            * assessment_id (str)
+            * assessment_revision (str),
+            * file_name (str)
+            * record_id (str)
+            * app_id (str)
 
     Returns:
         str: The dataset identifier if it exists, otherwise returns None.
