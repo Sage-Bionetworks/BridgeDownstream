@@ -45,6 +45,10 @@ jobs:
       - name: Copy files to templates bucket
         run: python src/scripts/manage_artifacts/artifacts.py --upload --ref $NAMESPACE
 
+        # Hardcode --ref as stopgap for actual job script versioning
+      - name: Copy Glue scripts to templates bucket
+        run: python src/scripts/manage_artifacts/artifacts.py --upload --ref "v0.1"
+
   pytest-docker:
     name: Build and push testing docker image to ECR
     needs: upload-files
@@ -201,6 +205,13 @@ jobs:
           aws_access_key_id: ${{ secrets.CI_USER_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.CI_USER_SECRET_ACCESS_KEY }}
           role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
+
+      - name: Copy files to templates bucket
+        run: python src/scripts/manage_artifacts/artifacts.py --environment $environment --upload --ref $NAMESPACE
+
+        # Hardcode --ref as stopgap for actual job script versioning
+      - name: Copy Glue scripts to templates bucket
+        run: python src/scripts/manage_artifacts/artifacts.py --environment $environment --upload --ref "v0.1"
 
       - name: Login to Amazon ECR
         id: login-ecr
