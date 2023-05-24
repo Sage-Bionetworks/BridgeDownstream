@@ -610,6 +610,9 @@ def write_file_to_json_dataset(
                 j["day"] = int(uploaded_on.day)
                 j["recordid"] = s3_obj_metadata["recordid"]
         output_fname = s3_obj_metadata["recordid"] + ".ndjson"
+        if output_fname.startswith(("_", ".")):
+            # Glue will ignore files which begin with _ or .
+            output_fname = f"0{output_fname}"
         output_path = os.path.join(dataset_identifier, output_fname)
         logger.debug(f"output_path: {output_path}")
         with open(output_path, "w") as f_out:
