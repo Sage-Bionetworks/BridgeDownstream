@@ -182,22 +182,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pre-commit, unit-tests, upload-files]
     if: github.ref_name == 'main' && github.ref_type != 'tag'
-
     strategy:
       matrix:
         job-environment:
           - develop
           - prod
-
-        include:
-          - job-environment: develop
-            sceptre-environment: develop
-
-          - job-environment: prod
-            sceptre-environment: prod
-
     environment: ${{ matrix.job-environment }}
-
     steps:
       - name: Setup code, pipenv, aws
         uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
@@ -207,11 +197,11 @@ jobs:
           role_to_assume: ${{ secrets.CI_ROLE_TO_ASSUME }}
 
       - name: Copy files to templates bucket
-        run: python src/scripts/manage_artifacts/artifacts.py --environment $environment --upload --ref $NAMESPACE
+        run: python src/scripts/manage_artifacts/artifacts.py --environment ${{ matrix.job-environment }} --upload --ref $NAMESPACE
 
         # Hardcode --ref as stopgap for actual job script versioning
       - name: Copy Glue scripts to templates bucket
-        run: python src/scripts/manage_artifacts/artifacts.py --environment $environment --upload --ref "v0.1"
+        run: python src/scripts/manage_artifacts/artifacts.py --environment ${{ matrix.job-environment }} --upload --ref "v0.1"
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -230,4 +220,4 @@ jobs:
         run: mkdir -p templates/remote/
 
       - name: Deploy sceptre stacks
-        run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch ${{ matrix.sceptre-environment }} --yes
+        run: pipenv run sceptre --var "namespace=${{ env.NAMESPACE }}" launch ${{ matrix.job-environment }} --yes
