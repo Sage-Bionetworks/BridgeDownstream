@@ -1,5 +1,9 @@
 """
-Manage cloudformation artifacts for a specific ref (namespace)
+Manage cloudformation artifacts for a specific ref (namespace).
+
+We store some resources used by the Glue jobs (such as the schema mapping)
+on S3. This script makes sure those resources are uploaded to the
+appropriate destination, dependent on the namespace.
 """
 import argparse
 import subprocess
@@ -11,16 +15,29 @@ def read_args():
   parser = argparse.ArgumentParser(
     description='Uploading to S3 and deletion from S3 of scripts and templates.',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-  parser.add_argument('--ref')
+  parser.add_argument('--ref', help="The namespace to upload artifacts for.")
   group = parser.add_mutually_exclusive_group(required=True)
-  group.add_argument('--upload', action='store_true')
-  group.add_argument('--remove', action='store_true')
-  group.add_argument('--list', action='store_true')
+  group.add_argument(
+          '--upload',
+          action='store_true',
+          help="Indicates that artifacts should be uploaded."
+  )
+  group.add_argument(
+          '--remove',
+          action='store_true',
+          help="Indicates that artifacts should be removed."
+  )
+  group.add_argument(
+          '--list',
+          action='store_true',
+          help="Indicates that artifacts should be listed."
+  )
   parser.add_argument(
           '--environment',
           default="develop",
           choices=["develop", "prod"],
-          help="The deployment environment")
+          help="The deployment environment"
+  )
   args = parser.parse_args()
   return args
 
