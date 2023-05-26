@@ -182,12 +182,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [pre-commit, unit-tests, upload-files]
     if: github.ref_name == 'main' && github.ref_type != 'tag'
-
     strategy:
       matrix:
         job-environment:
           - develop
           - prod
+    environment: ${{ matrix.job-environment }}
     steps:
       - name: Setup code, pipenv, aws
         uses: Sage-Bionetworks/action-pipenv-aws-setup@v1
