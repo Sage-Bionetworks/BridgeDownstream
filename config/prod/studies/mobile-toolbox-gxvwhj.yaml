@@ -1,0 +1,30 @@
+template:
+  path: study-pipeline-infra.j2
+stack_name: '{{ stack_group_config.namespace }}-gxvwhj'
+dependencies:
+  - prod/glue-job-role.yaml
+  - prod/s3-intermediate-bucket.yaml
+  - prod/s3-parquet-bucket.yaml
+  - prod/glue-classifier-array-of-records.yaml
+  - prod/glue-job-S3ToJsonS3.yaml
+parameters:
+  Namespace: {{ stack_group_config.namespace }}
+  AppName: mobile-toolbox
+  StudyName: gxvwhj
+  TemplateBucketName: {{ stack_group_config.artifact_bucket_name }}
+  ArtifactRef: {{ stack_group_config.latest_version }}
+  JsonBucketName: !stack_output_external bridge-downstream-intermediate-bucket::BucketName
+  ParquetBucketName: !stack_output_external bridge-downstream-parquet-bucket::BucketName
+  RoleArn: !stack_output_external glue-job-role::RoleArn
+  ClassifierName: !stack_output_external '{{ stack_group_config.namespace }}-array-of-records-classifier::ClassifierName'
+  SynapseAuthSsmParameterName: '{{ stack_group_config.synapseAuthSsmParameterName }}'
+  S3ToJsonS3JobName: !stack_output_external '{{ stack_group_config.namespace }}-glue-job-S3ToJsonS3::JobName'
+  JsonToParquetTriggerSchedule: 'cron(10 * * * ? *)'
+
+stack_tags:
+  {{ stack_group_config.default_stack_tags }}
+
+sceptre_user_data:
+  dataset_crawler_assignments: !file src/glue/resources/dataset_crawler_assignments.yaml
+  # this needs to be replaced with real versioned schemas
+  dataset_schemas: !file src/glue/resources/table_columns.yaml
