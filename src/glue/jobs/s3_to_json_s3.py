@@ -478,6 +478,7 @@ def remove_expected_validation_errors(validation_result, client_info):
                 "'rotationRate', 'userAcceleration']"
             ),
             "'stepPath' is a required property",
+            "None is not of type 'integer'"
         ]
         unexpected_motion_errors = [
             e for e in motion_errors if e not in allowed_motion_errors

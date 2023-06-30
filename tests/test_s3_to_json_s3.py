@@ -691,6 +691,7 @@ class TestS3ToJsonS3:
                     "'rotationRate', 'userAcceleration']"
                 ),
                 "'stepPath' is a required property",
+                "None is not of type 'integer'"
             ]
         }
         unexpected_validation_errors = s3_to_json_s3.remove_expected_validation_errors(
