@@ -106,6 +106,13 @@ class TestS3ToJsonS3:
                             "filename": "motion.json",
                             "isRequired": False,
                             "jsonSchema": "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/MotionRecord.json",
+                        },
+                        {
+                            "filename": "microphone_levels.json",
+                            "description": "The microphone levels.",
+                            "contentType": "application/json",
+                            "isRequired": False,
+                            "jsonSchema": "https://sage-bionetworks.github.io/mobile-client-json/schemas/v2/AudioLevelRecord.json"
                         }
                     ],
                 }
@@ -448,6 +455,7 @@ class TestS3ToJsonS3:
             "taskData.json",
             "motion.json",
             "metadata.json",
+            "microphone_levels.json",
         ]
         actual_file_names = [j["file_name"] for j in json_schemas]
         for file_name in file_names:

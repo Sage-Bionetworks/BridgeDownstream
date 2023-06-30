@@ -150,6 +150,8 @@ def update_json_schemas(s3_obj, archive_map, json_schemas):
         self_ref_schema_list = get_self_ref_schema_list(z)
         for json_path in contents:
             file_name = os.path.basename(json_path)
+            if file_name == "microphone.json":
+                file_name = "microphone_levels.json"
             file_metadata = {
                 "file_name": file_name,
                 "app_id": app_id,
@@ -352,6 +354,8 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
         self_ref_schema_list = get_self_ref_schema_list(z)
         for json_path in contents:
             file_name = os.path.basename(json_path)
+            if file_name == "microphone.json":
+                file_name = "microphone_levels.json"
             json_schema = get_json_schema(
                 archive_map=archive_map,
                 file_metadata={
@@ -374,7 +378,10 @@ def validate_data(s3_obj, archive_map, json_schemas, dataset_mapping):
             with z.open(json_path, "r") as p:
                 logger.debug(
                         "Validating %s from %s against %s",
-                        file_name, validation_result["recordId"], json_schema["url"])
+                        os.path.basename(json_path),
+                        validation_result["recordId"],
+                        json_schema["url"]
+                )
                 j = json.load(p)
                 all_errors = validate_against_schema(
                     data=j, schema=json_schema["schema"]
@@ -680,11 +687,14 @@ def process_record(
         contents = z.namelist()
         logger.debug(f"contents: {contents}")
         for json_path in z.namelist():
+            file_name = os.path.basename(json_path)
+            if file_name == "microphone.json":
+                file_name = "microphone_levels.json"
             # Currently app_id is fixed "mobile-toolbox". See BRIDGE-3325 / ETL-231.
             file_metadata = {
                 "assessment_id": s3_obj_metadata["assessmentid"],
                 "assessment_revision": s3_obj_metadata["assessmentrevision"],
-                "file_name": os.path.basename(json_path),
+                "file_name": file_name,
                 "record_id": s3_obj_metadata["recordid"],
                 "app_id": "mobile-toolbox",
             }

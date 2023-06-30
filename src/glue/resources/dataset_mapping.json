@@ -9,6 +9,7 @@
                 {
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
+                  "microphone.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
                   "weather.json": "WeatherResult_v1"
@@ -23,6 +24,7 @@
                 {
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
+                  "microphone.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
                   "weather.json": "WeatherResult_v1"
@@ -37,6 +39,7 @@
                 {
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
+                  "microphone.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
                   "weather.json": "WeatherResult_v1"
@@ -51,6 +54,7 @@
                 {
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
+                  "microphone.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
                   "weather.json": "WeatherResult_v1"
@@ -91,6 +95,7 @@
                 {
                   "metadata.json": "TaskMetadata_v1",
                   "microphone_levels.json": "AudioLevelRecord_v1",
+                  "microphone.json": "AudioLevelRecord_v1",
                   "motion.json": "MotionRecord_v1",
                   "taskData.json": "sharedSchema_v1",
                   "weather.json": "WeatherResult_v1"
