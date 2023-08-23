@@ -1,1 +1,31 @@
-{"recordid":"two","arrayofobjectsfield":[{"filename":"two","timestamp":"two"}],"objectfield":{"filename":"two","timestamp":"two"}}
+{
+    "recordid": "two",
+    "arrayofobjectsfield": [
+        {
+            "filename": "two",
+            "timestamp": "two"
+        }
+    ],
+    "objectfield": {
+        "filename": "two",
+        "timestamp": "two"
+    },
+    "testitems": {
+        "endDate": "two",
+        "interactions": {
+            "items": [
+                {
+                    "controlEvent": "two"
+                }
+            ]
+        }
+    },
+    "userinteractions": [
+        {
+            "testEvent": [
+                "two"
+            ],
+            "stepIdentifier": "two"
+        }
+    ]
+}
