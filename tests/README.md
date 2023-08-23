@@ -11,7 +11,7 @@ Note that the docker image included in the above example command is publicly acc
 
 From within the container, ensure that the root of the repo is added to $PATH so that the Glue job modules can be imported. This can be taken care of automatically by passing the `-m` flag to `python3`. Two command line arguments are required when running the tests: `--namespace` and `--artifact-bucket`. Test resources are uploaded and retreived from AWS and need to be namespaced in Glue. Likewise, test data is uploaded to an `--artifact-bucket`, which can differ depending on if we are running tests in develop or prod. These resources are deleted once the tests have completed.
 
-If you are trying to run glue tests particularly the ones in the test_json_s3_to_parquet.py be sure to configure your aws credentials prior to running the below: 
+If you are trying to run glue tests particularly the ones in the test_json_s3_to_parquet.py be sure to configure your aws credentials prior to running the below:
 
 ```
 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
