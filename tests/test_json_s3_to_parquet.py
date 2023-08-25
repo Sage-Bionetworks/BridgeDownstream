@@ -2,10 +2,14 @@ import json
 import os
 import time
 import boto3
+
+
 import pandas
 import pytest
+from awsglue import DynamicFrame
 from awsglue.context import GlueContext
 from pyspark.sql.session import SparkSession
+
 from src.glue.jobs import json_s3_to_parquet
 
 # requires pytest-datadir to be installed
@@ -23,6 +27,10 @@ class TestJsonS3ToParquet:
     @pytest.fixture(scope="class")
     def glue_flat_table_name(self):
         return "dataset_pytest_flat_table"
+
+    @pytest.fixture(scope="class")
+    def glue_resolve_choice_table_name(self):
+        return "dataset_pytest_resolve_choice_table"
 
     @pytest.fixture(scope="class")
     def glue_database_path(self, artifact_bucket, namespace):
@@ -46,7 +54,7 @@ class TestJsonS3ToParquet:
             }
         )
         yield glue_database
-        glue_client.delete_database(Name=glue_database_name)
+        # glue_client.delete_database(Name=glue_database_name)
 
     @pytest.fixture(scope="class", autouse=True)
     def glue_nested_table(
@@ -90,6 +98,69 @@ class TestJsonS3ToParquet:
                         {
                             "Name": "userinteractions",
                             "Type": "array<struct<testEvent:array<string>,stepIdentifier:string>>",
+                        },
+                    ],
+                },
+                "PartitionKeys": [
+                    {"Name": "assessmentid", "Type": "string"},
+                    {"Name": "year", "Type": "string"},
+                    {"Name": "month", "Type": "string"},
+                    {"Name": "day", "Type": "string"},
+                ],
+                "Parameters": {
+                    "classification": "json",
+                    "compressionType": "none",
+                    "typeOfData": "file",
+                    "CrawlerSchemaDeserializerVersion": "1.0",
+                    "CrawlerSchemaSerializerVersion": "1.0",
+                },
+            },
+        )
+        return glue_table
+
+    @pytest.fixture(scope="class", autouse=True)
+    def glue_resolve_choice_table(
+        self,
+        glue_database,
+        glue_database_name,
+        glue_database_path,
+        glue_resolve_choice_table_name,
+    ):
+        glue_client = boto3.client("glue")
+        glue_table = glue_client.create_table(
+            DatabaseName=glue_database_name,
+            TableInput={
+                "Name": glue_resolve_choice_table_name,
+                "Description": "A table for pytest unit tests.",
+                "Retention": 0,
+                "TableType": "EXTERNAL_TABLE",
+                "StorageDescriptor": {
+                    "Location": os.path.join(
+                        glue_database_path,
+                        glue_resolve_choice_table_name.replace("_", "=", 1),
+                    )
+                    + "/",
+                    "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+                    "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
+                    "Compressed": False,
+                    "StoredAsSubDirectories": False,
+                    "Columns": [
+                        {"Name": "recordid", "Type": "string"},
+                        {
+                            "Name": "arrayofobjectsfield",
+                            "Type": "array<struct<filename:int,timestamp:int>>",
+                        },
+                        {
+                            "Name": "objectfield",
+                            "Type": "struct<filename:int,timestamp:string>",
+                        },
+                        {
+                            "Name": "testitems",
+                            "Type": "struct<endDate:string,interactions:struct<items:array<struct<controlEvent:double>>>>",
+                        },
+                        {
+                            "Name": "userinteractions",
+                            "Type": "array<struct<testEvent:array<string>,stepIdentifier:int>>",
                         },
                     ],
                 },
@@ -198,6 +269,8 @@ class TestJsonS3ToParquet:
         glue_flat_table_name,
         glue_nested_table,
         glue_nested_table_name,
+        glue_resolve_choice_table,
+        glue_resolve_choice_table_name,
         glue_crawler_role,
         json_s3_objects,
         namespace,
@@ -223,6 +296,13 @@ class TestJsonS3ToParquet:
                         "Path": os.path.join(
                             glue_database_path,
                             glue_nested_table_name.replace("_", "=", 1),
+                        )
+                        + "/"
+                    },
+                    {
+                        "Path": os.path.join(
+                            glue_database_path,
+                            glue_resolve_choice_table_name.replace("_", "=", 1),
                         )
                         + "/"
                     },
@@ -510,14 +590,17 @@ class TestJsonS3ToParquet:
                 "Name": "arrayofobjectsfield",
                 "Type": "array<struct<filename:string,timestamp:string>>",
             },
-            {"Name": "objectfield", "Type": "struct<filename:string,timestamp:string>"},
             {
-                "Name": "items",
+                "Name": "objectfield",
+                "Type": "struct<filename:string,timestamp:string>",
+            },
+            {
+                "Name": "testitems",
                 "Type": "struct<endDate:string,interactions:struct<items:array<struct<controlEvent:string>>>>",
             },
             {
                 "Name": "userinteractions",
-                "Type": "array<struct<controlEvent:array<string>,stepIdentifier:string>>",
+                "Type": "array<struct<testEvent:array<string>,stepIdentifier:string>>",
             },
         ]
 
@@ -618,7 +701,6 @@ class TestJsonS3ToParquet:
             ]
         }
         expected_output = [
-            ("testField[].controlEvent[].testEvent", "cast:string"),
             ("testField[].controlEvent[].testObject", "cast:double"),
             ("testField[].stepIdentifier", "cast:string"),
         ]
@@ -627,7 +709,7 @@ class TestJsonS3ToParquet:
             == expected_output
         )
 
-    def test_that_convert_json_schema_to_specs_converts_simple_schema(self):
+    def test_that_convert_json_schema_to_specs_converts_nested_schema(self):
         json_schema = {"objectfield": {"filename": "string", "timestamp": "string"}}
         expected_output = [
             ("objectfield.filename", "cast:string"),
@@ -647,3 +729,34 @@ class TestJsonS3ToParquet:
             json_s3_to_parquet.convert_json_schema_to_specs(json_schema)
             == expected_output
         )
+
+    def test_that_cast_glue_data_types_returns_expected_resolved_df(
+        self, glue_context, glue_database_name, glue_resolve_choice_table_name
+    ):
+        resolve_choice_table = json_s3_to_parquet.get_table(
+            table_name=glue_resolve_choice_table_name,
+            database_name=glue_database_name,
+            glue_context=glue_context,
+        )
+        result = (
+            json_s3_to_parquet.cast_glue_data_types(
+                resolve_choice_table, glue_database_name, glue_resolve_choice_table_name
+            )
+            .toDF()
+            .collect()
+        )
+
+        assert isinstance(result, DynamicFrame)
+        assert len(result) == 1
+        assert result[0]["recordid"] == "1"
+        assert result[0]["arrayofobjectsfield"][0]["filename"] == 1
+        assert result[0]["arrayofobjectsfield"][0]["timestamp"] == 1
+
+        assert result[0]["objectfield"]["filename"] == 1
+        assert result[0]["objectfield"]["timestamp"] == "1"
+
+        assert result[0]["testitems"]["endDate"] == "1"
+        assert result[0]["testitems"]["interactions"]["items"][0]["controlEvent"] == 1.0
+
+        assert result[0]["userinteractions"][0]["testEvent"] == [1.0, 1.0]
+        assert result[0]["userinteractions"][0]["stepIdentifier"] == 1

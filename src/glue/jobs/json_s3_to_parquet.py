@@ -175,21 +175,21 @@ def add_index_to_table(table_key, table_name, processed_tables, unprocessed_tabl
 
 
 def cast_glue_data_types(
-    dynamic_frame,
+    dynamic_frame: DynamicFrame,
     glue_database_name: str,
     glue_table_name: str,
-):
+) -> DynamicFrame:
     """Takes a DynamicFrame and Glue table name and force Glue to respect our data
     type choices when resolving types from a DynamicFrame object to a Spark Dataframe.
     This
 
     Args:
-        dynamic_frame : DynamicFrame object input
+        dynamic_frame (awsglue.DynamicFrame): DynamicFrame object input
         glue_database_name (str): Name of the database to pull the glue table from
         glue_table_name (str): Name of the glue table to pull the json schema from
 
     Returns:
-        pyspark.DataFrame: returns a Spark Dataframe with those resolved data types
+        awsglue.DynamicFrame: returns a DynamicFrame with those resolved data types
     """
     # Load the input glue data
     glue_client = boto3.client("glue")
@@ -263,7 +263,7 @@ def parse_hive_schema(hive_str: str, top_level_field: str) -> dict:
     return root
 
 
-def convert_json_schema_to_specs(json_schema: dict, path=[]) -> list:
+def convert_json_schema_to_specs(json_schema: dict, path: list = []) -> list:
     """Function to convert JSON schema to specs parameter in
     DynamicFrame.resolveChoice format as a list of tuples
 
@@ -279,23 +279,31 @@ def convert_json_schema_to_specs(json_schema: dict, path=[]) -> list:
              (path_to_field2 : cast:<field2_type>)
          ]
     """
+    # handles the condition in which the top level json schema is like "testField":[...]
     if isinstance(json_schema, list):
         json_schema = json_schema[0]
     specs = []
     for field, field_type in json_schema.items():
+        # handles the condition in which the nested json schema is like {"testField": ...}
         if isinstance(field_type, dict):
             inner_specs = convert_json_schema_to_specs(field_type, path + [field])
             specs.extend(inner_specs)
+
+        # handles the condition in which the nested json schema is like "testField":[...]
         elif isinstance(field_type, list):
+            # handles the condition in which the nested json schema is like "testField":[{...}]
             if isinstance(field_type[0], dict):
                 inner_specs = convert_json_schema_to_specs(
                     field_type, path + [f"{field}[]"]
                 )
                 specs.extend(inner_specs)
-            # handles the condition of a scenario like fieldName:array<string>
+            # Separates out the condition of a json schema scenario like "testField": ["string"]
+            # testField:array<string> (hive schema version).
+            # We currently don't have plans to cast something like that to another data type
             else:
-                specs.append((".".join(path + [field]), f"cast:{field_type[0]}"))
+                pass
         else:
+            # handles the condition in which the nested json schema is like "testField":some_value
             specs.append((".".join(path + [field]), f"cast:{field_type}"))
     return specs
 
