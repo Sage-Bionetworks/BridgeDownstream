@@ -38,13 +38,19 @@ class TestJsonS3ToParquet:
     @pytest.fixture(scope="class", autouse=True)
     def glue_database(self, glue_database_name, glue_database_path):
         glue_client = boto3.client("glue")
-        glue_database = glue_client.create_database(
-                DatabaseInput={
-                    "Name": glue_database_name,
-                    "Description": "A database for pytest unit tests.",
-                    "LocationUri": glue_database_path
-                }
-        )
+        potential_entity_conflict = True
+        while potential_entity_conflict:
+            try:
+                glue_database = glue_client.create_database(
+                        DatabaseInput={
+                            "Name": glue_database_name,
+                            "Description": "A database for pytest unit tests.",
+                            "LocationUri": glue_database_path
+                        }
+                )
+                potential_entity_conflict = False
+            except glue_client.exceptions.AlreadyExistsException:
+                glue_client.delete_database(Name=glue_database_name)
         yield glue_database
         glue_client.delete_database(Name=glue_database_name)
 
@@ -174,21 +180,35 @@ class TestJsonS3ToParquet:
         role_name=f"{namespace}-pytest-crawler-role"
         glue_service_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
         s3_read_policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-        glue_crawler_role = iam_client.create_role(
-                RoleName=role_name,
-                AssumeRolePolicyDocument=json.dumps({
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": ["glue.amazonaws.com"]
-                            },
-                            "Action": ["sts:AssumeRole"]
-                        }
-                    ]
-                }),
-        )
+        potential_entity_conflict = True
+        while potential_entity_conflict:
+            try:
+                glue_crawler_role = iam_client.create_role(
+                        RoleName=role_name,
+                        AssumeRolePolicyDocument=json.dumps({
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Principal": {
+                                        "Service": ["glue.amazonaws.com"]
+                                    },
+                                    "Action": ["sts:AssumeRole"]
+                                }
+                            ]
+                        }),
+                )
+                potential_entity_conflict = False
+            except iam_client.exceptions.EntityAlreadyExistsException:
+                iam_client.detach_role_policy(
+                        RoleName=role_name,
+                        PolicyArn=glue_service_policy_arn
+                )
+                iam_client.detach_role_policy(
+                        RoleName=role_name,
+                        PolicyArn=s3_read_policy_arn
+                )
+                iam_client.delete_role(RoleName=role_name)
         iam_client.attach_role_policy(
                 RoleName=role_name,
                 PolicyArn=glue_service_policy_arn
@@ -215,46 +235,52 @@ class TestJsonS3ToParquet:
         glue_client = boto3.client("glue")
         crawler_name = f"{namespace}-pytest-crawler"
         time.sleep(10) # give time for the IAM role trust policy to set in
-        glue_crawler = glue_client.create_crawler(
-                Name=crawler_name,
-                Role=glue_crawler_role,
-                DatabaseName=glue_database_name,
-                Description="A crawler for pytest unit test data.",
-                Targets={
-                    "S3Targets": [
-                        {
-                            "Path": os.path.join(
-                                glue_database_path,
-                                glue_flat_table_name.replace("_", "=", 1)
-                            ) + "/"
+        potential_entity_conflict = True
+        while potential_entity_conflict:
+            try:
+                glue_crawler = glue_client.create_crawler(
+                        Name=crawler_name,
+                        Role=glue_crawler_role,
+                        DatabaseName=glue_database_name,
+                        Description="A crawler for pytest unit test data.",
+                        Targets={
+                            "S3Targets": [
+                                {
+                                    "Path": os.path.join(
+                                        glue_database_path,
+                                        glue_flat_table_name.replace("_", "=", 1)
+                                    ) + "/"
+                                },
+                                {
+                                    "Path": os.path.join(
+                                        glue_database_path,
+                                        glue_nested_table_name.replace("_", "=", 1)
+                                    ) + "/"
+                                }
+                            ]
                         },
-                        {
-                            "Path": os.path.join(
-                                glue_database_path,
-                                glue_nested_table_name.replace("_", "=", 1)
-                            ) + "/"
-                        }
-                    ]
-                },
-                SchemaChangePolicy={
-                    "DeleteBehavior": "LOG",
-                    "UpdateBehavior": "LOG"
-                },
-                RecrawlPolicy={
-                    "RecrawlBehavior": "CRAWL_NEW_FOLDERS_ONLY"
-                },
-                Configuration=json.dumps({
-                    "Version":1.0,
-                    "CrawlerOutput": {
-                        "Partitions": {
-                            "AddOrUpdateBehavior":"InheritFromTable"
-                        }
-                    },
-                    "Grouping": {
-                        "TableGroupingPolicy":"CombineCompatibleSchemas"
-                    }
-                })
-        )
+                        SchemaChangePolicy={
+                            "DeleteBehavior": "LOG",
+                            "UpdateBehavior": "LOG"
+                        },
+                        RecrawlPolicy={
+                            "RecrawlBehavior": "CRAWL_NEW_FOLDERS_ONLY"
+                        },
+                        Configuration=json.dumps({
+                            "Version":1.0,
+                            "CrawlerOutput": {
+                                "Partitions": {
+                                    "AddOrUpdateBehavior":"InheritFromTable"
+                                }
+                            },
+                            "Grouping": {
+                                "TableGroupingPolicy":"CombineCompatibleSchemas"
+                            }
+                        })
+                )
+                potential_entity_conflict = False
+            except glue_client.exceptions.AlreadyExistsException:
+                glue_client.delete_crawler(Name=crawler_name)
         glue_client.start_crawler(Name=crawler_name)
         response = {"Crawler": {}}
         for i in range(60): # wait up to 10 minutes for crawler to finish
