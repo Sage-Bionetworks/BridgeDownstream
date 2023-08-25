@@ -1,1 +1,13 @@
-{"recordid":"one","arrayofobjectsfield":[{"filename":"one","timestamp":"one"}],"objectfield":{"filename":"one","timestamp":"one"}}
+{
+    "recordid": "one",
+    "arrayofobjectsfield": [
+        {
+            "filename": "one",
+            "timestamp": "one"
+        }
+    ],
+    "objectfield": {
+        "filename": "one",
+        "timestamp": "one"
+    }
+}

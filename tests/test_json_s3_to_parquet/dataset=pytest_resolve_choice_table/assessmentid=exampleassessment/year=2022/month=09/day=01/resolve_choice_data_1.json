@@ -1,0 +1,31 @@
+{
+    "recordid": 1,
+    "arrayofobjectsfield": [
+        {
+            "filename": "1",
+            "timestamp": "1"
+        }
+    ],
+    "objectfield": {
+        "filename": "1",
+        "timestamp": "1"
+    },
+    "testitems": {
+        "endDate": "1",
+        "interactions": {
+            "items": [
+                {
+                    "controlEvent": 1
+                }
+            ]
+        }
+    },
+    "userinteractions": [
+        {
+            "testEvent": [
+                1.0, 1.0
+            ],
+            "stepIdentifier": 1.0
+        }
+    ]
+}
