@@ -54,7 +54,7 @@ class TestJsonS3ToParquet:
             }
         )
         yield glue_database
-        # glue_client.delete_database(Name=glue_database_name)
+        glue_client.delete_database(Name=glue_database_name)
 
     @pytest.fixture(scope="class", autouse=True)
     def glue_nested_table(
@@ -746,7 +746,7 @@ class TestJsonS3ToParquet:
             .collect()
         )
 
-        assert isinstance(result, DynamicFrame)
+        assert isinstance(resolve_choice_table, DynamicFrame)
         assert len(result) == 1
         assert result[0]["recordid"] == "1"
         assert result[0]["arrayofobjectsfield"][0]["filename"] == 1

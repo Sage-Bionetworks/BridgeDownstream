@@ -9,23 +9,5 @@
     "objectfield": {
         "filename": "one",
         "timestamp": "one"
-    },
-    "testitems": {
-        "endDate": "one",
-        "interactions": {
-            "items": [
-                {
-                    "controlEvent": "one"
-                }
-            ]
-        }
-    },
-    "userinteractions": [
-        {
-            "testEvent": [
-                "one"
-            ],
-            "stepIdentifier": "one"
-        }
-    ]
+    }
 }
