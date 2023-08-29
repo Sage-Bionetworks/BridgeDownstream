@@ -23,6 +23,9 @@ from awsglue.utils import getResolvedOptions
 from pyspark import SparkContext
 
 
+# maximum iterations for any loop in order to timeout a loop
+MAX_ITERATIONS = 100
+
 def get_args():
     glue_client = boto3.client("glue")
     args = getResolvedOptions(
@@ -236,7 +239,11 @@ def parse_hive_schema(hive_str: str, top_level_field: str) -> dict:
     curr_elem = root
 
     key = None
+    
+    iteration = 0
     while to_parse:
+        if iteration > MAX_ITERATIONS:
+            raise Exception(f"Parsing hive schema reached maximum iterations of {MAX_ITERATIONS}")
         left, operator, to_parse = r.match(to_parse).groups()
 
         if operator == "struct<" or operator == "array<":
@@ -260,6 +267,7 @@ def parse_hive_schema(hive_str: str, top_level_field: str) -> dict:
 
             if operator == ">":
                 curr_elem = parents.pop()
+        iteration += 1
     return root
 
 
@@ -326,17 +334,18 @@ def main():
     )
 
     # cast table's glue types to crawlers' json schema types
-    casted_table = cast_glue_data_types(
-        dynamic_frame=table,
-        glue_database_name=table_name,
-        glue_table_name=workflow_run_properties["database"],
-    )
-    table_schema = casted_table.schema()
+    if args["cast_glue_data_types"]:
+        table = cast_glue_data_types(
+            dynamic_frame=table,
+            glue_database_name=table_name,
+            glue_table_name=workflow_run_properties["database"],
+        )
+    table_schema = table.schema()
 
     # Export new table records to parquet
-    if has_nested_fields(table_schema) and casted_table.count() > 0:
+    if has_nested_fields(table_schema) and table.count() > 0:
         tables_with_index = {}
-        table_relationalized = casted_table.relationalize(
+        table_relationalized = table.relationalize(
             root_table_name=table_name,
             staging_path=f"s3://{workflow_run_properties['parquet_bucket']}/tmp/",
             transformation_ctx="relationalize",
@@ -360,9 +369,9 @@ def main():
                 key=os.path.join(workflow_run_properties["parquet_prefix"], clean_name),
                 glue_context=glue_context,
             )
-    elif casted_table.count() > 0:
+    elif table.count() > 0:
         write_table_to_s3(
-            dynamic_frame=casted_table,
+            dynamic_frame=table,
             bucket=workflow_run_properties["parquet_bucket"],
             key=os.path.join(workflow_run_properties["parquet_prefix"], args["table"]),
             glue_context=glue_context,

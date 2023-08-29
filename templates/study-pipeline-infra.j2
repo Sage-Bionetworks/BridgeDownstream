@@ -80,6 +80,14 @@ Parameters:
     Type: String
     Description: The name of the S3 To JSON S3 Job
 
+  CastGlueDataTypes:
+    Type: String
+    Description: Whether to manually cast glue data types with resolve choice or not
+    AllowedValues:
+      - "true"
+      - "false"
+    Default: "false"
+
 Conditions:
   JsonToParquetTriggerIsNotScheduled: !Equals [!Ref JsonToParquetTriggerSchedule, ON_DEMAND]
   JsonToParquetTriggerIsScheduled: !Not [!Condition JsonToParquetTriggerIsNotScheduled]
@@ -125,6 +133,7 @@ Resources:
         --job-bookmark-option: job-bookmark-enable
         --job-language: python
         --table: {{ '{}'.format(dataset['table_name']) }}
+        --cast-glue-data-types: !Sub CastGlueDataTypes
         # --conf spark.sql.adaptive.enabled
       Description: {{ 'Export {} data in parquet format'.format(dataset['dataset_name']) }}
       ExecutionProperty:
