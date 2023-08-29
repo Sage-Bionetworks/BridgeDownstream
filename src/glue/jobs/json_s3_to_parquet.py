@@ -26,6 +26,7 @@ from pyspark import SparkContext
 # maximum iterations for any loop in order to timeout a loop
 MAX_ITERATIONS = 100
 
+
 def get_args():
     glue_client = boto3.client("glue")
     args = getResolvedOptions(
@@ -239,11 +240,13 @@ def parse_hive_schema(hive_str: str, top_level_field: str) -> dict:
     curr_elem = root
 
     key = None
-    
+
     iteration = 0
     while to_parse:
         if iteration > MAX_ITERATIONS:
-            raise Exception(f"Parsing hive schema reached maximum iterations of {MAX_ITERATIONS}")
+            raise Exception(
+                f"Parsing hive schema reached maximum iterations of {MAX_ITERATIONS}"
+            )
         left, operator, to_parse = r.match(to_parse).groups()
 
         if operator == "struct<" or operator == "array<":

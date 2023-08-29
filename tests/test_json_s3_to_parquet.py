@@ -676,11 +676,11 @@ class TestJsonS3ToParquet:
         )
 
     def test_that_parse_hive_schema_throws_max_iter_exception(self):
-        hive_schema = "struct<array<>>"*120
+        hive_schema = "struct<array<>>" * 120
         with pytest.raises(Exception) as e:
             json_s3_to_parquet.parse_hive_schema(
-                    hive_schema, top_level_field="testField"
-                )
+                hive_schema, top_level_field="testField"
+            )
             assert e.message == "Parsing hive schema reached maximum iterations of 100"
 
     def test_that_convert_json_schema_to_specs_converts_struct_schema(self):
