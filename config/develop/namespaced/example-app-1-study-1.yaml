@@ -20,7 +20,7 @@ parameters:
   ClassifierName: !stack_output_external '{{ ns }}-array-of-records-classifier::ClassifierName'
   SynapseAuthSsmParameterName: '{{ stack_group_config.synapseAuthSsmParameterName }}'
   S3ToJsonS3JobName: !stack_output_external '{{ ns }}-glue-job-S3ToJsonS3::JobName'
-  CastGlueDataTypes: True
+  CastGlueDataTypes: "true"
 
 stack_tags:
   {{ stack_group_config.default_stack_tags }}
