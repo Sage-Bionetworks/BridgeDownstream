@@ -1,0 +1,44 @@
+{
+  "$id" : "https://sage-bionetworks.github.io/BridgeDownstream/schemas/BridgeDownstream.json",
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "type" : "object",
+  "title" : "BridgeDownstream",
+  "description" : "The fields added to the Parquet data by Bridge Downstream.",
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "description" : "The foreign key of the parent dataset."
+    },
+    "index" : {
+      "type" : "integer",
+      "description" : "The position of this element in the original JSON array."
+    },
+    "recordid" : {
+      "type" : "string",
+      "description" : "The Bridge record identifier."
+    },
+    "assessmentid" : {
+      "type" : "string",
+      "description" : "The Bridge assessment identifier."
+    },
+    "year" : {
+      "type" : "integer",
+      "description" : "The year component of the Bridge field `UploadedOn`."
+    },
+    "month" : {
+      "type" : "integer",
+      "description" : "The month component of the Bridge field `UploadedOn`."
+    },
+    "day" : {
+      "type" : "integer",
+      "description" : "The day component of the Bridge field `UploadedOn`."
+    }
+  },
+  "required" : [
+    "recordid",
+    "assessmentid",
+    "year",
+    "month",
+    "day"
+  ]
+}
